@@ -9,7 +9,7 @@ import com.adminlte.controller.BaseController;
 @Controller
 @RequestMapping("/maintain")
 public class maintainController extends BaseController {
-	//不会走的路径
+	//不会走的路径嗯
 	@RequestMapping("/inspectManage")
 	public String taskManager(Model model) {
 		return "maintain/taskManage";
