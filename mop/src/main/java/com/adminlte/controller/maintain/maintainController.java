@@ -1,4 +1,4 @@
-package com.adminlte.controller.devmng;
+package com.adminlte.controller.maintain;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,9 +9,5 @@ import com.adminlte.controller.BaseController;
 @Controller
 @RequestMapping("/maintain")
 public class maintainController extends BaseController {
-	//不会走的路径嗯
-	@RequestMapping("/inspectManage")
-	public String taskManager(Model model) {
-		return "maintain/taskManage";
-	}
+	
 }

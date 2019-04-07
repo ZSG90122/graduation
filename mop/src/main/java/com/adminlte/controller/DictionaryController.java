@@ -28,6 +28,7 @@ import com.adminlte.pojo.Dicplperblindagetype;
 import com.adminlte.pojo.Dicproblemtype;
 import com.adminlte.pojo.Dicprojectstate;
 import com.adminlte.pojo.Dicsystemtype;
+import com.adminlte.pojo.Dictasktype;
 import com.adminlte.pojo.Dicdevsystemtype;
 import com.adminlte.pojo.Dicdevtype;
 import com.adminlte.pojo.Dictendertype;
@@ -48,6 +49,7 @@ import com.adminlte.service.IDicproblemtypeService;
 import com.adminlte.service.IDicdevtypeService;
 import com.adminlte.service.IDicprojectstateService;
 import com.adminlte.service.IDicsystemtypeService;
+import com.adminlte.service.IDictasktypeService;
 import com.adminlte.service.IDicdevsystemtypeService;
 import com.adminlte.service.IDictendertypeService;
 import com.adminlte.service.IDoctypeService;
@@ -94,6 +96,9 @@ public class DictionaryController {
 	IDicplperblindagetypeService idicplperblindagetypeService;// 野战人员掩体
 	@Autowired
 	IDoctypeService idoctypeService;// 文档类型
+	@Autowired
+	IDictasktypeService idictasktypeService;
+
 	@Autowired
 	private ServletRequest request;
 
@@ -1038,7 +1043,6 @@ public class DictionaryController {
 	/**
 	 * 获得配套系统类型的字典
 	 * 
-	 * @author zsg
 	 */
 	@RequestMapping(value = "/selectSystemTypeList", method = RequestMethod.GET)
 	@ResponseBody
@@ -1048,4 +1052,15 @@ public class DictionaryController {
 		return idicsystemtypeService.selectList(wrapper);
 	}
 
+	/**
+	 * 任务类型获取
+	 * @return
+	 */
+	@RequestMapping(value = "/selectTaskTypeList", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Dictasktype> selectTaskTypeList() {
+		EntityWrapper<Dictasktype> wrapper = new EntityWrapper<Dictasktype>();
+		wrapper.orderBy("id");
+		return idictasktypeService.selectList(wrapper);
+	}
 }
