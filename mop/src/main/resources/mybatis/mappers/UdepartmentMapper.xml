@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adminlte.mapper.UdepartmentMapper">
+
+    <resultMap id="departmentResultMap" type="com.adminlte.pojo.Udepartment">
+        <id column="id" property="id" jdbcType="BIGINT" />
+    	<result column="parentid" property="parentid" jdbcType="BIGINT" />
+    	<result column="name" property="name" jdbcType="VARCHAR" />
+    	<result column="rename" property="rename" jdbcType="VARCHAR" />
+    	<result column="depcode" property="depcode" jdbcType="VARCHAR" />
+    	<result column="contacts" property="contacts" jdbcType="VARCHAR" />
+    	<result column="bolruin" property="bolruin" jdbcType="INTEGER" />
+    	<result column="telphone" property="telphone" jdbcType="VARCHAR" />
+    	<result column="address" property="address" jdbcType="VARCHAR" />
+    	<result column="introduce" property="introduce" jdbcType="VARCHAR" />
+    	<result column="deptype_id" property="deptypeId" jdbcType="BIGINT" />
+    	<result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+         id, parentid, depcode, name, 'rename' ,contacts,bolruin, telphone, address, introduce, deptype_id as deptypeId, remark
+    </sql>
+    
+    <!-- 查询给定id的所有后代    输入 depid-->
+    <select id="selectOffsprings" parameterType="java.lang.Long" resultMap="departmentResultMap">
+    	select 
+    		<include refid="Base_Column_List"/>
+    	from udepartment
+    	where
+    	  <if test="depid != null">
+    	  	FIND_IN_SET(id,getChildSet(#{depid,jdbcType=BIGINT}) )
+    	  </if>
+    
+    </select>
+    <!-- by CGP 通过部门id，查询每个部门的联系人 -->
+    <select id="selectContactsNameByDepId" resultMap="departmentResultMap">
+	select  
+		d.id,
+        contacts
+	FROM
+		udepartment d
+		where
+			<!-- 既能查询出id的数据，也能查询出其子节点的数据 -->
+        	FIND_IN_SET(d.id,getChildSet(#{id,jdbcType=BIGINT}) )
+        	
+      <!--  
+      	该判断条件，只能查询出id的一条数据，
+      <where>
+            d.id = #{id}
+        </where> -->
+  </select>
+  
+  <select id="selectListWapper" resultMap="departmentResultMap">
+   	SELECT
+		d.id,
+		d.parentid,
+		d.`rename`,
+		d.`name`,
+		d.contacts,
+		d.telphone,
+		d.address,
+		d.introduce,
+		d.deptype_id,
+		d.remark,
+		d.depcode,
+		d.bolruin
+	FROM
+		udepartment d
+		${ew.sqlSegment}
+   </select>
+    
+</mapper>

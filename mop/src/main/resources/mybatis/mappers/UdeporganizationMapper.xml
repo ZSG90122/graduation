@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adminlte.mapper.UdeporganizationMapper">
+
+    <resultMap id="deporganizationVoResultMap" type="com.adminlte.pojo.Udeporganization">
+        <id column="id" property="id" jdbcType="BIGINT" />
+    	<result column="parentid" property="parentid" jdbcType="BIGINT" />
+    	<result column="name" property="name" jdbcType="VARCHAR" />
+    	<result column="rename" property="rename" jdbcType="VARCHAR" />
+    	<result column="contacts" property="contacts" jdbcType="VARCHAR" />
+    	<result column="telphone" property="telphone" jdbcType="VARCHAR" />
+    	<result column="address" property="address" jdbcType="VARCHAR" />
+    	<result column="introduce" property="introduce" jdbcType="VARCHAR" />
+    	<result column="deptype_id" property="deptypeId" jdbcType="BIGINT" />
+    	<result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+         id, parentid, name, rename,contacts, telphone, address, introduce, deptype_id as deptypeId, remark
+    </sql>
+    
+    
+</mapper>

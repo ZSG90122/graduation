@@ -1,0 +1,73 @@
+
+.mybg {
+  /*font-family: "Lato", sans-serif;
+  background: url(IMG/dark_stripes.png);
+  text-align: center;
+  height: 100%;*/
+  background: linear-gradient(180deg, #2D2D30, #000000,#2D2D30);
+}
+
+/*Í¼Æ¬±³¾°*/
+.mypicbg {
+  font-family: "Lato", sans-serif;
+  background: url(IMG/dark_stripes.png);
+  height: 100%;
+}
+
+/*µ¯³ö¿ò*/
+.black_overlay {
+    display: none;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 1001;
+    -moz-opacity: 0.8;
+    opacity: .80;
+    filter: alpha(opacity=80);
+}
+
+.white_content {
+    display:none;
+    position:fixed;
+    top: 5%;
+    left: 25%;
+    width: 60%;
+    bottom:5%;
+    /*height: 500px;*/
+    padding: 16px;
+    /*border: 2px solid orange;*/
+    background-color: white;
+    z-index: 1002;
+    overflow: auto;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 0 10px #000000;
+    cursor: move; 
+}
+
+.process_content {
+    display:none;
+    position:fixed;
+    width: 640px;
+    height:200px;
+    left:25%;
+    top:25%;
+    margin:0 auto;
+    padding:0px;
+    background-color: white;
+    z-index: 1002;
+    overflow: hidden;
+    cursor: move; 
+    border:1px solid #ff0000;
+}
+
+.myresize {
+    width:500px;
+    height:500px;
+}
+
+.todolist_li{
+    width:auto;
+}

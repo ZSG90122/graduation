@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.adminlte.mapper.BdevsystemMapper">
+	<resultMap id="BaseResultMap" type="com.adminlte.pojo.Bdevsystem">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="depid" property="depid" jdbcType="BIGINT" />
+		<result column="rchouseid" property="rchouseid" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="TINYINT" />
+		<result column="funlist" property="funlist" jdbcType="VARCHAR" />
+		<result column="mainenterpriseid" property="mainenterpriseid"
+			jdbcType="BIGINT" />
+		<result column="managerid" property="managerid" jdbcType="BIGINT" />
+		<result column="descrip" property="descrip" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="VoBaseResultMap" type="com.adminlte.pojo.vo.BdevsystemVo">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="depid" property="depid" jdbcType="BIGINT" />
+		<result column="rchouseid" property="rchouseid" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="TINYINT" />
+		<result column="funlist" property="funlist" jdbcType="VARCHAR" />
+		<result column="mainenterpriseid" property="mainenterpriseid"
+			jdbcType="BIGINT" />
+		<result column="managerid" property="managerid" jdbcType="BIGINT" />
+		<result column="descrip" property="descrip" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="enterprisename" property="enterprisename"
+			jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="typename" property="typename" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, depid, rchouseid, name, type, funlist,
+		mainenterpriseid, managerid,
+		descrip,
+		remark
+	</sql>
+	<select id="selectVoListWrapper" resultMap="VoBaseResultMap">
+		SELECT
+		s.id,
+		s.depid,
+		s.rchouseid,
+		s.`name`,
+		s.type,
+		s.funlist,
+		s.mainenterpriseid,
+		s.managerid,
+		s.descrip,
+		s.remark,
+		e.`name` AS enterprisename,
+		e.contactperson,
+		u.`name` AS username,
+		d.`name` AS typename
+		FROM
+		bdevsystem s
+		LEFT JOIN benterprise e ON e.id = s.mainenterpriseid
+		LEFT JOIN `user` u ON u.id = s.managerid
+		LEFT JOIN dicsystemtype d ON d.id = s.type
+		${ew.sqlSegment}
+	</select>
+	<select id="selectListWapper" resultMap="BaseResultMap">
+		SELECT
+		s.id,
+		s.depid,
+		s.rchouseid,
+		s.`name`,
+		s.type,
+		s.funlist,
+		s.mainenterpriseid,
+		s.managerid,
+		s.descrip,
+		s.remark
+		FROM
+		bdevsystem s
+		${ew.sqlSegment}
+	</select>
+</mapper>

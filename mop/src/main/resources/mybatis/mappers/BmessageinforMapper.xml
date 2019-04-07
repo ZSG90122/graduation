@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adminlte.mapper.BmessageinforMapper">
+  <resultMap id="BaseResultMap" type="com.adminlte.pojo.Bmessageinfor">
+
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="messagetype_id" jdbcType="BIGINT" property="messagetypeId" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, messagetype_id AS messagetypeId, content, state, createtime, user_id as userId, title, remark
+  </sql>
+
+  <!--由于查询量并不大，所以采用分布查询的方式，效率较低，还有嵌套查询
+	http://www.marsitman.com/mybatis/mybatis-collection.html
+	https://blog.csdn.net/sinat_32869075/article/details/52872841
+	https://blog.csdn.net/molashaonian/article/details/53013151
+  -->
+  
+  <resultMap id="BaseVoResultMap" type="com.adminlte.pojo.vo.BmessageinforVo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="messagetype_id" jdbcType="BIGINT" property="messagetypeId" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    
+    <result column="messagetypename" jdbcType="VARCHAR" property="messagetypename" />
+    <result column="userName" jdbcType="VARCHAR" property="userName" />
+    <collection property="dispatchList" select="com.adminlte.mapper.BmessagedispatchMapper.selectmessagedispatchbymsgid" column="id" >
+		
+    </collection>
+    <collection property="attachList" select="com.adminlte.mapper.BmessageinforattachMapper.selectmessageattachbymsgid" column="id"  >
+		
+    </collection>
+  </resultMap>
+
+  <select id="selectmessageListbymsgid" parameterType="java.lang.Long" resultType="com.adminlte.pojo.vo.BmessageinforVo">
+  	select  
+  		m.id,m.messagetype_id messagetypeId,m.user_id userId,m.remark,m.state,m.content,m.createtime,m.title,u.`name` userName,d.`name` messagetypename
+	FROM
+		bmessageinfor m
+		LEFT JOIN `user` u on m.receiveuser_id = u.id
+		LEFT JOIN dicmessagetype d on m.messagetype_id = d.id
+		where
+		m.id=#{message_id}
+  </select>
+
+  <select id="selectMessagesByWrapper" resultMap="BaseVoResultMap">
+	select  
+		m.id,
+		m.messagetype_id, 
+		m.content,
+		m.state, 
+		m.createtime, 
+		m.user_id , 
+		m.title, 
+		m.remark,
+		d.`name` messagetypename,
+		u.`name` userName
+	FROM
+		bmessageinfor m
+		LEFT JOIN dicmessagetype d on m.messagetype_id = d.id
+		LEFT JOIN `user` u on m.user_id = u.id
+		${ew.sqlSegment}
+  </select>
+    <!-- 通过message_id查询数据 -->
+    <select id="selectMessageByMessageId" resultMap="BaseVoResultMap">
+	select  
+		m.id, 
+		m.messagetype_id, 
+		m.content,
+		m.state, 
+		m.createtime, 
+		m.user_id , 
+		m.title, 
+		m.remark,
+		d.`name` messagetypename,
+		u.`name` userName
+	FROM
+		bmessageinfor m
+		LEFT JOIN dicmessagetype d on m.messagetype_id = d.id
+		LEFT JOIN `user` u on m.user_id = u.id
+		<where>
+            m.id = #{message_id}
+        </where>
+  </select>
+  <!-- 删除信息列表，要先删除用户子表，再删除主表-->
+	<delete id="delectOneOrmoreDispatch" parameterType="java.util.List">
+	delete from bmessagedispatch where message_id in
+        <foreach item="message_id" collection="list" index="index" open="(" close=")" separator=",">
+            #{message_id}
+        </foreach>
+	</delete>
+	
+	<delete id="delectOneOrmoreAttach" parameterType="java.util.List">
+	delete from bmessageinforattach where message_id in
+        <foreach item="message_id" collection="list" index="index" open="(" close=")" separator=",">
+            #{message_id}
+        </foreach>
+	</delete>
+	
+	<delete id="delectOneOrmoreMessageInfo" parameterType="java.util.List">
+	delete from bmessageinfor where id in
+	<foreach item="message_id" collection="list" index="index" open="(" close=")" separator=",">
+            #{message_id}
+    </foreach>
+	</delete>  
+	<!-- 根据id查询出一条消息，用于在添加和更新时看到部门信息 -->
+	 <select id="selectoneMessage" resultMap="BaseVoResultMap">
+	 select  
+		m.id
+	 FROM
+		bmessageinfor m
+		<where>
+			m.messagetype_id= #{messagetypeId}
+		</where>
+	 	 
+ 	</select>
+	
+	
+	
+	  
+</mapper>

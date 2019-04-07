@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.adminlte.mapper.BdevsoftMapper">
+	<resultMap id="BaseResultMap" type="com.adminlte.pojo.Bdevsoft">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="rchouseid" property="rchouseid" jdbcType="BIGINT" />
+		<result column="devcode" property="devcode" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="systemtypeid" property="systemtypeid" jdbcType="BIGINT" />
+		<result column="devtypeid" property="devtypeid" jdbcType="BIGINT" />
+		<result column="maintenid" property="maintenid" jdbcType="BIGINT" />
+		<result column="typecode" property="typecode" jdbcType="VARCHAR" />
+		<result column="mngpersonid" property="mngpersonid" jdbcType="BIGINT" />
+		<result column="depid" property="depid" jdbcType="BIGINT" />
+		<result column="application" property="application" jdbcType="VARCHAR" />
+		<result column="providerenterpriseid" property="providerenterpriseid"
+			jdbcType="BIGINT" />
+		<result column="madeenterpriseid" property="madeenterpriseid"
+			jdbcType="BIGINT" />
+		<result column="leavedate" property="leavedate" jdbcType="DATE" />
+		<result column="leavecode" property="leavecode" jdbcType="VARCHAR" />
+		<result column="buydate" property="buydate" jdbcType="DATE" />
+		<result column="buyaddress" property="buyaddress" jdbcType="VARCHAR" />
+		<result column="devrevalue" property="devrevalue" jdbcType="REAL" />
+		<result column="assectcode" property="assectcode" jdbcType="VARCHAR" />
+		<result column="buyperson" property="buyperson" jdbcType="VARCHAR" />
+		<result column="qualdate" property="qualdate" jdbcType="DATE" />
+		<result column="repairdate" property="repairdate" jdbcType="DATE" />
+		<result column="scrapdate" property="scrapdate" jdbcType="DATE" />
+		<result column="installrchouseid" property="installrchouseid"
+			jdbcType="BIGINT" />
+		<result column="usepersonid" property="usepersonid" jdbcType="BIGINT" />
+		<result column="installdate" property="installdate" jdbcType="DATE" />
+		<result column="installenterpriseid" property="installenterpriseid"
+			jdbcType="BIGINT" />
+		<result column="installreson" property="installreson" jdbcType="VARCHAR" />
+		<result column="mainip" property="mainip" jdbcType="VARCHAR" />
+		<result column="mainport" property="mainport" jdbcType="VARCHAR" />
+		<result column="tprotocal1" property="tprotocal1" jdbcType="VARCHAR" />
+		<result column="tprotocal2" property="tprotocal2" jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="BaseVoResultMap" type="com.adminlte.pojo.vo.BdevsoftVo">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="rchouseid" property="rchouseid" jdbcType="BIGINT" />
+		<result column="devcode" property="devcode" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="systemtypeid" property="systemtypeid" jdbcType="BIGINT" />
+		<result column="devtypeid" property="devtypeid" jdbcType="BIGINT" />
+		<result column="maintenid" property="maintenid" jdbcType="BIGINT" />
+		<result column="typecode" property="typecode" jdbcType="VARCHAR" />
+		<result column="mngpersonid" property="mngpersonid" jdbcType="BIGINT" />
+		<result column="depid" property="depid" jdbcType="BIGINT" />
+		<result column="application" property="application" jdbcType="VARCHAR" />
+		<result column="providerenterpriseid" property="providerenterpriseid"
+			jdbcType="BIGINT" />
+		<result column="madeenterpriseid" property="madeenterpriseid"
+			jdbcType="BIGINT" />
+		<result column="leavedate" property="leavedate" jdbcType="DATE" />
+		<result column="leavecode" property="leavecode" jdbcType="VARCHAR" />
+		<result column="buydate" property="buydate" jdbcType="DATE" />
+		<result column="buyaddress" property="buyaddress" jdbcType="VARCHAR" />
+		<result column="devrevalue" property="devrevalue" jdbcType="REAL" />
+		<result column="assectcode" property="assectcode" jdbcType="VARCHAR" />
+		<result column="buyperson" property="buyperson" jdbcType="VARCHAR" />
+		<result column="qualdate" property="qualdate" jdbcType="DATE" />
+		<result column="repairdate" property="repairdate" jdbcType="DATE" />
+		<result column="scrapdate" property="scrapdate" jdbcType="DATE" />
+		<result column="installrchouseid" property="installrchouseid"
+			jdbcType="BIGINT" />
+		<result column="usepersonid" property="usepersonid" jdbcType="BIGINT" />
+		<result column="installdate" property="installdate" jdbcType="DATE" />
+		<result column="installenterpriseid" property="installenterpriseid"
+			jdbcType="BIGINT" />
+		<result column="installreson" property="installreson" jdbcType="VARCHAR" />
+		<result column="mainip" property="mainip" jdbcType="VARCHAR" />
+		<result column="mainport" property="mainport" jdbcType="VARCHAR" />
+		<result column="tprotocal1" property="tprotocal1" jdbcType="VARCHAR" />
+		<result column="tprotocal2" property="tprotocal2" jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="departname" property="departname" jdbcType="VARCHAR" />
+		<result column="systemname" property="systemname" jdbcType="VARCHAR" />
+		<result column="devtypename" property="devtypename" jdbcType="VARCHAR" />
+		<result column="devmaintainname" property="devmaintainname"
+			jdbcType="VARCHAR" />
+		<result column="enterprisename" property="enterprisename"
+			jdbcType="VARCHAR" />
+		<collection property="parameterList" ofType="com.adminlte.pojo.Bdevsoftparameter">
+			<id column="pid" property="id" jdbcType="BIGINT" />
+			<result column="devsoftid" property="devsoftid" jdbcType="BIGINT" />
+			<result column="code" property="code" jdbcType="BIGINT" />
+			<result column="parameterName" property="name" jdbcType="VARCHAR" />
+			<result column="value" property="value" jdbcType="VARCHAR" />
+			<result column="valuetype" property="valuetype" jdbcType="TINYINT" />
+		</collection>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, rchouseid, devcode, name, systemtypeid, devtypeid,
+		maintenid,
+		typecode, mngpersonid,
+		depid, application,
+		providerenterpriseid, madeenterpriseid, leavedate,
+		leavecode,
+		buydate,
+		buyaddress, devrevalue, assectcode, buyperson, qualdate, repairdate,
+		scrapdate,
+		installrchouseid, usepersonid, installdate,
+		installenterpriseid, installreson, mainip,
+		mainport, tprotocal1,
+		tprotocal2, username, password, remark
+	</sql>
+
+	<select id="selectVoListWrapper" resultMap="BaseVoResultMap">
+		SELECT
+		v.id,
+		v.rchouseid,
+		v.devcode,
+		v.`name`,
+		v.systemtypeid,
+		v.devtypeid,
+		v.maintenid,
+		v.typecode,
+		v.mngpersonid,
+		v.depid,
+		v.application,
+		v.providerenterpriseid,
+		v.madeenterpriseid,
+		v.leavedate,
+		v.leavecode,
+		v.buydate,
+		v.buyaddress,
+		v.devrevalue,
+		v.assectcode,
+		v.buyperson,
+		v.qualdate,
+		v.repairdate,
+		v.scrapdate,
+		v.installrchouseid,
+		v.usepersonid,
+		v.installdate,
+		v.installenterpriseid,
+		v.installreson,
+		v.mainip,
+		v.mainport,
+		v.tprotocal1,
+		v.tprotocal2,
+		v.username,
+		v.`password`,
+		v.remark,
+		u.`name` AS departname,
+		st.`name` AS systemname,
+		dt.`name` AS devtypename,
+		dmt.`name` AS devmaintainname,
+		e.`name` AS enterprisename,
+		p.id as pid,
+		p.`code`,
+		p.devsoftid,
+		p.`name` as parameterName,
+		p.`value`,
+		p.valuetype
+		FROM
+		bdevsoft v
+		LEFT JOIN udepartment u ON u.id = v.depid
+		LEFT JOIN dicsystemtype st ON st.id = v.systemtypeid
+		LEFT JOIN dicdevtype dt ON dt.id = v.devtypeid
+		LEFT JOIN dicmaintaintype dmt ON dmt.id = v.maintenid
+		LEFT JOIN benterprise e ON e.id = v.providerenterpriseid
+		LEFT JOIN bdevsoftparameter p ON p.devsoftid = v.id
+		${ew.sqlSegment}
+	</select>
+
+	<select id="selectListWapper" resultMap="BaseResultMap">
+		SELECT
+		v.id,
+		v.rchouseid,
+		v.devcode,
+		v.`name`,
+		v.systemtypeid,
+		v.devtypeid,
+		v.maintenid,
+		v.typecode,
+		v.mngpersonid,
+		v.depid,
+		v.application,
+		v.providerenterpriseid,
+		v.madeenterpriseid,
+		v.leavedate,
+		v.leavecode,
+		v.buydate,
+		v.buyaddress,
+		v.devrevalue,
+		v.assectcode,
+		v.buyperson,
+		v.qualdate,
+		v.repairdate,
+		v.scrapdate,
+		v.installrchouseid,
+		v.usepersonid,
+		v.installdate,
+		v.installenterpriseid,
+		v.installreson,
+		v.mainip,
+		v.mainport,
+		v.tprotocal1,
+		v.tprotocal2,
+		v.username,
+		v.`password`,
+		v.remark
+		FROM
+		bdevsoft v
+		${ew.sqlSegment}
+	</select>
+</mapper>

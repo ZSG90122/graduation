@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.adminlte.mapper.MainPageMapper" >
+
+  <select id="selectStateInfo"   resultType="com.adminlte.pojo.vo.MainPageStateInfoVo" parameterType="String">
+     select sys_control_box_infor.box_ip,sys_control_box_infor.box_name,
+     		sys_control_box_infor.box_streetname,sys_control_box_infor.tb_id,
+     		sys_control_box_infor.box_lng,sys_control_box_infor.box_lat
+     from   sys_control_box_infor,user
+	 where  user.login_name=#{username} and user.id = sys_control_box_infor.box_user_id 
+  </select>
+  
+  <select id="selectBaseInfo"   resultType="com.adminlte.pojo.vo.MainPageStateInfoVo" parameterType="String">
+     select sys_control_box_infor.box_ip,sys_control_box_infor.box_name,
+     		sys_control_box_infor.box_streetname,sys_control_box_infor.tb_id,
+     		sys_control_box_infor.box_lng,sys_control_box_infor.box_lat
+     from   sys_control_box_infor,user
+	 where  user.login_name=#{username} and user.id = sys_control_box_infor.box_user_id 
+  </select>
+  
+</mapper>

@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adminlte.mapper.UserMapper">
+
+    <resultMap id="userVoResultMap" type="com.adminlte.pojo.vo.UserVo">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <id column="level" property="level" jdbcType="BIGINT"/>
+        <result column="login_name" property="loginName" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="TINYINT"/>
+        <result column="age" property="age" jdbcType="TINYINT"/>
+        <result column="user_type" property="userType" jdbcType="TINYINT"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="department_id" property="departmentId" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="image" property="image" jdbcType="VARCHAR"/>
+
+        <result column="departmentName" property="departmentName" jdbcType="VARCHAR"/>
+
+        <collection property="rolesList" ofType="com.adminlte.pojo.Urole">
+            <id column="roleId" property="id"/>
+            <result column="roleName" property="name"/>
+        </collection>
+    </resultMap>
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, level,login_name AS loginName, name, password,sex, age, phone, p.address, image, user_type AS userType, status, department_id AS departmentId, create_time AS createTime
+    </sql>
+
+
+    <select id="selectUserVoById" resultMap="userVoResultMap" parameterType="java.lang.Long">
+        SELECT
+        t.id,
+        login_name,
+        t.`name`,
+        `password`,
+        t.level,
+        sex,
+        age,
+        user_type,
+        t.`status`,
+        department_id,
+        t.create_time,
+        phone,
+        p.address,
+        image,
+        s.`name` AS departmentName,
+        o.id AS roleId,
+        o.`name` AS roleName
+        FROM
+        user t
+        LEFT JOIN user_role r ON t.id = r.user_id
+        LEFT JOIN urole o ON r.role_id = o.id
+        LEFT JOIN udepartment s ON s.id = t.department_id
+        LEFT JOIN uprofile p ON p.user_id = t.id
+        <where>
+            t.id = #{id}
+        </where>
+    </select>
+    <select id="SelectUsrIDByNP" resultType="com.adminlte.pojo.User">
+        SELECT * FROM user where login_name=#{arg0} and password=#{arg1}
+    </select>
+    
+    <select id="findPasswordByBaseInfo" resultType="com.adminlte.pojo.User">
+        SELECT * FROM user t
+        LEFT JOIN uprofile p ON p.user_id = t.id
+        where  login_name=#{loginName} and phone=#{phone} and name=#{name}
+    </select>
+    
+    <select id="selectUserVoPage" resultMap="userVoResultMap">
+        SELECT
+        t.id,
+        login_name,
+        t.`name`,
+        `password`,
+        t.level,
+        sex,
+        age,
+        user_type,
+        t.`status`,
+        department_id,
+        t.create_time,
+        phone,
+        p.address,
+        image,
+        s.`name` AS departmentName,
+        o.id AS roleId,
+        o.`name` AS roleName
+        FROM
+        user t
+        LEFT JOIN user_role r ON t.id = r.user_id
+        LEFT JOIN urole o ON r.role_id = o.id
+        LEFT JOIN udepartment s ON s.id = t.department_id
+        LEFT JOIN uprofile p ON p.user_id = t.id
+        <where>
+            <if test=" name != null and name != '' ">
+                t.name = #{name}
+            </if>
+            <if test=" departmentId != null ">
+                t.department_id = #{departmentId}
+            </if>
+            <if test=" startTime != null ">
+                <![CDATA[ and t.create_time >= #{startTime} ]]>
+            </if>
+            <if test=" endTime != null ">
+                <![CDATA[ and t.create_time <= #{endTime} ]]>
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectUserVo" resultMap="userVoResultMap">
+     SELECT
+        t.id,
+        login_name,
+        t.`name`,
+        `password`,
+        t.level,
+        sex,
+        age,
+        user_type,
+        t.`status`,
+        department_id,
+        t.create_time,
+        phone,
+        p.address,
+        image,
+        s.`name` AS departmentName,
+        o.id AS roleId,
+        o.`name` AS roleName
+        FROM
+        user t
+        LEFT JOIN user_role r ON t.id = r.user_id
+        LEFT JOIN urole o ON r.role_id = o.id
+        LEFT JOIN udepartment s ON s.id = t.department_id
+        LEFT JOIN uprofile p ON p.user_id = t.id
+    </select>
+    <!-- 查询所有role -->
+    <select id="selectAllRole" resultType="com.adminlte.pojo.Urole">
+	 SELECT * FROM urole
+	</select>
+	<!-- 查询所有Orgnaization -->
+    <select id="selectAllOrgnization" resultType="com.adminlte.pojo.Udepartment">
+	 SELECT * FROM udepartment
+	</select>
+	<!-- 查询user单个信息 -->
+    <select id="selectoneUser" resultType="com.adminlte.pojo.User">
+	 SELECT id FROM user where login_name= #{loginName}
+ 	</select>
+	<!-- 新增用户 下面三个方法向三张表中插入数据 -->
+	<insert id="addUserVoInfo"  parameterType="com.adminlte.pojo.vo.UserVo">
+		insert into user(login_name,name,password,level,user_type, status,create_time,department_id)
+		 values (#{loginName},
+		 #{name},
+		 #{password},
+		 #{level},
+		 #{userType},
+		 #{status},
+		 #{createTime},
+		 #{departmentId});
+	</insert>
+	
+	<insert id="addProfile" parameterType="com.adminlte.pojo.vo.UserVo">
+		insert into uprofile
+		(user_id,sex,age,phone,address,image)
+		values (
+		#{id},
+		#{sex},
+		#{age},
+		#{phone},
+		#{address},
+		#{image})
+	</insert>
+	
+	<insert id="addUserRole" parameterType="com.adminlte.pojo.vo.UserVo">
+		insert into user_role
+		(user_id,role_id)
+		values (
+		#{id},
+		#{roleIds})
+	</insert>
+	
+	<!-- 更新用户信息 -->
+	<!-- 更新user表 -->
+	<update id="updateUserInfo" parameterType="com.adminlte.pojo.vo.UserVo">
+		update user set
+		login_name=#{loginName},
+		name=#{name},
+		password=#{password},
+		level=#{level},
+		user_type=#{userType},
+		status=#{status}
+		<where>
+            <if test=" departmentId != null ">
+                department_id = #{departmentId}
+            </if>
+        </where>
+		where id=#{id}
+	</update>
+	<!-- 更新user的一些信息 -->
+	<update id="updateUserInfoBySuper" parameterType="com.adminlte.pojo.vo.UserVo">
+		update user set
+		login_name=#{loginName},
+		name=#{name},
+		password=#{password},
+		level=#{level},
+		department_id=#{departmentId},
+		status=#{status}
+		where id=#{id}
+	</update>
+	<!-- 更新user_role表 -->
+	<update id="updateRoleInfo" parameterType="com.adminlte.pojo.vo.UserVo">
+		update user_role set
+		role_id=#{roleIds}
+		where user_id=#{id}
+	</update>
+	
+	<!-- 更新Profile表 -->
+	<update id="updateProfile" parameterType="com.adminlte.pojo.vo.UserVo">
+		update uprofile set
+		sex=#{sex},
+		age=#{age},
+		phone=#{phone},
+		address=#{address},
+		image=#{image}
+		where user_id=#{id}
+	</update>
+	
+	<!-- 删除用户信息先删除子表在删除主表-->
+	<delete id="delectOneOrmoreProfile" parameterType="java.util.List">
+	delete from uprofile where user_id in
+        <foreach item="user_id" collection="list" index="index" open="(" close=")" separator=",">
+            #{user_id}
+        </foreach>
+	</delete>
+	
+	<delete id="delectOneOrmoreUserRole" parameterType="java.util.List">
+	delete from user_role where user_id in
+        <foreach item="user_id" collection="list" index="index" open="(" close=")" separator=",">
+            #{user_id}
+        </foreach>
+	</delete>
+	
+	<delete id="delectOneOrmoreUserInfo" parameterType="java.util.List">
+	delete from user where id in
+	<foreach item="user_id" collection="list" index="index" open="(" close=")" separator=",">
+            #{user_id}
+    </foreach>
+	</delete>
+	
+	<select id="selectUserVoByDepId" resultMap="userVoResultMap" parameterType="java.lang.Long">
+     SELECT
+        t.id,
+        login_name,
+        t.`name`,
+        `password`,
+        t.level,
+        sex,
+        age,
+        user_type,
+        t.`status`,
+        department_id,
+        t.create_time,
+        phone,
+        p.address,
+        image,
+        s.`name` AS departmentName,
+        o.id AS roleId,
+        o.`name` AS roleName
+        FROM
+        user t
+        LEFT JOIN user_role r ON t.id = r.user_id
+        LEFT JOIN urole o ON r.role_id = o.id
+        LEFT JOIN udepartment s ON s.id = t.department_id
+        LEFT JOIN uprofile p ON p.user_id = t.id
+        where
+        	FIND_IN_SET(t.department_id,getChildSet(#{depid,jdbcType=BIGINT}) )
+    </select>
+    
+    <select id="selectUserVoByWrapper" resultMap="userVoResultMap" >
+        SELECT
+        t.id,
+        login_name,
+        t.`name`,
+        `password`,
+        t.level,
+        sex,
+        age,
+        user_type,
+        t.`status`,
+        department_id,
+        t.create_time,
+        phone,
+        p.address,
+        image,
+        s.`name` AS departmentName,
+        o.id AS roleId,
+        o.`name` AS roleName
+        FROM
+        user t
+        LEFT JOIN user_role r ON t.id = r.user_id
+        LEFT JOIN urole o ON r.role_id = o.id
+        LEFT JOIN udepartment s ON s.id = t.department_id
+        LEFT JOIN uprofile p ON p.user_id = t.id
+        ${ew.sqlSegment}
+    </select>
+	
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adminlte.mapper.DocdepdocMapper">
+	<resultMap id="BaseResultMap" type="com.adminlte.pojo.Docdepdoc">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="dtype" jdbcType="BIGINT" property="dtype" />
+		<result column="title" jdbcType="VARCHAR" property="title" />
+		<result column="keyword" jdbcType="VARCHAR" property="keyword" />
+		<result column="type" jdbcType="VARCHAR" property="type" />
+		<result column="attur" jdbcType="VARCHAR" property="attur" />
+		<result column="docabstract" jdbcType="VARCHAR" property="docabstract" />
+		<result column="visdep" jdbcType="BIGINT" property="visdep" />
+		<result column="pubperson" jdbcType="BIGINT" property="pubperson" />
+		<result column="persondepid" jdbcType="INTEGER" property="persondepid" />
+		<result column="pubtime" jdbcType="TIMESTAMP" property="pubtime" />
+		<result column="seclevel" jdbcType="BIGINT" property="seclevel" />
+		<result column="downloadNumber" jdbcType="BIGINT" property="downloadNumber" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, dtype, title, keyword, type,attur, docabstract, visdep, pubperson,persondepid,
+		pubtime, seclevel,downloadNumber
+	</sql>
+	<sql id="Exce_Column_List">
+		d.id, dtype, title, keyword, type,attur, docabstract, visdep, pubperson,persondepid,
+		pubtime, seclevel,downloadNumber,
+		df.name as typeName,u.name as depName,us.name as seclevelName
+	</sql>
+
+	<sql id="Tow_Column_List">
+		d.id, title, keyword, type,attur, docabstract, visdep, pubperson,persondepid
+		  seclevel,us.role_id as dtype,downloadNumber
+	</sql>
+
+	<select id="listdocdepVo" resultType="com.adminlte.pojo.vo.docdepVo">
+		select
+		<include refid="Exce_Column_List" />
+		FROM docdepdoc d
+		LEFT JOIN doctype df on d.dtype = df.id
+		LEFT JOIN udepartment u on d.visdep = u.id
+		LEFT JOIN user us on d.pubperson = us.id
+		${ew.sqlSegment}
+	</select>
+
+	<select id="listdocInfoVos" resultType="com.adminlte.pojo.vo.docdepVo">
+		select
+		<include refid="Tow_Column_List" />
+		FROM docdepdoc d
+		LEFT JOIN user_role us on d.pubperson = us.user_id
+		${ew.sqlSegment}
+	</select>
+	
+	<update id="updateDownLoadNumber">
+	   update docdepdoc set downloadNumber = downloadNumber +1 
+	   where id=#{id}
+	</update>
+	
+</mapper>

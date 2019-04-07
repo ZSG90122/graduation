@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.adminlte.mapper.UachievementMapper" >
+  <resultMap id="BaseResultMap" type="com.adminlte.pojo.Uachievement" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="logtime" property="logtime" jdbcType="INTEGER" />
+    <result column="newproject" property="newproject" jdbcType="INTEGER" />
+    <result column="updateproject" property="updateproject" jdbcType="INTEGER" />
+    <result column="newbids" property="newbids" jdbcType="INTEGER" />
+    <result column="updatebids" property="updatebids" jdbcType="INTEGER" />
+    <result column="newprogress" property="newprogress" jdbcType="INTEGER" />
+    <result column="deleteprogress" property="deleteprogress" jdbcType="INTEGER" />
+    <result column="newmilestone" property="newmilestone" jdbcType="INTEGER" />
+    <result column="deletemilestone" property="deletemilestone" jdbcType="INTEGER" />
+    <result column="updatemilestone" property="updatemilestone" jdbcType="INTEGER" />
+    <result column="newdocument" property="newdocument" jdbcType="INTEGER" />
+    <result column="deletedocument" property="deletedocument" jdbcType="INTEGER" />
+    <result column="newmessage" property="newmessage" jdbcType="INTEGER" />
+    <result column="deletemessage" property="deletemessage" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, user_id, logtime, newproject, updateproject, newbids, updatebids, newprogress, 
+    deleteprogress, newmilestone, deletemilestone, updatemilestone, newdocument, deletedocument, 
+    newmessage, deletemessage
+  </sql>
+  
+  <resultMap id="BaseResultMapVo" type="com.adminlte.pojo.vo.UachievementVo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="logtime" property="logtime" jdbcType="INTEGER" />
+    <result column="newproject" property="newproject" jdbcType="INTEGER" />
+    <result column="updateproject" property="updateproject" jdbcType="INTEGER" />
+    <result column="newbids" property="newbids" jdbcType="INTEGER" />
+    <result column="updatebids" property="updatebids" jdbcType="INTEGER" />
+    <result column="newprogress" property="newprogress" jdbcType="INTEGER" />
+    <result column="deleteprogress" property="deleteprogress" jdbcType="INTEGER" />
+    <result column="newmilestone" property="newmilestone" jdbcType="INTEGER" />
+    <result column="deletemilestone" property="deletemilestone" jdbcType="INTEGER" />
+    <result column="updatemilestone" property="updatemilestone" jdbcType="INTEGER" />
+    <result column="newdocument" property="newdocument" jdbcType="INTEGER" />
+    <result column="deletedocument" property="deletedocument" jdbcType="INTEGER" />
+    <result column="newmessage" property="newmessage" jdbcType="INTEGER" />
+    <result column="deletemessage" property="deletemessage" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="depname" property="depname" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="selectUachievementVoByWrapper" resultMap="BaseResultMapVo">
+		SELECT
+			a.id,
+			a.user_id,
+			a.logtime,
+			a.newproject,
+			a.updateproject,
+			a.newbids,
+			a.updatebids,
+			a.newprogress,
+			a.deleteprogress,
+			a.newmilestone,
+			a.deletemilestone,
+			a.updatemilestone,
+			a.newdocument,
+			a.deletedocument,
+			a.newmessage,
+			a.deletemessage,
+			u.name as username,
+			up.image as userImgUrl,
+			up.sex as sex,
+			p.name as depname
+		FROM
+			uachievement a
+		LEFT JOIN `user` u on a.user_id = u.id
+		LEFT JOIN `uprofile` up on a.user_id = up.user_id
+		LEFT JOIN udepartment p on u.department_id = p.id  		
+		${ew.sqlSegment}
+   </select>
+   
+  <select id="getAllOptionNum" resultType="com.adminlte.commons.utils.achievementUtil">
+		SELECT
+			 sum(logtime) as logtime,
+			 sum(newproject) as newproject,
+			 sum(updateproject) as updateproject,
+			 sum(newbids) as newbids,
+			 sum(updatebids) as updatebids,
+			 sum(newprogress) as newprogress,
+			 sum(deleteprogress) as deleteprogress,
+			 sum(newmilestone) as newmilestone,
+			 sum(deletemilestone) as deletemilestone,
+			 sum(updatemilestone) as updatemilestone,
+			 sum(newdocument) as newdocument,
+			 sum(deletedocument) as deletedocument,
+			 sum(newmessage) as newmessage,
+			 sum(deletemessage) as deletemessage
+		FROM
+			uachievement
+   </select>
+  
+</mapper>

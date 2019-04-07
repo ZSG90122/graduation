@@ -1,0 +1,142 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+	
+	<!-- 使用spring自带的占位符替换功能 -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<!-- 允许JVM参数覆盖 -->
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<!-- 忽略没有找到的资源文件 -->
+		<property name="ignoreResourceNotFound" value="true" />
+		<!-- 配置资源文件 -->
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+	<!-- 扫描包 -->
+	<context:component-scan base-package="com.adminlte"/>
+
+
+	 <!-- 定义数据源 -->
+	<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<!-- 数据库驱动 -->
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<!-- 相应驱动的jdbcUrl -->
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<!-- 数据库的用户名 -->
+		<property name="username" value="${jdbc.username}" />
+		<!-- 数据库的密码 -->
+		<property name="password" value="${jdbc.password}" />
+		<!-- 检查数据库连接池中空闲连接的间隔时间，单位是分，默认值：240，如果要取消则设置为0 -->
+		<property name="idleConnectionTestPeriod" value="60" />
+		<!-- 连接池中未使用的链接最大存活时间，单位是分，默认值：60，如果要永远存活设置为0 -->
+		<property name="idleMaxAge" value="30" />
+		<!-- 每个分区最大的连接数 -->
+		<!-- 
+			判断依据：请求并发数
+		 -->
+		<property name="maxConnectionsPerPartition" value="100" />
+		<!-- 每个分区最小的连接数 -->
+		<property name="minConnectionsPerPartition" value="5" />
+	</bean>
+	
+	<!--时间转换 前段到后端对象的时间属性，字符串到date  -->
+	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">    
+        <property name="converters">    
+            <list>    
+                <bean class="com.adminlte.controller.DateConvert" />    
+            </list>    
+        </property>    
+    </bean>
+	
+
+	<!-- 定义一个任务类  -->
+	<bean id="DsJob" class="com.adminlte.quartz.DSScheduleQtz"></bean>
+	<bean id="ProjectstateJob" class="com.adminlte.quartz.DSScheduleQtzProjectstate"></bean>
+	<bean id="DayJob" class="com.adminlte.quartz.DSDayScheduleQtz"></bean>
+	<bean id="MonthJob" class="com.adminlte.quartz.DSMonthScheduleQtz"></bean>
+	
+	<bean id="JobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="DsJob"></property>
+		<property name="targetMethod" value="execute"></property>
+        <property name="concurrent" value="false" /><!-- 作业不并发调度  -->
+	</bean>
+	
+	<bean id="ProjectstateDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="ProjectstateJob"></property>
+		<property name="targetMethod" value="execute"></property>
+        <property name="concurrent" value="false" /><!-- 作业不并发调度  -->
+	</bean>
+	
+	<bean id="DayJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="DayJob"></property>
+		<property name="targetMethod" value="execute"></property>
+        <property name="concurrent" value="true" /><!-- 作业并发调度  -->
+	</bean>
+	
+	<bean id="MonthJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="MonthJob"></property>
+		<property name="targetMethod" value="execute"></property>
+        <property name="concurrent" value="true" /><!-- 作业并发调度  -->
+	</bean>
+	
+	<!-- 定义trigger 触发器 -->
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="JobDetail"></property>
+        <property name="cronExpression" value="0 0/1 * * * ?"></property>  
+       <!--  <property name="cronExpression" value="0 0/30 * * * ?"></property>   -->
+    </bean>
+    
+    <bean id="projectstateTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="ProjectstateDetail"></property>
+        <property name="cronExpression" value="0 15 0 * * ?"></property>  
+    </bean>
+
+    <bean id="DayCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="DayJobDetail"></property>
+        <property name="cronExpression" value="0 0 0 */3 * ?"></property>  <!--每3天0点0分 -->
+    </bean>
+    <bean id="MonthCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="MonthJobDetail"></property>
+        <property name="cronExpression" value="0 30 23 L * ?"></property> <!--"0 10 1 1 * ?"  -->
+        <!--每隔5秒执行一次 value="0/5 * * * * ?" --> 
+        <!--每天每隔10分钟执行一次 value="0 0/10 * * * ?" -->
+        <!--每天早上8点执行一次 value="0 0 8 * * ?" -->
+        <!--在每天下午16点到下午16：59期间的每1分钟触发 value="0 * 16 * * ?" --> 
+        <!--每月最后一天23点30分执行一次 value="0 30 23 L * ?" --> 
+        <!--每月15日上午10:15触发 value="0 15 10 15 * ?" -->   
+        <!-- 0 45 0 1 * ?   每月第1天0点45分-->
+        <!-- 0 15 0 * * ?  每天0点15分-->
+		<!--         对应关系是
+		 0  0      *      *    *  ？
+		 秒  分钟     小时     天      月    周几 -->
+		<!-- 0 代表具体时间，即0分0秒
+			*代表每的意思，即每月每天每小时
+			？代表不确定 -->
+    </bean>
+    <!-- 调度工厂 -->
+	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+           <list>
+                <ref bean="cronTrigger"/>
+                <ref bean="projectstateTrigger"/>
+                <ref bean="DayCronTrigger"/>
+                <ref bean="MonthCronTrigger"/>
+           </list>
+        </property>
+    </bean>
+
+</beans>

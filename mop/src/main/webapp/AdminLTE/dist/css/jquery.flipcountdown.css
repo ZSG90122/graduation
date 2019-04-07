@@ -1,0 +1,26 @@
+.xdsoft_flipcountdown{display:inline-block;}
+
+.xdsoft_flipcountdown .xdsoft_digit{float:left;background-repeat:no-repeat;}
+.xdsoft_flipcountdown .xdsoft_clearex{clear:both;float:none;}
+
+
+.xdsoft_flipcountdown >.xdsoft_digit{
+	background-position:0px 0px;
+}
+.xdsoft_flipcountdown >.xdsoft_digit.xdsoft_separator,.xdsoft_flipcountdown >.xdsoft_digit.xdsoft_dot{
+	opacity:0.9;
+}
+ 
+ .xdsoft_flipcountdown.xdsoft_size_sm >.xdsoft_digit{
+	width:24px; 
+	height:34px;
+	background-image:url(../img/digit-sm.png);
+}
+.xdsoft_flipcountdown.xdsoft_size_sm >.xdsoft_digit.xdsoft_space,
+.xdsoft_flipcountdown.xdsoft_size_sm >.xdsoft_digit.xdsoft_separator,
+.xdsoft_flipcountdown.xdsoft_size_sm >.xdsoft_digit.xdsoft_dot{
+	width:10px;
+	background-position:-6px -2100px;
+}
+
+ 

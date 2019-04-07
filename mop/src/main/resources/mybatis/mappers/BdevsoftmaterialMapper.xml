@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.adminlte.mapper.BdevsoftmaterialMapper" >
+  <resultMap id="BaseResultMap" type="com.adminlte.pojo.Bdevsoftmaterial" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="devsoftid" property="devsoftid" jdbcType="BIGINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="uptime" property="uptime" jdbcType="TIMESTAMP" />
+    <result column="uppersonid" property="uppersonid" jdbcType="BIGINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, devsoftid, title, content, type, url, uptime, uppersonid, remark
+  </sql>
+  <select id="selectListWapper" resultMap="BaseResultMap">
+   	SELECT
+		m.id,
+		m.devsoftid,
+		m.title,
+		m.content,
+		m.type,
+		m.url,
+		m.uptime,
+		m.uppersonid,
+		m.remark
+	FROM
+		bdevsoftmaterial m
+		${ew.sqlSegment}
+   </select>
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.adminlte.mapper.BenterpriseMapper" >
+  <resultMap id="BaseResultMap" type="com.adminlte.pojo.Benterprise" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="encode" property="encode" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="contactperson" property="contactperson" jdbcType="VARCHAR" />
+    <result column="contactphone" property="contactphone" jdbcType="VARCHAR" />
+    <result column="introduction" property="introduction" jdbcType="VARCHAR" />
+    <result column="qualify" property="qualify" jdbcType="VARCHAR" />
+    <result column="isactive" property="isactive" jdbcType="BIGINT" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, name, encode, address, contactperson, contactphone, introduction, qualify, isactive
+  </sql>
+  
+  
+  <select id="selectListWapper" resultMap="BaseResultMap">
+   	SELECT
+		e.id,
+		e.`name`,
+		e.encode,
+		e.address,
+		e.contactperson,
+		e.contactphone,
+		e.introduction,
+		e.qualify,
+		e.isactive
+	FROM
+		benterprise e
+		${ew.sqlSegment}
+   </select>
+  
+</mapper>

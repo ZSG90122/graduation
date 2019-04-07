@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adminlte.mapper.DicchinacityinfoMapper">
+
+    <resultMap id="chinacityinfoVoResultMap" type="com.adminlte.pojo.Dicchinacityinfo">
+        <id column="cityid" property="cityid" jdbcType="VARCHAR" />
+    	<result column="cityname" property="cityname" jdbcType="VARCHAR" />
+    	<result column="parentcityid" property="parentcityid" jdbcType="VARCHAR" />
+    </resultMap>
+    
+    <sql id="Base_Column_List" >
+         cityid, cityname, parentcityid
+    </sql>
+    
+    
+</mapper>

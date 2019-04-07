@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adminlte.mapper.BmessagedispatchMapper">
+  <resultMap id="BaseResultMap" type="com.adminlte.pojo.Bmessagedispatch">
+  
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="message_id" jdbcType="BIGINT" property="messageId" />
+    <result column="receiveuser_id" jdbcType="BIGINT" property="receiveuserId" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, message_id as messageId, receiveuser_id as receiveuserId, state, remark
+  </sql>
+  <resultMap id="BaseResultMapVo" type="com.adminlte.pojo.vo.BmessagedispatchVo">
+  
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="message_id" jdbcType="BIGINT" property="messageId" />
+    <result column="receiveuser_id" jdbcType="BIGINT" property="receiveuserId" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="userName" jdbcType="VARCHAR" property="userName" />
+    <collection property="messageList" select="com.adminlte.mapper.BmessageinforMapper.selectmessageListbymsgid" column="message_id"  >
+		
+    </collection> 
+    
+  </resultMap>
+  <!-- 遍历出所有的Bmessagedispatch -->
+    <select id="selectAllBmessagedispatch" resultMap="BaseResultMap">
+	select  
+		b.id,
+		b.message_id, 
+		b.receiveuser_id,
+		b.state,
+		b.remark
+	FROM
+		bmessagedispatch b
+		LEFT JOIN bmessageinfor m on b.message_id = m.id
+		LEFT JOIN `user` u on b.receiveuser_id = u.id
+  </select>
+	<!-- 通过该方法Bmessageinfor，可以获取Bmessageinforattach中的字段 -->
+  <select id="selectmessagedispatchbymsgid" parameterType="java.lang.Long" resultType="com.adminlte.pojo.vo.BmessagedispatchVo">
+  	select  
+  		b.id,b.message_id messageId,b.receiveuser_id receiveuserId,b.remark,b.state,u.`name` userName,ud.`name` depName
+	FROM
+		bmessagedispatch b
+		LEFT JOIN `user` u on b.receiveuser_id = u.id
+		LEFT JOIN udepartment ud on u.department_id = ud.id
+		where
+		b.message_id=#{id}
+  </select>
+   <!-- 根据消息id删除接收到的消息 -->
+	<delete id="delectDealMessage" parameterType="java.util.List">
+	delete from bmessagedispatch where id in
+        <foreach item="id" collection="list" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adminlte.mapper.BmessageinforattachMapper">
+  <resultMap id="BaseResultMap" type="com.adminlte.pojo.Bmessageinforattach">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="message_id" jdbcType="BIGINT" property="messageId" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, message_id as messageId,type, name, url, remark
+  </sql>
+  
+ <select id="selectmessageattachbymsgid" parameterType="java.lang.Long" resultType="com.adminlte.pojo.Bmessageinforattach">
+  	 select 
+    		<include refid="Base_Column_List"/>
+     from bmessageinforattach
+     where
+     message_id=#{id}
+  </select>
+  
+  
+</mapper>

@@ -1,0 +1,11 @@
+
+网络操作流程说明：
+1、NettyController:tomcat启动后就自动调用这个类来启动netty后台监听事件,初始启动的时候读入一些持续化的数据
+2、TCP_Netty_Server：绑定端口，接受客户端的连接
+3、TCP_Netty_Server_Handler：读取网络数据，进行基本判断后，分发给数据处理线程池。（这里一个重要工作是需要保存channel的连接信息，用于后续发送数据）
+4、Dispatcher：业务逻辑线程分发池，客户端传来的数据分发给处理线程
+5、DeCommand_Factory：具体解析客户端发来的数据
+
+6、DataCache：内存缓冲数据管理，每个站都有缓冲数据
+7、NettyChannelMap：保存ip到通道的映射，目的是方便找到channel用于向客户端发送数据
+
