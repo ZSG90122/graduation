@@ -87,6 +87,20 @@ public class taskController extends BaseController {
 	}
 
 	/**
+	 * List形式返回所有处于下达状态的任务信息
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/getTransedTaskList")
+	@ResponseBody
+	public List<Btask> getTransedTaskList() {
+		EntityWrapper<Btask> wrapper = new EntityWrapper<Btask>();
+		wrapper.eq("state", 0);
+		wrapper.orderBy("id");
+		return this.iBtaskService.selectList(wrapper);
+	}
+
+	/**
 	 * 插入一条数据
 	 * 
 	 * @param task

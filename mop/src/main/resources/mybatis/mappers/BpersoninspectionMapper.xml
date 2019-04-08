@@ -75,6 +75,7 @@
 		LEFT JOIN udepartment u ON u.id = p.owerdep
 		LEFT JOIN brcstationdevhouse r ON r.id = p.redevid
 		LEFT JOIN dicinspecttype i ON i.id = p.typeid
+		${ew.sqlSegment}
 	</select>
 
 </mapper>

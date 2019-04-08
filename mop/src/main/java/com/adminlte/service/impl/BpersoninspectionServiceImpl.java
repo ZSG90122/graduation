@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.adminlte.mapper.BpersoninspectionMapper;
 import com.adminlte.pojo.Bpersoninspection;
-import com.adminlte.pojo.vo.BdevsoftVo;
 import com.adminlte.pojo.vo.BpersoninspectionVo;
 import com.adminlte.result.DatatablesResult;
 import com.adminlte.service.IBpersoninspectionService;

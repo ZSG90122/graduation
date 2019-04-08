@@ -169,4 +169,14 @@ public class Bpersoninspection implements Serializable {
 	public void setRemark(String remark) {
 		this.remark = remark == null ? null : remark.trim();
 	}
+
+	@Override
+	public String toString() {
+		return "Bpersoninspection [id=" + id + ", owerdep=" + owerdep + ", redevid=" + redevid + ", typeid=" + typeid
+				+ ", taskid=" + taskid + ", name=" + name + ", inspectcontent=" + inspectcontent + ", inspectresult="
+				+ inspectresult + ", state=" + state + ", isfault=" + isfault + ", inspecttime=" + inspecttime
+				+ ", inspectperson=" + inspectperson + ", filltime=" + filltime + ", fillpersonid=" + fillpersonid
+				+ ", verifypersonid=" + verifypersonid + ", remark=" + remark + "]";
+	}
+	
 }

@@ -541,13 +541,11 @@
 							class="btn btn-primary suredepart" data-dismiss="modal">确定</button>
 					</div>
 				</div>
-				<!-- /.modal-content -->
 			</div>
-			<!-- /.modal-dialog -->
-			<!-- ============================================ -->
-
-
 		</div>
+		<!-- modal-softparameter结束 -->
+		
+	</div>
 </body>
 </html>
 <script
@@ -828,7 +826,7 @@
 			$("#repairdate").val("");
 			$("#scrapdate").val("");
 			$("#installdate").val("");
-			
+
 			//添加配套系统的设备信息时的controller的url
 			url = "<%=request.getContextPath()%>/rest/devsoft/insertDevSoftVo";
 			$("#myModalLabel").html("<b>设备录入</b>");
@@ -1280,11 +1278,11 @@
 			softparameterTable.clear().draw();
 		})
 		$("#softparameterTable tbody").on("click", 'tr', function() {
-			 $(this).toggleClass('selected');
+			$(this).toggleClass('selected');
 		});
 		$("#btn-delAll-softparameter").on("click", function() {
-			 softparameterTable.rows('.selected').remove().draw( false );
+			softparameterTable.rows('.selected').remove().draw(false);
 		});
-		
+
 	});
 </script>

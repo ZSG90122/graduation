@@ -1,12 +1,14 @@
 package com.adminlte.controller.maintain;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,10 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.adminlte.controller.BaseController;
 import com.adminlte.pojo.Bpersoninspection;
+import com.adminlte.pojo.Btask;
 import com.adminlte.pojo.vo.BpersoninspectionVo;
 import com.adminlte.pojo.vo.Result;
 import com.adminlte.result.DatatablesResult;
 import com.adminlte.service.IBpersoninspectionService;
+import com.adminlte.service.IBtaskService;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 
 @Controller
@@ -25,6 +29,9 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 public class inspectController extends BaseController {
 	@Autowired
 	IBpersoninspectionService ibpersoninspectionService;
+
+	@Autowired
+	IBtaskService ibtaskService;
 
 	@RequestMapping("/inspectManage")
 	public String inspectManage(Model model) {
@@ -59,7 +66,7 @@ public class inspectController extends BaseController {
 			if (null != taskcontent && taskcontent.length() > 0) {
 				wrapper.like("taskcontent", taskcontent);
 			}
-			wrapper.orderBy("id");
+			wrapper.orderBy("p.id");
 			DatatablesResult<BpersoninspectionVo> datatablesResult = this.ibpersoninspectionService
 					.selecDataGridWrapper(page, rows, Integer.parseInt(draw), wrapper);
 			return ResponseEntity.ok(datatablesResult);
@@ -118,6 +125,57 @@ public class inspectController extends BaseController {
 	public Result deleteOneTask(Bpersoninspection personinspection) {
 		try {
 			this.ibpersoninspectionService.deleteById(personinspection);
+			return new Result(true);
+		} catch (Exception e) {
+			return new Result(false);
+		}
+	}
+
+	/**
+	 * 批量删除
+	 * 
+	 * @param personinspection
+	 * @return
+	 */
+	@RequestMapping(value = "/deleteInspectByBatch", method = RequestMethod.POST)
+	@ResponseBody
+	public Result deleteInspectByBatch(@RequestBody List<Bpersoninspection> personinspectionList) {
+		try {
+			for (Bpersoninspection personinspection : personinspectionList)
+				this.ibpersoninspectionService.deleteById(personinspection);
+			return new Result(true);
+		} catch (Exception e) {
+			return new Result(false);
+		}
+	}
+
+	/**
+	 * 审核巡检的逻辑
+	 * 
+	 * @param personinspection
+	 * @param finishcontent
+	 * @return
+	 */
+	@RequestMapping(value = "/verify", method = RequestMethod.POST)
+	@ResponseBody
+	public Result verify(Bpersoninspection personinspection, String finishcontent) {
+		try {
+			// 审核通过
+			personinspection.setState((byte) 1);
+			personinspection.setVerifypersonid(getShiroUser().getId());
+			// System.out.println("!!!!"+personinspection);
+			// 暂定为任务巡检
+			this.ibpersoninspectionService.updateById(personinspection);
+			// 只有当是任务巡检的时候才需要同步更新任务的内容
+			if (personinspection.getTaskid() != null) {
+				Btask task = ibtaskService.selectById(personinspection.getTaskid());
+				// 任务置为完成状态
+				task.setState((byte) 1);
+				task.setFilltime(personinspection.getFilltime());
+				task.setFillperson(personinspection.getFillpersonid());
+				task.setFinishcontent(finishcontent);
+				this.ibtaskService.updateById(task);
+			}
 			return new Result(true);
 		} catch (Exception e) {
 			return new Result(false);

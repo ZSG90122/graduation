@@ -92,26 +92,27 @@
 					</div>
 
 					<div class="modal-body">
-						<form class="form-horizontal" id="editForm" action=""
-							method="post">
-							<div class="row-fluid">
-								<div class="pull-right">
-									<div class="btn-group">
-										<button type="button" id="btn-loadmodel"
-											class="btn btn-primary">
-											<i class="fa fa-save">&nbsp;导入模板</i>
-										</button>
-									</div>
-								</div>
-								<div class="row" style="margin-left:0px;">
-									<h5>资产档案信息:</h5>
+
+						<div class="row-fluid">
+							<div class="pull-right">
+								<div class="btn-group">
+									<button type="button" id="btn-loadmodel"
+										class="btn btn-primary">
+										<i class="fa fa-save">&nbsp;导入模板</i>
+									</button>
 								</div>
 							</div>
+							<div class="row" style="margin-left:0px;">
+								<h5>资产档案信息:</h5>
+							</div>
+						</div>
 
-							<!-------------第一个表框开始 ---------->
-							<div class="panel panel-default" id="panel1">
-								<div class="panel-body">
-									<!-- 第二行 -->
+						<!-------------第一个表框开始 ---------->
+						<div class="panel panel-default" id="panel1">
+							<div class="panel-body">
+								<form class="form-horizontal" id="editForm" action=""
+									method="post">
+									<input type="hidden" class="form-control" name="id" id='id'>
 									<div class="form-group">
 										<label for="inputName" class="col-sm-2 control-label">任务类型</label>
 										<div class="col-sm-4">
@@ -126,21 +127,22 @@
 												id="taskcontent" placeholder="输入任务的内容..."></textarea>
 										</div>
 									</div>
-									<!-------------第一个表框结束 ---------->
-								</div>
+								</form>
+								<!-------------第一个表框结束 ---------->
 							</div>
-							<!-- 第一个表框结束 -->
+						</div>
+						<!-- 第一个表框结束 -->
 
-							<div class="modal-footer">
-								<button type="button" id="btn-cancel" class="btn btn-default"
-									data-btn-type="cancel">
-									<i class="fa fa-reply">&nbsp;取消</i>
-								</button>
-								<button type="submit" id="btn-submit" class="btn btn-primary">
-									<i class="fa fa-save">&nbsp;保存</i>
-								</button>
-							</div>
-						</form>
+						<div class="modal-footer">
+							<button type="button" id="btn-cancel" class="btn btn-default"
+								data-btn-type="cancel">
+								<i class="fa fa-reply">&nbsp;取消</i>
+							</button>
+							<button type="submit" id="btn-submit" class="btn btn-primary">
+								<i class="fa fa-save">&nbsp;保存</i>
+							</button>
+						</div>
+
 					</div>
 					<!-- modal-body END -->
 				</div>
@@ -467,25 +469,27 @@
 			}
 			var taskIds = JSON.stringify(check_val);
 			url = "<%=request.getContextPath()%>/rest/task/deleteTaskByBatch";
-			$.ajax({
-				url : url,
-				type : 'post',
-				dataType : "json",
-				cache : "false",
-				data : taskIds, //传给后台的数据
-				contentType : "application/json;charset=UTF-8",
-				success : function(data) {
-					if (data.success) {
-						toastr.success("删除成功！");
-						tables.api().row().remove().draw(false);
-					} else {
-						toastr.error('删除失败！' + JSON.stringify(data));
+			if (confirm("确定要删除吗？！")) {
+				$.ajax({
+					url : url,
+					type : 'post',
+					dataType : "json",
+					cache : "false",
+					data : taskIds, //传给后台的数据
+					contentType : "application/json;charset=UTF-8",
+					success : function(data) {
+						if (data.success) {
+							toastr.success("删除成功！");
+							tables.api().row().remove().draw(false);
+						} else {
+							toastr.error('删除失败！' + JSON.stringify(data));
+						}
+					},
+					error : function(err) {
+						toastr.error("Server Connection Error<%=request.getContextPath()%>.");
 					}
-				},
-				error : function(err) {
-					toastr.error("Server Connection Error<%=request.getContextPath()%>.");
-				}
-			});
+				});
+			}
 		});
 
 		//刷新

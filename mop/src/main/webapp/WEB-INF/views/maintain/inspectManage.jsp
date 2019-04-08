@@ -73,8 +73,8 @@
 					<th>遥控站</th>
 					<th>巡检类型</th>
 					<th>巡检名称</th>
-					<th>是否故障</th>
-					<th>审核状态</th>
+					<th>故障录入</th>
+					<th>审核</th>
 					<th>操作</th>
 				</tr>
 			</thead>
@@ -93,25 +93,26 @@
 					</div>
 
 					<div class="modal-body">
-						<form class="form-horizontal" id="editForm" action=""
-							method="post">
-							<div class="row-fluid">
-								<div class="pull-right">
-									<div class="btn-group">
-										<button type="button" id="btn-loadmodel"
-											class="btn btn-primary">
-											<i class="fa fa-save">&nbsp;导入模板</i>
-										</button>
-									</div>
-								</div>
-								<div class="row" style="margin-left:0px;">
-									<h5>资产档案信息:</h5>
+						<div class="row-fluid">
+							<div class="pull-right">
+								<div class="btn-group">
+									<button type="button" id="btn-loadmodel"
+										class="btn btn-primary">
+										<i class="fa fa-save">&nbsp;导入模板</i>
+									</button>
 								</div>
 							</div>
+							<div class="row" style="margin-left:0px;">
+								<h5>资产档案信息:</h5>
+							</div>
+						</div>
 
-							<!-------------第一个表框开始 ---------->
-							<div class="panel panel-default" id="panel1">
-								<div class="panel-body">
+						<!-------------第一个表框开始 ---------->
+						<div class="panel panel-default" id="panel1">
+							<div class="panel-body">
+								<form class="form-horizontal" id="editForm" action=""
+									method="post">
+									<input type="hidden" class="form-control" name="id" id='id'>
 									<!-- 第一行 -->
 									<div class="form-group">
 										<label for="inputName" class="col-sm-2 control-label">市州</label>
@@ -134,10 +135,11 @@
 												id="typeid">
 											</select>
 										</div>
-										<label for="inputName" class="col-sm-2 control-label">任务</label>
+										<label id="taskLable" for="inputName"
+											class="col-sm-2 control-label">任务</label>
 										<div class="col-sm-4">
-											<select class="form-control select2" name="typeid"
-												id="typeid">
+											<select class="form-control select2" name="taskid"
+												id="taskid">
 											</select>
 										</div>
 									</div>
@@ -186,25 +188,61 @@
 										</div>
 									</div>
 									<!-------------第一个表框结束 ---------->
-								</div>
+								</form>
 							</div>
-							<!-- 第一个表框结束 -->
+						</div>
+						<!-- 第一个表框结束 -->
 
-							<div class="modal-footer">
-								<button type="button" id="btn-cancel" class="btn btn-default"
-									data-btn-type="cancel">
-									<i class="fa fa-reply">&nbsp;取消</i>
-								</button>
-								<button type="submit" id="btn-submit" class="btn btn-primary">
-									<i class="fa fa-save">&nbsp;保存</i>
-								</button>
-							</div>
-						</form>
+						<div class="modal-footer">
+							<button type="button" id="btn-cancel" class="btn btn-default"
+								data-btn-type="cancel">
+								<i class="fa fa-reply">&nbsp;取消</i>
+							</button>
+							<button type="submit" id="btn-submit" class="btn btn-primary">
+								<i class="fa fa-save">&nbsp;保存</i>
+							</button>
+						</div>
+
 					</div>
-					<!-- modal-body END -->
+
 				</div>
 			</div>
 		</div>
+		<!-- editModal END -->
+
+		<div class="modal fade" id="verify_opinion_modal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+						<h4 class="modal-title">审核意见</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" action="">
+							<div class="form-group">
+								<label for="finishcontent" class="col-sm-2 control-label">参数名</label>
+								<div class="col-sm-6">
+									<textarea class="form-control" style="resize:none"
+										name="finishcontent" rows="5" id="finishcontent"
+										placeholder="请输入审核意见......"></textarea>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default pull-left"
+							data-dismiss="modal">取消</button>
+						<button id="btn_confirm" type="button"
+							class="btn btn-primary suredepart" data-dismiss="modal">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--  -->
+
 	</div>
 </body>
 </html>
@@ -329,7 +367,7 @@
 			},
 			columns : [ //对应上面thead里面的序列
 				{
-					"data" : "null" //复选框
+					"data" : "columnDefs" //复选框
 				},
 				{
 					"data" : "id" //编号
@@ -371,18 +409,30 @@
 								return "待审核";
 							else
 								return "<div class='btn-group'>" +
-									"<button id='btn_verify' class='btn btn-primary btn-sm' type='button'><i class='fa fa-plus'></i></button>" +
+									"<button id='btn_verify' class='btn btn-primary btn-sm' type='button'><i class='fa fa-arrow-up'></i></button>" +
 									"</div>";
 							break;
 						case 1:
 							return "已审核";
 							break;
 						}
-
 					}
 				},
 				{
-					"data" : 'columnDefs' //此项用于操作第一列为一个递增的序列，操作最后一列为操作按钮（只有具有admin权限的使用者才具有该权限）
+					"data" : 'state', //此项用于操作第一列为一个递增的序列，操作最后一列为操作按钮（只有具有admin权限的使用者才具有该权限）
+					"render" : function(data, type, full, callback) {
+						switch (data) {
+						case 0:
+							return str;
+							break;
+						case 1:
+							return "<div class='btn-group'>" +
+								"<button id='btn_read' class='btn btn-primary btn-sm' type='button'><i class='fa fa-eye'></i></button>" +
+								"<button id='delRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-trash-o'></i></button>" +
+								"</div>";
+							break;
+						}
+					}
 				}
 			],
 			//操作按钮
@@ -390,10 +440,6 @@
 				{
 					targets : 0,
 					defaultContent : "<input type='checkbox' name='checkList'>"
-				},
-				{
-					targets : -1,
-					defaultContent : str
 				}
 			],
 			language : {
@@ -440,7 +486,8 @@
 		$("#btn-add").on("click", function() {
 			$("input[name=id]").val(null);
 			sel.bindselectfirst('owerdep', "<%=request.getContextPath()%>/rest/department/getdeplist", 'id', 'name');
-			sel.bindselectfirst('typeid', "<%=request.getContextPath()%>/rest/dic/getInspcetTypeList", 'id', 'name');
+			sel.syndata('typeid', "<%=request.getContextPath()%>/rest/dic/getInspcetTypeList", 'id', 'name', function(data) {});
+
 			$("input[name=name]").val("");
 			$("#isfault").select2("val", [ 0 ])
 			$("textarea[name=inspectcontent]").val("");
@@ -462,6 +509,8 @@
 			$("input[name=id]").val(data.id);
 			sel.binddata('owerdep', "<%=request.getContextPath()%>/rest/department/getdeplist", 'id', 'name', data.owerdep);
 			sel.binddata('typeid', "<%=request.getContextPath()%>/rest/dic/getInspcetTypeList", 'id', 'name', data.typeid);
+			sel.binddata('taskid', "<%=request.getContextPath()%>/rest/task/getTransedTaskList", 'id', 'taskcontent', data.taskid);
+
 			$("input[name=name]").val(data.name);
 			$("#isfault").select2("val", [ data.isfault ])
 			$("textarea[name=inspectcontent]").val(data.inspectcontent);
@@ -477,6 +526,24 @@
 			$("#editForm").data('bootstrapValidator').destroy();
 			$("#editForm").data('bootstrapValidator', null);
 			inputvalidator();
+		});
+
+		var taskid;
+		// 巡检类型下拉列表值变化监听事件
+		$("#typeid").on('change', function() {
+			var typeIdVal = $("#typeid").val();
+			if (typeIdVal != 1) {
+				$("#taskid").next().css("display", "none");
+				$("#taskid").empty();
+				$("#taskLable").hide();
+			} else {
+				$("#taskid").next().css("display", "block");
+				$("#taskid").prop("disabled", false);
+				if (taskid == null) {
+					sel.bindselectfirst('taskid', "<%=request.getContextPath()%>/rest/task/getTransedTaskList", 'id', 'taskcontent');
+				}
+				$("#taskLable").show();
+			}
 		});
 
 		// 提交
@@ -522,7 +589,7 @@
 			obj.id = data.id;
 			if (confirm("是否确认删除这条信息?")) {
 				$.ajax({
-					url : "<%=request.getContextPath()%>/rest/task/deleteOneTask",
+					url : "<%=request.getContextPath()%>/rest/inspect/deleteOneInspect",
 					type : 'post',
 					dataType : "json",
 					cache : "false",
@@ -555,27 +622,29 @@
 					check_val.push(oneEnterprice);
 				}
 			}
-			var taskIds = JSON.stringify(check_val);
-			url = "<%=request.getContextPath()%>/rest/task/deleteTaskByBatch";
-			$.ajax({
-				url : url,
-				type : 'post',
-				dataType : "json",
-				cache : "false",
-				data : taskIds, //传给后台的数据
-				contentType : "application/json;charset=UTF-8",
-				success : function(data) {
-					if (data.success) {
-						toastr.success("删除成功！");
-						tables.api().row().remove().draw(false);
-					} else {
-						toastr.error('删除失败！' + JSON.stringify(data));
+			var inspectIds = JSON.stringify(check_val);
+			url = "<%=request.getContextPath()%>/rest/inspect/deleteInspectByBatch";
+			if (confirm("确定要删除吗？！")) {
+				$.ajax({
+					url : url,
+					type : 'post',
+					dataType : "json",
+					cache : "false",
+					data : inspectIds, //传给后台的数据
+					contentType : "application/json;charset=UTF-8",
+					success : function(data) {
+						if (data.success) {
+							toastr.success("删除成功！");
+							tables.api().row().remove().draw(false);
+						} else {
+							toastr.error('删除失败！' + JSON.stringify(data));
+						}
+					},
+					error : function(err) {
+						toastr.error("Server Connection Error<%=request.getContextPath()%>.");
 					}
-				},
-				error : function(err) {
-					toastr.error("Server Connection Error<%=request.getContextPath()%>.");
-				}
-			});
+				});
+			}
 		});
 
 		//刷新
@@ -608,66 +677,38 @@
 					// 版本号v0.5.2-dev不再支持submitHandler配置	
 				},
 				fields : {
-					devcode : {
+					owerdep : {
 						validators : {
 							notEmpty : {
-								message : '请输入设备编号'
+								message : '请选择市州'
 							}
 						}
 					},
 					name : {
 						validators : {
 							notEmpty : {
-								message : '请输入设备名称'
+								message : '请输入巡检名称'
 							}
 						}
 					},
-					typecode : {
+					inspectcontent : {
 						validators : {
 							notEmpty : {
-								message : '请输入设备规格型号'
+								message : '请输入巡检内容'
 							}
 						}
 					},
-					application : {
+					inspectresult : {
 						validators : {
 							notEmpty : {
-								message : '请输入设备用途'
+								message : '请输入巡检结论'
 							}
 						}
 					},
-					leavecode : {
+					inspectperson : {
 						validators : {
 							notEmpty : {
-								message : '请输入出厂编号'
-							}
-						}
-					},
-					buyaddress : {
-						validators : {
-							notEmpty : {
-								message : '请输入采购地址'
-							}
-						}
-					},
-					devrevalue : {
-						validators : {
-							notEmpty : {
-								message : '请输入设备原值'
-							}
-						}
-					},
-					assectcode : {
-						validators : {
-							notEmpty : {
-								message : '请输入资产编号'
-							}
-						}
-					},
-					buyperson : {
-						validators : {
-							notEmpty : {
-								message : '请输入采购人名称'
+								message : '请输入巡检人姓名'
 							}
 						}
 					}
@@ -677,10 +718,45 @@
 			}); /* end $('#editForm').bootstrapValidator */
 		}
 
-
-
 		$("#btn-cancel").on("click", function() {
 			$("#editModal").modal("hide");
+		});
+
+		var verify_data;
+		// 审核按钮事件
+		$("#dataTable tbody").on("click", "#btn_verify", function() {
+			verify_data = tables.api().row($(this).parents("tr")).data();
+			$("#verify_opinion_modal").modal("show");
+			$("#finishcontent").val("");
+		});
+
+		// 提交审核意见
+		$("#btn_confirm").on("click", function() {
+			verify_data.finishcontent = $("#finishcontent").val();
+			verify_data.filltime = new Date(verify_data.filltime).format("yyyy-MM-dd hh:mm:ss");
+			verify_data.inspecttime = new Date(verify_data.inspecttime).format("yyyy-MM-dd hh:mm:ss");
+			console.log(JSON.stringify(verify_data));
+			url = "<%=request.getContextPath()%>/rest/inspect/verify";
+			if (confirm("确定提交审核意见吗？？")) {
+				$.ajax({
+					url : url,
+					type : 'post',
+					dataType : "json",
+					cache : "false",
+					data : verify_data, //传给后台的数据
+					success : function(data) {
+						if (data.success) {
+							toastr.success("删除成功！");
+							tables.api().row().remove().draw(false);
+						} else {
+							toastr.error('删除失败！' + JSON.stringify(data));
+						}
+					},
+					error : function(err) {
+						toastr.error("Server Connection Error<%=request.getContextPath()%>.");
+					}
+				});
+			}
 		});
 	});
 </script>
