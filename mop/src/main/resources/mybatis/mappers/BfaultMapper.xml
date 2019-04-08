@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adminlte.mapper.BfaultMapper">
+	<resultMap id="BaseResultMap" type="com.adminlte.pojo.Bfault">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="typeid" jdbcType="BIGINT" property="typeid" />
+		<result column="souce" jdbcType="BIGINT" property="souce" />
+		<result column="inpectid" jdbcType="BIGINT" property="inpectid" />
+		<result column="redevid" jdbcType="BIGINT" property="redevid" />
+		<result column="systemid" jdbcType="BIGINT" property="systemid" />
+		<result column="faultdes" jdbcType="VARCHAR" property="faultdes" />
+		<result column="state" jdbcType="TINYINT" property="state" />
+		<result column="solution" jdbcType="VARCHAR" property="solution" />
+		<result column="solutionresult" jdbcType="VARCHAR" property="solutionresult" />
+		<result column="findtime" jdbcType="TIMESTAMP" property="findtime" />
+		<result column="veriytime" jdbcType="TIMESTAMP" property="veriytime" />
+		<result column="soluttime" jdbcType="TIMESTAMP" property="soluttime" />
+		<result column="findperson" jdbcType="VARCHAR" property="findperson" />
+		<result column="fillperson" jdbcType="BIGINT" property="fillperson" />
+		<result column="veriyperson" jdbcType="BIGINT" property="veriyperson" />
+	</resultMap>
+
+	<resultMap id="BaseVoResultMap" type="com.adminlte.pojo.vo.BfaultVo">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="typeid" jdbcType="BIGINT" property="typeid" />
+		<result column="souce" jdbcType="BIGINT" property="souce" />
+		<result column="inpectid" jdbcType="BIGINT" property="inpectid" />
+		<result column="redevid" jdbcType="BIGINT" property="redevid" />
+		<result column="systemid" jdbcType="BIGINT" property="systemid" />
+		<result column="faultdes" jdbcType="VARCHAR" property="faultdes" />
+		<result column="state" jdbcType="TINYINT" property="state" />
+		<result column="solution" jdbcType="VARCHAR" property="solution" />
+		<result column="solutionresult" jdbcType="VARCHAR" property="solutionresult" />
+		<result column="findtime" jdbcType="TIMESTAMP" property="findtime" />
+		<result column="veriytime" jdbcType="TIMESTAMP" property="veriytime" />
+		<result column="soluttime" jdbcType="TIMESTAMP" property="soluttime" />
+		<result column="findperson" jdbcType="VARCHAR" property="findperson" />
+		<result column="fillperson" jdbcType="BIGINT" property="fillperson" />
+		<result column="veriyperson" jdbcType="BIGINT" property="veriyperson" />
+		<result column="faulttypename" jdbcType="VARCHAR" property="faulttypename" />
+	
+	</resultMap>
+
+	<select id="selectVoList" resultMap="BaseVoResultMap">
+		SELECT
+		f.id,
+		f.typeid,
+		f.souce,
+		f.inpectid,
+		f.redevid,
+		f.systemid,
+		f.faultdes,
+		f.state,
+		f.solution,
+		f.solutionresult,
+		f.findtime,
+		f.veriytime,
+		f.soluttime,
+		f.findperson,
+		f.fillperson,
+		f.veriyperson,
+		ft.`name` AS faulttypename
+		FROM
+		bfault AS f
+		LEFT JOIN dicfaulttype ft ON ft.id = f.typeid
+		${ew.sqlSegment}
+	</select>
+</mapper>

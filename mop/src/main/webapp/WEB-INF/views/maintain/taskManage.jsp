@@ -494,7 +494,8 @@
 
 		//刷新
 		$("#btn-re").on("click", function() {
-			tables.fnDraw(false); //刷新保持分页状态
+			tables.api().ajax.reload(); //刷新保持分页状态
+			tables.fnDraw();
 		});
 
 		//checkbox全选

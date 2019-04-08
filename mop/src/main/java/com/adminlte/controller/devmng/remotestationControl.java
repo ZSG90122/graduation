@@ -209,5 +209,18 @@ public class remotestationControl extends BaseController {
 	public String rsdevsoft(Model model) {
 		return "devmanager/rsdevsoft";
 	}
-	
+
+	/**
+	 * 选择某一市州下的遥控站
+	 * 
+	 * @param owerdep
+	 * @return
+	 */
+	@RequestMapping("/getRemoteStationList")
+	@ResponseBody
+	public List<Brcstationdevhouse> getRemoteStationList(@RequestParam Long owerdep) {
+		EntityWrapper<Brcstationdevhouse> wrapper = new EntityWrapper<Brcstationdevhouse>();
+		wrapper.eq("owerdep", owerdep);
+		return this.rcstationdevhouseService.selectList(wrapper);
+	}
 }

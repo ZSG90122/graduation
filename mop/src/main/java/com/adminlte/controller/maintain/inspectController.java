@@ -76,6 +76,14 @@ public class inspectController extends BaseController {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 	}
 
+	@RequestMapping("/getInspectList")
+	@ResponseBody
+	public List<Bpersoninspection> getInspectList() {
+		EntityWrapper<Bpersoninspection> wrapper = new EntityWrapper<Bpersoninspection>();
+		wrapper.orderBy("id");
+		return this.ibpersoninspectionService.selectList(wrapper);
+	}
+
 	/**
 	 * 插入一条巡检信息
 	 * 
@@ -87,8 +95,10 @@ public class inspectController extends BaseController {
 	public Result insertOneInspect(Bpersoninspection bpersoninspection) {
 		try {
 			bpersoninspection.setFillpersonid(getShiroUser().getId());
-			// 默认为未审核
-			bpersoninspection.setState((byte) 0);
+			if (bpersoninspection.getTypeid() == 1)
+				bpersoninspection.setState((byte) 0);
+			else
+				bpersoninspection.setState((byte) 2);
 			bpersoninspection.setFilltime(new Date());
 			this.ibpersoninspectionService.insert(bpersoninspection);
 			return new Result(true);

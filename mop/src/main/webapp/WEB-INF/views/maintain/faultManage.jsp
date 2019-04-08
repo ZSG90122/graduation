@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>巡检管理</title>
+<title>故障录入</title>
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/AdminLTE/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet"
@@ -69,12 +69,11 @@
 				<tr class="info">
 					<td><input type="checkbox" id="checkAll"></td>
 					<th>序号</th>
-					<th>市州</th>
-					<th>遥控站</th>
-					<th>巡检类型</th>
-					<th>巡检名称</th>
-					<th>故障录入</th>
-					<th>审核</th>
+					<th>问题类型</th>
+					<th>问题描述</th>
+					<th>状态</th>
+					<th>发现人</th>
+					<th>发现时间</th>
 					<th>操作</th>
 				</tr>
 			</thead>
@@ -115,64 +114,37 @@
 									<input type="hidden" class="form-control" name="id" id='id'>
 									<!-- 第一行 -->
 									<div class="form-group">
-										<label for="inputName" class="col-sm-2 control-label">市州</label>
-										<div class="col-sm-4">
-											<select class="form-control select2" name="owerdep"
-												id="owerdep">
-											</select>
-										</div>
 										<label for="inputName" class="col-sm-2 control-label">遥控站</label>
 										<div class="col-sm-4">
 											<select class="form-control select2" name="redevid"
 												id="redevid">
 											</select>
 										</div>
+										<label for="inputName" class="col-sm-2 control-label">配套系统</label>
+										<div class="col-sm-4">
+											<select class="form-control select2" name="systemid"
+												id="systemid">
+											</select>
+										</div>
 									</div>
 									<div class="form-group">
-										<label for="inputName" class="col-sm-2 control-label">巡检类型</label>
+										<label for="inputName" class="col-sm-2 control-label">巡检名称</label>
+										<div class="col-sm-4">
+											<select class="form-control select2" name="inpectid"
+												id="inpectid">
+											</select>
+										</div>
+										<label id="taskLable" for="inputName"
+											class="col-sm-2 control-label">错误类型</label>
 										<div class="col-sm-4">
 											<select class="form-control select2" name="typeid"
 												id="typeid">
 											</select>
 										</div>
-										<label id="taskLable" for="inputName"
-											class="col-sm-2 control-label">任务</label>
-										<div class="col-sm-4">
-											<select class="form-control select2" name="taskid"
-												id="taskid">
-											</select>
-										</div>
 									</div>
 
 									<div class="form-group">
-										<label for="inputName" class="col-sm-2 control-label">巡检名称</label>
-										<div class="col-sm-4">
-											<input type="text" class="form-control" name="name" id="name"
-												placeholder="请输入巡检名称">
-										</div>
-										<label for="inputName" class="col-sm-2 control-label">是否故障</label>
-										<div class="col-sm-4">
-											<select class="form-control select2" name="isfault"
-												id="isfault">
-												<option value="0">无故障</option>
-												<option value="1">有故障</option>
-											</select>
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="inputName" class="col-sm-2 control-label">巡检内容</label>
-										<div class="col-sm-4">
-											<textarea class="form-control" rows="5" name="inspectcontent"
-												id="inspectcontent" placeholder="输入巡检内容..."></textarea>
-										</div>
-										<label for="inputName" class="col-sm-2 control-label">巡检结论</label>
-										<div class="col-sm-4">
-											<textarea class="form-control" rows="5" name="inspectresult"
-												id="inspectresult" placeholder="输入巡检结论..."></textarea>
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="inputName" class="col-sm-2 control-label">巡检时间</label>
+										<label for="inputName" class="col-sm-2 control-label">发现时间</label>
 										<div class="col-sm-4">
 											<div class='input-group date' id='datetimepicker'>
 												<input type='text' class="form-control" name='inspecttime'
@@ -181,10 +153,17 @@
 												</span>
 											</div>
 										</div>
-										<label for="inputName" class="col-sm-2 control-label">巡检人名称</label>
+										<label for="inputName" class="col-sm-2 control-label">发现人名称</label>
 										<div class="col-sm-4">
-											<input type="text" class="form-control" name="inspectperson"
-												id="inspectperson" placeholder="请输入巡检人名称">
+											<input type="text" class="form-control" name="findperson"
+												id="findperson" placeholder="请输入巡检人名称">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="inputName" class="col-sm-2 control-label">问题描述</label>
+										<div class="col-sm-4">
+											<textarea class="form-control" rows="5" name="faultdes"
+												id="faultdes" placeholder="输入问题描述..."></textarea>
 										</div>
 									</div>
 									<!-------------第一个表框结束 ---------->
@@ -360,7 +339,7 @@
 			searching : false, //禁用datatables搜索
 			ajax : {
 				type : "post",
-				url : "<%=request.getContextPath()%>/rest/inspect/getInspectDataGrid",
+				url : "<%=request.getContextPath()%>/rest/fault/getFaultDataGrid",
 				dataSrc : "data", //传输回来的数据
 				dataType : 'json',
 				data : querydata //传输过去的数据
@@ -373,19 +352,13 @@
 					"data" : "id" //编号
 				},
 				{
-					"data" : "owerdepname" //市州
+					"data" : "faulttypename" //故障类型名称
 				},
 				{
-					"data" : 'redevname' //遥控站
+					"data" : 'faultdes' // 问题描述
 				},
 				{
-					"data" : 'inspecttypename' // 巡检类型
-				},
-				{
-					"data" : 'name' // 巡检名称
-				},
-				{
-					"data" : 'isfault',
+					"data" : 'state', // 问题状态
 					"render" : function(data, type, full, callback) {
 						switch (data) {
 						case 0:
@@ -401,43 +374,21 @@
 					}
 				},
 				{
-					"data" : 'state',
+					"data" : 'findperson'
+				},
+				{
+					"data" : 'findtime',
 					"render" : function(data, type, full, callback) {
-						switch (data) {
-						case 0:
-							if (str === null)
-								return "待审核";
-							else
-								return "<div class='btn-group'>" +
-									"<button id='btn_verify' class='btn btn-primary btn-sm' type='button'><i class='fa fa-arrow-up'></i></button>" +
-									"</div>";
-							break;
-						case 1:
-							return "已审核";
-							break;
-						default:
-							return "无需审核";
-							break;
-						}
+						return new Date(data).format("yyyy-MM-dd hh:mm:ss");
 					}
 				},
 				{
-					"data" : 'state', //此项用于操作第一列为一个递增的序列，操作最后一列为操作按钮（只有具有admin权限的使用者才具有该权限）
+					"data" : null,
 					"render" : function(data, type, full, callback) {
-						switch (data) {
-						case 0:
-							return str;
-							break;
-						case 1:
-							return "<div class='btn-group'>" +
-								"<button id='btn_read' class='btn btn-primary btn-sm' type='button'><i class='fa fa-eye'></i></button>" +
-								"<button id='delRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-trash-o'></i></button>" +
-								"</div>";
-							break;
-						case 2:
-							return str;
-							break;
-						}
+						return "<div class='btn-group'>" +
+							"<button id='editRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-edit'></i></button>" +
+							"<button id='delRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-trash-o'></i></button>" +
+							"</div>";
 					}
 				}
 			],
@@ -543,11 +494,11 @@
 		$("#typeid").on('change', function() {
 			var typeIdVal = $("#typeid").val();
 			if (typeIdVal != 1) {
-				$("#taskid").next().next().css("display", "none");
+				$("#taskid").next().css("display", "none");
 				$("#taskid").empty();
 				$("#taskLable").hide();
 			} else {
-				$("#taskid").next().next().css("display", "");
+				$("#taskid").next().css("display", "block");
 				$("#taskid").prop("disabled", false);
 				if (taskid == null) {
 					sel.bindselectfirst('taskid', "<%=request.getContextPath()%>/rest/task/getTransedTaskList", 'id', 'taskcontent');
@@ -559,6 +510,7 @@
 			}
 		});
 
+		// 遥控站与市州之间的级联
 		var redevid;
 		$("#owerdep").on('change', function() {
 			var owerDepVal = $("#owerdep").val();
@@ -578,6 +530,7 @@
 				if (confirm("确定提交么？")) {
 					//获取到表单中的数据
 					var params = $("#editForm").form().getFormSimpleData();
+					alert(JSON.stringify(params))
 					//此处的data保存了操作的返回值	
 					$.ajax({
 						url : url,
@@ -702,13 +655,6 @@
 					// 版本号v0.5.2-dev不再支持submitHandler配置	
 				},
 				fields : {
-					taskid : {
-						validators : {
-							notEmpty : {
-								message : '任务不能为空'
-							}
-						}
-					},
 					owerdep : {
 						validators : {
 							notEmpty : {
