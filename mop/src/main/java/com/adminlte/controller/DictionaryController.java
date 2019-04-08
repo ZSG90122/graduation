@@ -20,6 +20,7 @@ import com.adminlte.pojo.Dicchinacityinfo;
 import com.adminlte.pojo.Dicdeptype;
 import com.adminlte.pojo.Dicfundsource;
 import com.adminlte.pojo.Dicimportmatter;
+import com.adminlte.pojo.Dicinspecttype;
 import com.adminlte.pojo.Dicmessagetype;
 import com.adminlte.pojo.Dicmaintaintype;
 import com.adminlte.pojo.Dicplanemiltype;
@@ -40,6 +41,7 @@ import com.adminlte.service.IDicchinacityinfoService;
 import com.adminlte.service.IDicdeptypeService;
 import com.adminlte.service.IDicfundsourceService;
 import com.adminlte.service.IDicimportmatterService;
+import com.adminlte.service.IDicinspecttypeService;
 import com.adminlte.service.IDicmessagetypeService;
 import com.adminlte.service.IDicmaintaintypeService;
 import com.adminlte.service.IDicplanemiltypeService;
@@ -97,7 +99,9 @@ public class DictionaryController {
 	@Autowired
 	IDoctypeService idoctypeService;// 文档类型
 	@Autowired
-	IDictasktypeService idictasktypeService;
+	IDictasktypeService idictasktypeService;// 任务类型
+	@Autowired
+	IDicinspecttypeService idicinspecttype;// 巡检类型
 
 	@Autowired
 	private ServletRequest request;
@@ -1054,6 +1058,7 @@ public class DictionaryController {
 
 	/**
 	 * 任务类型获取
+	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/selectTaskTypeList", method = RequestMethod.GET)
@@ -1062,5 +1067,13 @@ public class DictionaryController {
 		EntityWrapper<Dictasktype> wrapper = new EntityWrapper<Dictasktype>();
 		wrapper.orderBy("id");
 		return idictasktypeService.selectList(wrapper);
+	}
+
+	@RequestMapping(value = "/getInspcetTypeList", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Dicinspecttype> getInspcetTypeList() {
+		EntityWrapper<Dicinspecttype> wrapper = new EntityWrapper<Dicinspecttype>();
+		wrapper.orderBy("id");
+		return idicinspecttype.selectList(wrapper);
 	}
 }

@@ -1,55 +1,38 @@
 package com.adminlte.controller.maintain;
 
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.adminlte.controller.BaseController;
-import com.adminlte.pojo.Btask;
+import com.adminlte.pojo.Bpersoninspection;
+import com.adminlte.pojo.vo.BpersoninspectionVo;
 import com.adminlte.pojo.vo.Result;
 import com.adminlte.result.DatatablesResult;
-import com.adminlte.service.IBtaskService;
+import com.adminlte.service.IBpersoninspectionService;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 
 @Controller
-@RequestMapping("/task")
-public class taskController extends BaseController {
-
+@RequestMapping("/inspect")
+public class inspectController extends BaseController {
 	@Autowired
-	IBtaskService iBtaskService;
+	IBpersoninspectionService ibpersoninspectionService;
 
-	/**
-	 * 跳转到任务管理界面
-	 * 
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping("/taskManage")
-	public String taskManager(Model model) {
-		return "maintain/taskManage";
+	@RequestMapping("/inspectManage")
+	public String inspectManage(Model model) {
+		return "maintain/inspectManage";
 	}
 
-	/**
-	 * 获取表格数据
-	 * 
-	 * @param querystring
-	 * @param draw
-	 * @param start
-	 * @param length
-	 * @return
-	 */
-	@RequestMapping("/getTaskDataGrid")
-	public ResponseEntity<DatatablesResult<Btask>> getTaskDataGrid(String querystring,
+	@RequestMapping("/getInspectDataGrid")
+	public ResponseEntity<DatatablesResult<BpersoninspectionVo>> getInspectDataGrid(String querystring,
 			@RequestParam(value = "draw") String draw, @RequestParam(value = "start") String start,
 			@RequestParam(value = "length") String length) {
 		int rows = Integer.parseInt(length);
@@ -72,13 +55,13 @@ public class taskController extends BaseController {
 			}
 		}
 		try {
-			EntityWrapper<Btask> wrapper = new EntityWrapper<Btask>();
+			EntityWrapper<Bpersoninspection> wrapper = new EntityWrapper<Bpersoninspection>();
 			if (null != taskcontent && taskcontent.length() > 0) {
 				wrapper.like("taskcontent", taskcontent);
 			}
 			wrapper.orderBy("id");
-			DatatablesResult<Btask> datatablesResult = this.iBtaskService.selecDataGridWrapper(page, rows,
-					Integer.parseInt(draw), wrapper);
+			DatatablesResult<BpersoninspectionVo> datatablesResult = this.ibpersoninspectionService
+					.selecDataGridWrapper(page, rows, Integer.parseInt(draw), wrapper);
 			return ResponseEntity.ok(datatablesResult);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -87,19 +70,20 @@ public class taskController extends BaseController {
 	}
 
 	/**
-	 * 插入一条数据
+	 * 插入一条巡检信息
 	 * 
-	 * @param task
+	 * @param bpersoninspection
 	 * @return
 	 */
-	@RequestMapping(value = "/insertOneTask", method = RequestMethod.POST)
+	@RequestMapping("/insertOneInspect")
 	@ResponseBody
-	public Result insertOneTask(Btask task) {
+	public Result insertOneInspect(Bpersoninspection bpersoninspection) {
 		try {
-			task.setState((byte) 0);
-			task.setTransperson(getShiroUser().getName());
-			task.setTranstime(new Date());
-			this.iBtaskService.insert(task);
+			bpersoninspection.setFillpersonid(getShiroUser().getId());
+			// 默认为未审核
+			bpersoninspection.setState((byte) 0);
+			bpersoninspection.setFilltime(new Date());
+			this.ibpersoninspectionService.insert(bpersoninspection);
 			return new Result(true);
 		} catch (Exception e) {
 			return new Result(false);
@@ -107,16 +91,16 @@ public class taskController extends BaseController {
 	}
 
 	/**
-	 * 更新一条数据
+	 * 更新一条巡检信息
 	 * 
-	 * @param task
+	 * @param personinspection
 	 * @return
 	 */
-	@RequestMapping(value = "/updateOneTask", method = RequestMethod.POST)
+	@RequestMapping(value = "/updateOneInspect", method = RequestMethod.POST)
 	@ResponseBody
-	public Result updateOneTask(Btask task) {
+	public Result updateOneTask(Bpersoninspection personinspection) {
 		try {
-			this.iBtaskService.updateById(task);
+			this.ibpersoninspectionService.updateById(personinspection);
 			return new Result(true);
 		} catch (Exception e) {
 			return new Result(false);
@@ -124,40 +108,19 @@ public class taskController extends BaseController {
 	}
 
 	/**
-	 * 删除一条数据
+	 * 删除一条巡检信息
 	 * 
-	 * @param task
+	 * @param personinspection
 	 * @return
 	 */
-	@RequestMapping(value = "/deleteOneTask", method = RequestMethod.POST)
+	@RequestMapping(value = "/deleteOneInspect", method = RequestMethod.POST)
 	@ResponseBody
-	public Result deleteOneTask(Btask task) {
+	public Result deleteOneTask(Bpersoninspection personinspection) {
 		try {
-			this.iBtaskService.deleteById(task);
+			this.ibpersoninspectionService.deleteById(personinspection);
 			return new Result(true);
 		} catch (Exception e) {
 			return new Result(false);
 		}
 	}
-
-	/**
-	 * 批量删除
-	 * 
-	 * @param taskList
-	 * @return
-	 */
-	@RequestMapping(value = "/deleteTaskByBatch", method = RequestMethod.POST)
-	@ResponseBody
-	public Result deleteTaskByBatch(@RequestBody List<Btask> taskList) {
-		try {
-			for (Btask task : taskList) {
-				this.iBtaskService.deleteById(task);
-				// 可能同时还需要删除相应的巡检和故障信息
-			}
-			return new Result(true);
-		} catch (Exception e) {
-			return new Result(false);
-		}
-	}
-
 }

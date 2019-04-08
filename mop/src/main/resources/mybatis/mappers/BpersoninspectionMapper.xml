@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adminlte.mapper.BpersoninspectionMapper">
+	<resultMap id="BaseResultMap" type="com.adminlte.pojo.Bpersoninspection">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="owerdep" jdbcType="BIGINT" property="owerdep" />
+		<result column="redevid" jdbcType="BIGINT" property="redevid" />
+		<result column="typeid" jdbcType="BIGINT" property="typeid" />
+		<result column="taskid" jdbcType="BIGINT" property="taskid" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="inspectcontent" jdbcType="VARCHAR" property="inspectcontent" />
+		<result column="inspectresult" jdbcType="VARCHAR" property="inspectresult" />
+		<result column="state" jdbcType="TINYINT" property="state" />
+		<result column="isfault" jdbcType="TINYINT" property="isfault" />
+		<result column="inspecttime" jdbcType="TIMESTAMP" property="inspecttime" />
+		<result column="inspectperson" jdbcType="VARCHAR" property="inspectperson" />
+		<result column="filltime" jdbcType="TIMESTAMP" property="filltime" />
+		<result column="fillpersonid" jdbcType="BIGINT" property="fillpersonid" />
+		<result column="verifypersonid" jdbcType="BIGINT" property="verifypersonid" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+	</resultMap>
+
+	<resultMap id="BaseVoResultMap" type="com.adminlte.pojo.vo.BpersoninspectionVo">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="owerdep" jdbcType="BIGINT" property="owerdep" />
+		<result column="redevid" jdbcType="BIGINT" property="redevid" />
+		<result column="typeid" jdbcType="BIGINT" property="typeid" />
+		<result column="taskid" jdbcType="BIGINT" property="taskid" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="inspectcontent" jdbcType="VARCHAR" property="inspectcontent" />
+		<result column="inspectresult" jdbcType="VARCHAR" property="inspectresult" />
+		<result column="state" jdbcType="TINYINT" property="state" />
+		<result column="isfault" jdbcType="TINYINT" property="isfault" />
+		<result column="inspecttime" jdbcType="TIMESTAMP" property="inspecttime" />
+		<result column="inspectperson" jdbcType="VARCHAR" property="inspectperson" />
+		<result column="filltime" jdbcType="TIMESTAMP" property="filltime" />
+		<result column="fillpersonid" jdbcType="BIGINT" property="fillpersonid" />
+		<result column="verifypersonid" jdbcType="BIGINT" property="verifypersonid" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="owerdepname" jdbcType="VARCHAR" property="owerdepname" />
+		<result column="redevname" jdbcType="VARCHAR" property="redevname" />
+		<result column="inspecttypename" jdbcType="VARCHAR" property="inspecttypename" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, owerdep, redevid, typeid, taskid, name, inspectcontent,
+		inspectresult, state,
+		isfault, inspecttime, inspectperson, filltime,
+		fillpersonid, verifypersonid,
+		remark
+	</sql>
+	<select id="selectVoListWrapper" resultMap="BaseVoResultMap">
+		SELECT
+		p.id,
+		p.owerdep,
+		p.redevid,
+		p.typeid,
+		p.taskid,
+		p.`name`,
+		p.inspectcontent,
+		p.inspectresult,
+		p.state,
+		p.isfault,
+		p.inspecttime,
+		p.inspectperson,
+		p.filltime,
+		p.fillpersonid,
+		p.verifypersonid,
+		p.remark,
+		u.`name` AS owerdepname,
+		r.`name` AS redevname,
+		i.`name` AS inspecttypename
+		FROM
+		bpersoninspection AS p
+		LEFT JOIN udepartment u ON u.id = p.owerdep
+		LEFT JOIN brcstationdevhouse r ON r.id = p.redevid
+		LEFT JOIN dicinspecttype i ON i.id = p.typeid
+	</select>
+
+</mapper>

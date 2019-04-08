@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>任务管理</title>
+<title>巡检管理</title>
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/AdminLTE/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet"
@@ -69,11 +69,12 @@
 				<tr class="info">
 					<td><input type="checkbox" id="checkAll"></td>
 					<th>序号</th>
-					<th>任务类型</th>
-					<th>任务内容</th>
-					<th>任务状态</th>
-					<th>下达人</th>
-					<th>下达时间</th>
+					<th>市州</th>
+					<th>遥控站</th>
+					<th>巡检类型</th>
+					<th>巡检名称</th>
+					<th>是否故障</th>
+					<th>审核状态</th>
 					<th>操作</th>
 				</tr>
 			</thead>
@@ -111,19 +112,77 @@
 							<!-------------第一个表框开始 ---------->
 							<div class="panel panel-default" id="panel1">
 								<div class="panel-body">
-									<!-- 第二行 -->
+									<!-- 第一行 -->
 									<div class="form-group">
-										<label for="inputName" class="col-sm-2 control-label">任务类型</label>
+										<label for="inputName" class="col-sm-2 control-label">市州</label>
 										<div class="col-sm-4">
-											<select class="form-control select2" name="type" id="type">
+											<select class="form-control select2" name="owerdep"
+												id="owerdep">
+											</select>
+										</div>
+										<label for="inputName" class="col-sm-2 control-label">遥控站</label>
+										<div class="col-sm-4">
+											<select class="form-control select2" name="redevid"
+												id="redevid">
 											</select>
 										</div>
 									</div>
 									<div class="form-group">
-										<label for="inputName" class="col-sm-2 control-label">任务内容</label>
+										<label for="inputName" class="col-sm-2 control-label">巡检类型</label>
 										<div class="col-sm-4">
-											<textarea class="form-control" rows="5" name="taskcontent"
-												id="taskcontent" placeholder="输入任务的内容..."></textarea>
+											<select class="form-control select2" name="typeid"
+												id="typeid">
+											</select>
+										</div>
+										<label for="inputName" class="col-sm-2 control-label">任务</label>
+										<div class="col-sm-4">
+											<select class="form-control select2" name="typeid"
+												id="typeid">
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="inputName" class="col-sm-2 control-label">巡检名称</label>
+										<div class="col-sm-4">
+											<input type="text" class="form-control" name="name" id="name"
+												placeholder="请输入巡检名称">
+										</div>
+										<label for="inputName" class="col-sm-2 control-label">是否故障</label>
+										<div class="col-sm-4">
+											<select class="form-control select2" name="isfault"
+												id="isfault">
+												<option value="0">无故障</option>
+												<option value="1">有故障</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="inputName" class="col-sm-2 control-label">巡检内容</label>
+										<div class="col-sm-4">
+											<textarea class="form-control" rows="5" name="inspectcontent"
+												id="inspectcontent" placeholder="输入巡检内容..."></textarea>
+										</div>
+										<label for="inputName" class="col-sm-2 control-label">巡检结论</label>
+										<div class="col-sm-4">
+											<textarea class="form-control" rows="5" name="inspectresult"
+												id="inspectresult" placeholder="输入巡检结论..."></textarea>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="inputName" class="col-sm-2 control-label">巡检时间</label>
+										<div class="col-sm-4">
+											<div class='input-group date' id='datetimepicker'>
+												<input type='text' class="form-control" name='inspecttime'
+													id="inspecttime" /> <span class="input-group-addon">
+													<span class="glyphicon glyphicon-calendar"></span>
+												</span>
+											</div>
+										</div>
+										<label for="inputName" class="col-sm-2 control-label">巡检人名称</label>
+										<div class="col-sm-4">
+											<input type="text" class="form-control" name="inspectperson"
+												id="inspectperson" placeholder="请输入巡检人名称">
 										</div>
 									</div>
 									<!-------------第一个表框结束 ---------->
@@ -213,7 +272,7 @@
 	var date = new Date();
 	$('.date').datetimepicker({
 		language : 'zh-cn',
-		minView : "month",
+		minView : "day",
 		format : 'yyyy-mm-dd hh:ii:ss',
 		todayBtn : true,
 		autoclose : 1
@@ -243,9 +302,9 @@
 		form = $('#editForm').form();
 		//添加、修改异步提交地址
 		//只有具有admin权限的用户才具有对数据记录进行删除和修改的功能
-		var str = "";
+		var str = null;
 		<shiro:hasAnyRoles name = "admin">
-    	 str+= "<div class='btn-group'>" +
+    	 str = "<div class='btn-group'>" +
          "<button id='editRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-edit'></i></button>" +
          "<button id='delRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-trash-o'></i></button>" +
          "</div>"
@@ -263,7 +322,7 @@
 			searching : false, //禁用datatables搜索
 			ajax : {
 				type : "post",
-				url : "<%=request.getContextPath()%>/rest/task/getTaskDataGrid",
+				url : "<%=request.getContextPath()%>/rest/inspect/getInspectDataGrid",
 				dataSrc : "data", //传输回来的数据
 				dataType : 'json',
 				data : querydata //传输过去的数据
@@ -276,32 +335,50 @@
 					"data" : "id" //编号
 				},
 				{
-					"data" : "type" //市州
+					"data" : "owerdepname" //市州
 				},
 				{
-					"data" : 'taskcontent', //系统大类的名称
+					"data" : 'redevname' //遥控站
 				},
 				{
-					"data" : 'state', //设备类型名称
+					"data" : 'inspecttypename' // 巡检类型
+				},
+				{
+					"data" : 'name' // 巡检名称
+				},
+				{
+					"data" : 'isfault', //设备类型名称
 					"render" : function(data, type, full, callback) {
 						switch (data) {
 						case 0:
-							return "待完成";
+							return "无故障";
 							break;
 						case 1:
-							return "已完成";
+							return "<div class='btn-group'>" +
+								"<button id='insert_fault' class='btn btn-primary btn-sm' type='button'><i class='fa fa-plus'></i></button>" +
+								"</div>";
 							break;
 						}
 
 					}
 				},
 				{
-					"data" : 'transperson' //设备型号
-				},
-				{
-					"data" : 'transtime', //设备运维类型
+					"data" : 'state', //设备类型名称
 					"render" : function(data, type, full, callback) {
-						return new Date(data).format("yyyy-MM-dd");
+						switch (data) {
+						case 0:
+							if (str === null)
+								return "待审核";
+							else
+								return "<div class='btn-group'>" +
+									"<button id='btn_verify' class='btn btn-primary btn-sm' type='button'><i class='fa fa-plus'></i></button>" +
+									"</div>";
+							break;
+						case 1:
+							return "已审核";
+							break;
+						}
+
 					}
 				},
 				{
@@ -362,10 +439,16 @@
 		//添加
 		$("#btn-add").on("click", function() {
 			$("input[name=id]").val(null);
-			sel.bindselectfirst('type', "<%=request.getContextPath()%>/rest/dic/selectTaskTypeList", 'id', 'name');
-			$("textarea[name=taskcontent]").val("");
-			url = "<%=request.getContextPath()%>/rest/task/insertOneTask";
-			$("#myModalLabel").html("<b>任务录入</b>");
+			sel.bindselectfirst('owerdep', "<%=request.getContextPath()%>/rest/department/getdeplist", 'id', 'name');
+			sel.bindselectfirst('typeid', "<%=request.getContextPath()%>/rest/dic/getInspcetTypeList", 'id', 'name');
+			$("input[name=name]").val("");
+			$("#isfault").select2("val", [ 0 ])
+			$("textarea[name=inspectcontent]").val("");
+			$("textarea[name=inspectresult]").val("");
+			$("input[name=inspecttime]").val("");
+			$("input[name=inspectperson]").val("");
+			url = "<%=request.getContextPath()%>/rest/inspect/insertOneInspect";
+			$("#myModalLabel").html("<b>巡检信息录入</b>");
 			$("#editModal").modal("show");
 			//下边2行清除上次验证结果
 			$("#editForm").data('bootstrapValidator').destroy();
@@ -377,11 +460,17 @@
 		$("#dataTable tbody").on("click", "#editRow", function() {
 			var data = tables.api().row($(this).parents("tr")).data();
 			$("input[name=id]").val(data.id);
-			sel.binddata('type', "<%=request.getContextPath()%>/rest/dic/selectTaskTypeList", 'id', 'name', data.type);
-			$("textarea[name=taskcontent]").val(data.taskcontent);
+			sel.binddata('owerdep', "<%=request.getContextPath()%>/rest/department/getdeplist", 'id', 'name', data.owerdep);
+			sel.binddata('typeid', "<%=request.getContextPath()%>/rest/dic/getInspcetTypeList", 'id', 'name', data.typeid);
+			$("input[name=name]").val(data.name);
+			$("#isfault").select2("val", [ data.isfault ])
+			$("textarea[name=inspectcontent]").val(data.inspectcontent);
+			$("textarea[name=inspectresult]").val(data.inspectresult);
+			$("input[name=inspecttime]").val(new Date(data.inspecttime).format("yyyy-MM-dd hh:mm:ss"));
+			$("input[name=inspectperson]").val(data.inspectperson);
 			//修改操作时controller的url
-			url = "<%=request.getContextPath()%>/rest/task/updateOneTask";
-			$("#myModalLabel").html("<b>修改设备信息</b>");
+			url = "<%=request.getContextPath()%>/rest/inspect/updateOneInspect";
+			$("#myModalLabel").html("<b>修改巡检信息</b>");
 			$("#editModal").modal("show");
 
 			//下边2行清除上次验证结果
@@ -390,6 +479,7 @@
 			inputvalidator();
 		});
 
+		// 提交
 		$("#btn-submit").on("click", function() {
 			$("#editForm").bootstrapValidator('validate'); //提交验证
 			if ($("#editForm").data('bootstrapValidator').isValid()) { //获取验证结果，如果成功，执行下面代码
