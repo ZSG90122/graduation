@@ -25,9 +25,12 @@
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/AdminLTE/conmmon/css/toastr.min.css">
 <link rel="stylesheet"
-	href="<%=request.getContextPath()%>/AdminLTE/plugins/select2/select2.css">
-<link rel="stylesheet"
 	href="<%=request.getContextPath()%>/AdminLTE/bootstrap/css/bootstrap-datetimepicker.min.css">
+<%-- <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/default.css"> --%>
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/assets/css/fileinput.css">
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/AdminLTE/plugins/select2/select2.min.css">
 </head>
 <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
 	<!-- 查询、添加、批量删除、导出、刷新 -->
@@ -135,6 +138,8 @@
 												id="typeid">
 											</select>
 										</div>
+										<!-- 隐藏控件，用于下拉列表的校验，校验器对下拉列表的校验存在问题 -->
+<!-- 										<input type="hidden" class="form-control" id='taskidValidator'> -->
 										<label id="taskLable" for="inputName"
 											class="col-sm-2 control-label">任务</label>
 										<div class="col-sm-4">
@@ -277,6 +282,12 @@
 <script
 	src="<%=request.getContextPath()%>/AdminLTE/dist/js/base-form.js"></script>
 <script
+	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap.js"></script>
+<script src="<%=request.getContextPath()%>/assets/js/fileinput.js"></script>
+<script src="<%=request.getContextPath()%>/assets/js/zh.js"></script>
+<script
+	src="<%=request.getContextPath()%>/AdminLTE/conmmon/fileupload.js"></script>
+<script
 	src="<%=request.getContextPath()%>/AdminLTE/conmmon/xlsx.core.min.js"></script>
 <script
 	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
@@ -344,7 +355,7 @@
 		<shiro:hasAnyRoles name = "admin">
     	 str = "<div class='btn-group'>" +
          "<button id='editRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-edit'></i></button>" +
-         "<button id='delRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-trash-o'></i></button>" +
+         "<button id='delRow' class='btn btn-danger btn-sm' type='button'><i class='fa fa-trash-o'></i></button>" +
          "</div>"
     	</shiro:hasAnyRoles>
 
@@ -389,11 +400,11 @@
 					"render" : function(data, type, full, callback) {
 						switch (data) {
 						case 0:
-							return "无故障";
+							return '<small class="label label-success">无故障</small>';
 							break;
 						case 1:
 							return "<div class='btn-group'>" +
-								"<button id='insert_fault' class='btn btn-primary btn-sm' type='button'><i class='fa fa-plus'></i></button>" +
+								"<button id='insert_fault' class='btn btn-danger btn-sm' type='button'>故障录入</button>" +
 								"</div>";
 							break;
 						}
@@ -409,14 +420,14 @@
 								return "待审核";
 							else
 								return "<div class='btn-group'>" +
-									"<button id='btn_verify' class='btn btn-primary btn-sm' type='button'><i class='fa fa-arrow-up'></i></button>" +
+									"<button id='btn_verify' class='btn btn-primary btn-sm' type='button'>点击审核</button>" +
 									"</div>";
 							break;
 						case 1:
-							return "已审核";
+							return '<small class="label label-success">已审核</small>';
 							break;
 						default:
-							return "无需审核";
+							return '<small class="label label-default">无需审核</small>';
 							break;
 						}
 					}
@@ -431,7 +442,7 @@
 						case 1:
 							return "<div class='btn-group'>" +
 								"<button id='btn_read' class='btn btn-primary btn-sm' type='button'><i class='fa fa-eye'></i></button>" +
-								"<button id='delRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-trash-o'></i></button>" +
+								"<button id='delRow' class='btn btn-danger btn-sm' type='button'><i class='fa fa-trash-o'></i></button>" +
 								"</div>";
 							break;
 						case 2:
@@ -520,7 +531,8 @@
 			redevid = data.redevid;
 			sel.synbinddata('owerdep', "<%=request.getContextPath()%>/rest/department/getdeplist", 'id', 'name', data.owerdep, function(data) {});
 			sel.synbinddata('typeid', "<%=request.getContextPath()%>/rest/dic/getInspcetTypeList", 'id', 'name', data.typeid, function(data) {});
-
+			$("#typeid").prop("disabled",true);
+			
 			$("input[name=name]").val(data.name);
 			$("#isfault").select2("val", [ data.isfault ])
 			$("textarea[name=inspectcontent]").val(data.inspectcontent);
@@ -547,17 +559,19 @@
 				$("#taskid").empty();
 				$("#taskLable").hide();
 			} else {
+				// 添加了校验之后会添加一个隐藏的标签，所以用两个next
 				$("#taskid").next().next().css("display", "");
 				$("#taskid").prop("disabled", false);
 				if (taskid == null) {
-					sel.bindselectfirst('taskid', "<%=request.getContextPath()%>/rest/task/getTransedTaskList", 'id', 'taskcontent');
+					sel.bindselectNonefirst('taskid', "<%=request.getContextPath()%>/rest/task/getTransedTaskList", 'id', 'taskcontent');
 				} else {
-					sel.binddata('taskid', "<%=request.getContextPath()%>/rest/task/getTransedTaskList", 'id', 'taskcontent', taskid);
+					sel.binddata('taskid', "<%=request.getContextPath()%>/rest/task/getFilledOneTaskById?taskid=" + taskid, 'id', 'taskcontent', taskid);
 					taskid = null;
 				}
 				$("#taskLable").show();
 			}
 		});
+
 
 		var redevid;
 		$("#owerdep").on('change', function() {
@@ -579,6 +593,8 @@
 					//获取到表单中的数据
 					var params = $("#editForm").form().getFormSimpleData();
 					//此处的data保存了操作的返回值	
+					//alert(JSON.stringify(params))
+					console.log(JSON.stringify(params));
 					$.ajax({
 						url : url,
 						type : 'post',
@@ -689,6 +705,7 @@
 			}
 		});
 
+		// 数据校验
 		function inputvalidator() {
 			$('#editForm').bootstrapValidator({
 				message : '请输入有效值',
@@ -704,18 +721,25 @@
 				fields : {
 					taskid : {
 						validators : {
-							notEmpty : {
-								message : '任务不能为空'
+							callback : {
+								message : "请选择任务，若无任务，请确认任务是否已下达",
+								callback : function(value, validator) {
+									if (value == -1) {
+										return false;
+									}
+									else return true;
+								}
 							}
 						}
 					},
-					owerdep : {
-						validators : {
-							notEmpty : {
-								message : '请选择市州'
-							}
-						}
-					},
+// 					owerdep : {
+// 						validators : {
+// 							notEmpty : {
+// 								message : '请选择市州'
+// 							}
+// 						}
+// 					},
+
 					name : {
 						validators : {
 							notEmpty : {
@@ -749,6 +773,7 @@
 				e.preventDefault(); //防止重复提交						
 			}); /* end $('#editForm').bootstrapValidator */
 		}
+
 
 		$("#btn-cancel").on("click", function() {
 			$("#editModal").modal("hide");
@@ -791,6 +816,7 @@
 			}
 		});
 
+		// 审核完成之后只能查看无法修改
 		$("#dataTable tbody").on("click", "#btn_read", function() {});
 	});
 </script>

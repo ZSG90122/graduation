@@ -101,6 +101,20 @@ public class taskController extends BaseController {
 	}
 
 	/**
+	 * 通过任务id获取一条任务
+	 * 
+	 * @param taskid
+	 * @return
+	 */
+	@RequestMapping(value = "/getFilledOneTaskById")
+	@ResponseBody
+	public List<Btask> getFilledOneTaskById(@RequestParam Long taskid) {
+		EntityWrapper<Btask> wrapper = new EntityWrapper<Btask>();
+		wrapper.eq("id", taskid);
+		return this.iBtaskService.selectList(wrapper);
+	}
+
+	/**
 	 * 插入一条数据
 	 * 
 	 * @param task

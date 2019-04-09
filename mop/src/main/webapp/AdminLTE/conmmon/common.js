@@ -224,6 +224,21 @@ var sel = {
 			// 选中传进来的那个参数所代表的值
 			$("#" + ctrlName).select2("val", [ data[flag][val] ]);
 		});
+	},
+	// 首先选中第一项无
+	bindselectNonefirst : function(ctrlName, url, val, text) {
+		var control = $('#' + ctrlName);
+		//绑定Ajax的内容
+		$.ajaxSettings.async = false;
+		$.getJSON(url, function(data) {
+			control.empty(); //清空下拉框
+			control.append("<option selected value='" + "-1" + "'>&nbsp;" + "无" + "</option>");
+			$.each(data, function(i, item) {
+				control.append("<option value='" + data[i][val] + "'>&nbsp;" + data[i][text] + "</option>");
+			});
+		});
+		control.removeAttr("disabled");
+		$.ajaxSettings.async = true;
 	}
 }
 

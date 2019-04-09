@@ -95,11 +95,18 @@ public class inspectController extends BaseController {
 	public Result insertOneInspect(Bpersoninspection bpersoninspection) {
 		try {
 			bpersoninspection.setFillpersonid(getShiroUser().getId());
-			if (bpersoninspection.getTypeid() == 1)
-				bpersoninspection.setState((byte) 0);
-			else
-				bpersoninspection.setState((byte) 2);
 			bpersoninspection.setFilltime(new Date());
+			// 当巡检类型为任务巡检时才置为未审核状态
+			if (bpersoninspection.getTypeid() == 1) {
+				// 任务巡检的状态置为未审核状态
+				bpersoninspection.setState((byte) 0);
+				// 以下将任务的状态置为填入状态
+				Btask task = this.ibtaskService.selectById(bpersoninspection.getTaskid());
+				task.setState((byte) 1);
+				this.ibtaskService.updateById(task);
+			} else
+				// 非任务巡检无需审核
+				bpersoninspection.setState((byte) 2);
 			this.ibpersoninspectionService.insert(bpersoninspection);
 			return new Result(true);
 		} catch (Exception e) {
@@ -134,6 +141,15 @@ public class inspectController extends BaseController {
 	@ResponseBody
 	public Result deleteOneTask(Bpersoninspection personinspection) {
 		try {
+			// 获取待删除的巡检的完整信息
+			Bpersoninspection personinspectionFullm = this.ibpersoninspectionService.selectById(personinspection);
+			// 如果是任务巡检
+			if (personinspectionFullm.getTypeid() == 1) {
+				Btask task = this.ibtaskService.selectById(personinspectionFullm.getTaskid());
+				// 任务巡检删除之后取消填入状态，置为下达状态
+				task.setState((byte) 0);
+				this.ibtaskService.updateById(task);
+			}
 			this.ibpersoninspectionService.deleteById(personinspection);
 			return new Result(true);
 		} catch (Exception e) {
@@ -180,7 +196,7 @@ public class inspectController extends BaseController {
 			if (personinspection.getTaskid() != null) {
 				Btask task = ibtaskService.selectById(personinspection.getTaskid());
 				// 任务置为完成状态
-				task.setState((byte) 1);
+				task.setState((byte) 2);
 				task.setFilltime(personinspection.getFilltime());
 				task.setFillperson(personinspection.getFillpersonid());
 				task.setFinishcontent(finishcontent);

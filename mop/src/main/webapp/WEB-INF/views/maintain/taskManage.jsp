@@ -278,30 +278,32 @@
 					"data" : "id" //编号
 				},
 				{
-					"data" : "type" //市州
+					"data" : "type"
 				},
 				{
-					"data" : 'taskcontent', //系统大类的名称
+					"data" : 'taskcontent',
 				},
 				{
-					"data" : 'state', //设备类型名称
+					"data" : 'state',
 					"render" : function(data, type, full, callback) {
 						switch (data) {
 						case 0:
-							return "待完成";
+							return '<small class="label label-default">下达</small>';
 							break;
 						case 1:
-							return "已完成";
+							return '<small class="label label-primary">填入</small>';
+							break;
+						case 2:
+							return '<small class="label label-success">完成</small>';
 							break;
 						}
-
 					}
 				},
 				{
-					"data" : 'transperson' //设备型号
+					"data" : 'transperson'
 				},
 				{
-					"data" : 'transtime', //设备运维类型
+					"data" : 'transtime',
 					"render" : function(data, type, full, callback) {
 						return new Date(data).format("yyyy-MM-dd");
 					}
@@ -385,7 +387,6 @@
 			url = "<%=request.getContextPath()%>/rest/task/updateOneTask";
 			$("#myModalLabel").html("<b>修改设备信息</b>");
 			$("#editModal").modal("show");
-
 			//下边2行清除上次验证结果
 			$("#editForm").data('bootstrapValidator').destroy();
 			$("#editForm").data('bootstrapValidator', null);
@@ -398,7 +399,7 @@
 				if (confirm("确定提交么？")) {
 					//获取到表单中的数据
 					var params = $("#editForm").form().getFormSimpleData();
-					alert(JSON.stringify(params))
+					//alert(JSON.stringify(params))
 					//此处的data保存了操作的返回值	
 					$.ajax({
 						url : url,
