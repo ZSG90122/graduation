@@ -115,7 +115,7 @@ public class remotestationControl extends BaseController {
 	@ResponseBody
 	public List<Brcstationdevhouse> getstationdevhouselist() {
 		EntityWrapper<Brcstationdevhouse> wrapper = new EntityWrapper<Brcstationdevhouse>();
-		return rcstationdevhouseService.selectstationdevhouselistWrapper(wrapper);
+		return rcstationdevhouseService.selectList(wrapper);
 	}
 
 	/**
@@ -222,5 +222,18 @@ public class remotestationControl extends BaseController {
 		EntityWrapper<Brcstationdevhouse> wrapper = new EntityWrapper<Brcstationdevhouse>();
 		wrapper.eq("owerdep", owerdep);
 		return this.rcstationdevhouseService.selectList(wrapper);
+	}
+
+	/**
+	 * 选择某一巡检下的遥控站
+	 * 
+	 * @param
+	 * @return
+	 */
+	@RequestMapping("/getRemoteStationListOfInspect")
+	@ResponseBody
+	public List<Brcstationdevhouse> getRemoteStationListOfInspect(@RequestParam Long inspectid) {
+		//System.out.println("!!!!!!!!!!!!!" + this.rcstationdevhouseService.selectRemoteStationListOfInspect(inspectid));
+		return this.rcstationdevhouseService.selectRemoteStationListOfInspect(inspectid);
 	}
 }

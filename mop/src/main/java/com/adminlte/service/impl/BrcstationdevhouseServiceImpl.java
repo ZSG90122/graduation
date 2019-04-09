@@ -81,4 +81,9 @@ public class BrcstationdevhouseServiceImpl extends ServiceImpl<Brcstationdevhous
 		return brcstationdevhouseMapper.selectList(wrapper);
 	}
 
+	@Override
+	public List<Brcstationdevhouse> selectRemoteStationListOfInspect(Long inspectid) {
+		return this.brcstationdevhouseMapper.selectRemoteStationListOfInspect(inspectid);
+	}
+
 }

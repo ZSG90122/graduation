@@ -18,4 +18,7 @@ public interface IBrcstationdevhouseService extends IService<Brcstationdevhouse>
 
 	//查询返回所有的遥控站信息
 	List<Brcstationdevhouse> selectstationdevhouselistWrapper(Wrapper wrapper);
+
+	// 返回某次巡检下的遥控站信息
+	List<Brcstationdevhouse> selectRemoteStationListOfInspect(Long inspectid);
 }

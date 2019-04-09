@@ -32,6 +32,7 @@ import com.adminlte.pojo.Dicsystemtype;
 import com.adminlte.pojo.Dictasktype;
 import com.adminlte.pojo.Dicdevsystemtype;
 import com.adminlte.pojo.Dicdevtype;
+import com.adminlte.pojo.Dicfaulttype;
 import com.adminlte.pojo.Dictendertype;
 import com.adminlte.pojo.Doctype;
 import com.adminlte.pojo.vo.Result;
@@ -49,6 +50,7 @@ import com.adminlte.service.IDicplanetypeService;
 import com.adminlte.service.IDicplperblindagetypeService;
 import com.adminlte.service.IDicproblemtypeService;
 import com.adminlte.service.IDicdevtypeService;
+import com.adminlte.service.IDicfaulttypeService;
 import com.adminlte.service.IDicprojectstateService;
 import com.adminlte.service.IDicsystemtypeService;
 import com.adminlte.service.IDictasktypeService;
@@ -102,7 +104,8 @@ public class DictionaryController {
 	IDictasktypeService idictasktypeService;// 任务类型
 	@Autowired
 	IDicinspecttypeService idicinspecttype;// 巡检类型
-
+	@Autowired
+	IDicfaulttypeService idicfaulttypeService;// 故障类型
 	@Autowired
 	private ServletRequest request;
 
@@ -1069,11 +1072,29 @@ public class DictionaryController {
 		return idictasktypeService.selectList(wrapper);
 	}
 
+	/**
+	 * 巡检类型获取
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "/getInspcetTypeList", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Dicinspecttype> getInspcetTypeList() {
 		EntityWrapper<Dicinspecttype> wrapper = new EntityWrapper<Dicinspecttype>();
 		wrapper.orderBy("id");
 		return idicinspecttype.selectList(wrapper);
+	}
+
+	/**
+	 * 问题类型获取
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/getFaulttypeList", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Dicfaulttype> getFaulttypeList() {
+		EntityWrapper<Dicfaulttype> wrapper = new EntityWrapper<Dicfaulttype>();
+		wrapper.orderBy("id");
+		return idicfaulttypeService.selectList(wrapper);
 	}
 }

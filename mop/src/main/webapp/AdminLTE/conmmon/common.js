@@ -196,12 +196,19 @@ var sel = {
 		var control = $('#' + ctrlName);
 		//绑定Ajax的内容
 		$.getJSON(url, function(data) {
-			control.empty(); //清空下拉框
-			$.each(data, function(i, item) {
-				control.append("<option value='" + data[i][val] + "'>&nbsp;" + data[i][text] + "</option>");
-			});
-			fun(data);
-			$("#" + ctrlName).select2("val", [ data[0][val] ]);
+			console.log(data)
+			if (data.length!=0) {
+				control.empty(); //清空下拉框
+				$.each(data, function(i, item) {
+					control.append("<option value='" + data[i][val] + "'>&nbsp;" + data[i][text] + "</option>");
+				});
+				fun(data);
+				$("#" + ctrlName).select2("val", [ data[0][val] ]);
+			}else{
+				control.empty(); //清空下拉框
+				control.append("<option value='" + "-1" + "'>&nbsp;" + "无" + "</option>");
+				$("#" + ctrlName).select2("val", [ -1 ]);
+			}
 		});
 	},
 	// 效果类似于binddata，只是会在改变下拉列表值的时候会监
@@ -239,6 +246,45 @@ var sel = {
 		});
 		control.removeAttr("disabled");
 		$.ajaxSettings.async = true;
+	},
+	//同步选中第一个"无"选项
+	synfirstdata : function(ctrlName, url, val, text) {
+		var control = $('#' + ctrlName);
+		//绑定Ajax的内容
+		$.getJSON(url, function(data) {
+			control.empty(); //清空下拉框
+			control.append("<option value='" + "-1" + "'>&nbsp;" + "无" + "</option>");
+			$.each(data, function(i, item) {
+				control.append("<option value='" + data[i][val] + "'>&nbsp;" + data[i][text] + "</option>");
+			    console.log("<option value='" + data[i][val] + "'>&nbsp;" + data[i][text] + "</option>")
+			});
+			//选中第一个无
+			$("#" + ctrlName).select2("val", [ -1 ]);
+		});
+	},
+	// 附带"无"选项，同时同步数据出去
+	synNonebinddata : function(ctrlName, url, val, text, selectval) {
+		var control = $('#' + ctrlName);
+		//绑定Ajax的内容
+		var flag = -1; // 用于记录要被回显的标号,若返回的数据长度为0，那就选择"无"
+		$.getJSON(url, function(data) {
+			control.empty(); //清空下拉框
+			control.append("<option selected value='" + "-1" + "'>&nbsp;" + "无" + "</option>");
+			$.each(data, function(i, item) {
+				if (selectval == data[i][val]) {
+					control.append("<option selected='selected' value='" + data[i][val] + "'>&nbsp;" + data[i][text] + "</option>");
+					flag = i;
+				}
+				else
+					control.append("<option value='" + data[i][val] + "'>&nbsp;" + data[i][text] + "</option>");
+			});
+			// 选中传进来的那个参数所代表的值
+			if (flag != -1)
+				$("#" + ctrlName).select2("val", [ data[flag][val] ]);
+			else
+				$("#" + ctrlName).select2("val", [ flag ]);
+
+		});
 	}
 }
 

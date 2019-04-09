@@ -106,7 +106,7 @@
 								</div>
 							</div>
 							<div class="row" style="margin-left:0px;">
-								<h5>资产档案信息:</h5>
+								<h5>巡检信息:</h5>
 							</div>
 						</div>
 
@@ -139,7 +139,7 @@
 											</select>
 										</div>
 										<!-- 隐藏控件，用于下拉列表的校验，校验器对下拉列表的校验存在问题 -->
-<!-- 										<input type="hidden" class="form-control" id='taskidValidator'> -->
+										<!-- 										<input type="hidden" class="form-control" id='taskidValidator'> -->
 										<label id="taskLable" for="inputName"
 											class="col-sm-2 control-label">任务</label>
 										<div class="col-sm-4">
@@ -155,7 +155,7 @@
 											<input type="text" class="form-control" name="name" id="name"
 												placeholder="请输入巡检名称">
 										</div>
-										<label for="inputName" class="col-sm-2 control-label">是否故障</label>
+										<label for="inputName" class="col-sm-2 control-label">故障状态</label>
 										<div class="col-sm-4">
 											<select class="form-control select2" name="isfault"
 												id="isfault">
@@ -228,7 +228,7 @@
 					<div class="modal-body">
 						<form class="form-horizontal" action="">
 							<div class="form-group">
-								<label for="finishcontent" class="col-sm-2 control-label">参数名</label>
+								<label for="finishcontent" class="col-sm-2 control-label">审核意见</label>
 								<div class="col-sm-6">
 									<textarea class="form-control" style="resize:none"
 										name="finishcontent" rows="5" id="finishcontent"
@@ -354,8 +354,8 @@
 		var str = null;
 		<shiro:hasAnyRoles name = "admin">
     	 str = "<div class='btn-group'>" +
-         "<button id='editRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-edit'></i></button>" +
-         "<button id='delRow' class='btn btn-danger btn-sm' type='button'><i class='fa fa-trash-o'></i></button>" +
+         "<a id='editRow' class='label label-primary'><i class='fa fa-edit'></i></a>" +
+         "<a id='delRow' class='label label-danger'><i class='fa fa-trash-o'></i></a>" +
          "</div>"
     	</shiro:hasAnyRoles>
 
@@ -404,8 +404,11 @@
 							break;
 						case 1:
 							return "<div class='btn-group'>" +
-								"<button id='insert_fault' class='btn btn-danger btn-sm' type='button'>故障录入</button>" +
+								"<a id='insert_fault' class='label label-danger' type='button'>故障录入</a>" +
 								"</div>";
+							break;
+						case 2:
+							return '<small class="label label-success">故障已修复</small>';
 							break;
 						}
 					}
@@ -419,7 +422,7 @@
 								return "待审核";
 							else
 								return "<div class='btn-group'>" +
-									"<button id='btn_verify' class='btn btn-primary btn-sm' type='button'>点击审核</button>" +
+									"<a id='btn_verify' class='label label-primary'>点击审核</a>" +
 									"</div>";
 							break;
 						case 1:
@@ -440,8 +443,8 @@
 							break;
 						case 1:
 							return "<div class='btn-group'>" +
-								"<button id='btn_read' class='btn btn-primary btn-sm' type='button'><i class='fa fa-eye'></i></button>" +
-								"<button id='delRow' class='btn btn-danger btn-sm' type='button'><i class='fa fa-trash-o'></i></button>" +
+								"<a id='btn_read' class='label label-info'><i class='fa fa-eye'></i></a>" +
+								"<a id='delRow' class='label label-danger'><i class='fa fa-trash-o'></i></a>" +
 								"</div>";
 							break;
 						case 2:
@@ -500,6 +503,8 @@
 
 		//添加
 		$("#btn-add").on("click", function() {
+			$("#typeid").prop("disabled", false);
+			$("#isfault").prop("disabled", false);
 			$("input[name=id]").val(null);
 			// 用于级联效果的参数，防止前面值的影响，置为空
 			taskid = null;
@@ -530,9 +535,12 @@
 			redevid = data.redevid;
 			sel.synbinddata('owerdep', "<%=request.getContextPath()%>/rest/department/getdeplist", 'id', 'name', data.owerdep, function(data) {});
 			sel.synbinddata('typeid', "<%=request.getContextPath()%>/rest/dic/getInspcetTypeList", 'id', 'name', data.typeid, function(data) {});
-			$("#typeid").prop("disabled",true);
-			
+			$("#typeid").prop("disabled", true);
+
 			$("input[name=name]").val(data.name);
+			if (data.isfault == 2) {
+				$("#isfault").append("<option value='" + 2 + "'>&nbsp;" + "已修复" + "</option>");
+			}
 			$("#isfault").select2("val", [ data.isfault ])
 			$("textarea[name=inspectcontent]").val(data.inspectcontent);
 			$("textarea[name=inspectresult]").val(data.inspectresult);
@@ -731,13 +739,13 @@
 							}
 						}
 					},
-// 					owerdep : {
-// 						validators : {
-// 							notEmpty : {
-// 								message : '请选择市州'
-// 							}
-// 						}
-// 					},
+					// 					owerdep : {
+					// 						validators : {
+					// 							notEmpty : {
+					// 								message : '请选择市州'
+					// 							}
+					// 						}
+					// 					},
 
 					name : {
 						validators : {
@@ -816,6 +824,30 @@
 		});
 
 		// 审核完成之后只能查看无法修改
-		$("#dataTable tbody").on("click", "#btn_read", function() {});
+		$("#dataTable tbody").on("click", "#insert_fault", function() {
+			verify_data = tables.api().row($(this).parents("tr")).data();
+			if (undefined != $(window.parent.document).contents().find("#iframe_803")[0]) {
+
+				//alert(JSON.stringify( $(window.parent.document).contents().find("#iframe_27")[0]));
+				parent.closeTab($(window.parent.document).contents().find("#iframe_803")[0]); //关掉重新
+				parent.addTabs({
+					id : '803',
+					title : '故障录入',
+					close : true,
+					url : "/fault/faultManage"
+				});
+				$(window.parent.document).contents().find("#iframe_803")[0].contentWindow.parentprojectId(data.id);
+				$(window.parent.document).contents().find("#iframe_803")[0].contentWindow.$("#btn-re").click();
+			//$(window.parent.document).contents().find("#iframe_27")[0].contentWindow.parentprojectId(null);
+			} else {
+				parent.addTabs({
+					id : '803',
+					title : '故障录入',
+					close : true,
+					url : "/fault/faultManage"
+				});
+				$(window.parent.document).contents().find("#iframe_803")[0].contentWindow.parentprojectId(data.id);
+			}
+		});
 	});
 </script>

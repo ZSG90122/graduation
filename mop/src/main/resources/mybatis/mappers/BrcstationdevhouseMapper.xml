@@ -1,67 +1,71 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.adminlte.mapper.BrcstationdevhouseMapper" >
-  <resultMap id="BaseResultMap" type="com.adminlte.pojo.Brcstationdevhouse" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="type" property="type" jdbcType="TINYINT" />
-    <result column="code" property="code" jdbcType="VARCHAR" />
-    <result column="owerdep" property="owerdep" jdbcType="BIGINT" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="address" property="address" jdbcType="VARCHAR" />
-    <result column="depid" property="depid" jdbcType="BIGINT" />
-    <result column="mngpersonid" property="mngpersonid" jdbcType="BIGINT" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="leveltype" property="leveltype" jdbcType="TINYINT" />
-    <result column="funtype" property="funtype" jdbcType="TINYINT" />
-    <result column="funtionlist" property="funtionlist" jdbcType="VARCHAR" />
-    <result column="lng" property="lng" jdbcType="REAL" />
-    <result column="lat" property="lat" jdbcType="REAL" />
-    <result column="mainprotocal" property="mainprotocal" jdbcType="VARCHAR" />
-    <result column="mainip" property="mainip" jdbcType="VARCHAR" />
-    <result column="intalltime" property="intalltime" jdbcType="DATE" />
-    <result column="qualitytime" property="qualitytime" jdbcType="DATE" />
-    <result column="repairtime" property="repairtime" jdbcType="DATE" />
-    <result column="supdep" property="supdep" jdbcType="BIGINT" />
-    <result column="condep" property="condep" jdbcType="BIGINT" />
-    <result column="revalue" property="revalue" jdbcType="REAL" />
-    <result column="fillpersonid" property="fillpersonid" jdbcType="BIGINT" />
-  </resultMap>
-  
-  <resultMap id="VoBaseResultMap" type="com.adminlte.pojo.vo.BrcstationdevhouseVo" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="type" property="type" jdbcType="TINYINT" />
-    <result column="code" property="code" jdbcType="VARCHAR" />
-    <result column="owerdep" property="owerdep" jdbcType="BIGINT" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="address" property="address" jdbcType="VARCHAR" />
-    <result column="depid" property="depid" jdbcType="BIGINT" />
-    <result column="mngpersonid" property="mngpersonid" jdbcType="BIGINT" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="leveltype" property="leveltype" jdbcType="TINYINT" />
-    <result column="funtype" property="funtype" jdbcType="TINYINT" />
-    <result column="funtionlist" property="funtionlist" jdbcType="VARCHAR" />
-    <result column="lng" property="lng" jdbcType="REAL" />
-    <result column="lat" property="lat" jdbcType="REAL" />
-    <result column="mainprotocal" property="mainprotocal" jdbcType="VARCHAR" />
-    <result column="mainip" property="mainip" jdbcType="VARCHAR" />
-    <result column="intalltime" property="intalltime" jdbcType="DATE" />
-    <result column="qualitytime" property="qualitytime" jdbcType="DATE" />
-    <result column="repairtime" property="repairtime" jdbcType="DATE" />
-    <result column="supdep" property="supdep" jdbcType="BIGINT" />
-    <result column="condep" property="condep" jdbcType="BIGINT" />
-    <result column="revalue" property="revalue" jdbcType="REAL" />
-    <result column="fillpersonid" property="fillpersonid" jdbcType="BIGINT" />
-    <result column="ownerdepname" property="ownerdepname" jdbcType="VARCHAR" />
-    <result column="supdepname" property="supdepname" jdbcType="VARCHAR" />
-  </resultMap>
-  
-  <sql id="Base_Column_List" >
-    id, type, code, owerdep, name, address, depid, mngpersonid, remark, leveltype, funtype, funtionlist,
-    lng, lat, mainprotocal, mainip, intalltime, qualitytime, repairtime, supdep, condep, 
-    revalue,fillpersonid
-  </sql>
-  <select id="selectListWapper" resultMap="BaseResultMap">
-   	SELECT
+<mapper namespace="com.adminlte.mapper.BrcstationdevhouseMapper">
+	<resultMap id="BaseResultMap" type="com.adminlte.pojo.Brcstationdevhouse">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="type" property="type" jdbcType="TINYINT" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="owerdep" property="owerdep" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="depid" property="depid" jdbcType="BIGINT" />
+		<result column="mngpersonid" property="mngpersonid" jdbcType="BIGINT" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="leveltype" property="leveltype" jdbcType="TINYINT" />
+		<result column="funtype" property="funtype" jdbcType="TINYINT" />
+		<result column="funtionlist" property="funtionlist" jdbcType="VARCHAR" />
+		<result column="lng" property="lng" jdbcType="REAL" />
+		<result column="lat" property="lat" jdbcType="REAL" />
+		<result column="mainprotocal" property="mainprotocal" jdbcType="VARCHAR" />
+		<result column="mainip" property="mainip" jdbcType="VARCHAR" />
+		<result column="intalltime" property="intalltime" jdbcType="DATE" />
+		<result column="qualitytime" property="qualitytime" jdbcType="DATE" />
+		<result column="repairtime" property="repairtime" jdbcType="DATE" />
+		<result column="supdep" property="supdep" jdbcType="BIGINT" />
+		<result column="condep" property="condep" jdbcType="BIGINT" />
+		<result column="revalue" property="revalue" jdbcType="REAL" />
+		<result column="fillpersonid" property="fillpersonid" jdbcType="BIGINT" />
+	</resultMap>
+
+	<resultMap id="VoBaseResultMap" type="com.adminlte.pojo.vo.BrcstationdevhouseVo">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="type" property="type" jdbcType="TINYINT" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="owerdep" property="owerdep" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="depid" property="depid" jdbcType="BIGINT" />
+		<result column="mngpersonid" property="mngpersonid" jdbcType="BIGINT" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="leveltype" property="leveltype" jdbcType="TINYINT" />
+		<result column="funtype" property="funtype" jdbcType="TINYINT" />
+		<result column="funtionlist" property="funtionlist" jdbcType="VARCHAR" />
+		<result column="lng" property="lng" jdbcType="REAL" />
+		<result column="lat" property="lat" jdbcType="REAL" />
+		<result column="mainprotocal" property="mainprotocal" jdbcType="VARCHAR" />
+		<result column="mainip" property="mainip" jdbcType="VARCHAR" />
+		<result column="intalltime" property="intalltime" jdbcType="DATE" />
+		<result column="qualitytime" property="qualitytime" jdbcType="DATE" />
+		<result column="repairtime" property="repairtime" jdbcType="DATE" />
+		<result column="supdep" property="supdep" jdbcType="BIGINT" />
+		<result column="condep" property="condep" jdbcType="BIGINT" />
+		<result column="revalue" property="revalue" jdbcType="REAL" />
+		<result column="fillpersonid" property="fillpersonid" jdbcType="BIGINT" />
+		<result column="ownerdepname" property="ownerdepname" jdbcType="VARCHAR" />
+		<result column="supdepname" property="supdepname" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, type, code, owerdep, name, address, depid, mngpersonid,
+		remark,
+		leveltype, funtype, funtionlist,
+		lng, lat, mainprotocal, mainip,
+		intalltime, qualitytime, repairtime,
+		supdep, condep,
+		revalue,fillpersonid
+	</sql>
+	<select id="selectListWapper" resultMap="BaseResultMap">
+		SELECT
 		h.id,
 		h.type,
 		h.`code`,
@@ -85,13 +89,13 @@
 		h.condep,
 		h.fillpersonid,
 		h.revalue
-	FROM
+		FROM
 		brcstationdevhouse h
 		${ew.sqlSegment}
-   </select>
-   
-   <select id="selectVoListWapper" resultMap="VoBaseResultMap">
-   	SELECT
+	</select>
+
+	<select id="selectVoListWapper" resultMap="VoBaseResultMap">
+		SELECT
 		h.id,
 		h.type,
 		h.`code`,
@@ -115,12 +119,54 @@
 		h.condep,
 		h.revalue,
 		h.fillpersonid,
-		u.`name` as ownerdepname,
-		e.`name` as supdepname
-	FROM
+		u.`name` as
+		ownerdepname,
+		e.`name` as
+		supdepname
+		FROM
 		brcstationdevhouse h
-		LEFT JOIN udepartment u on u.id = h.owerdep
-		LEFT JOIN benterprise e on e.id = h.supdep
+		LEFT JOIN udepartment u on u.id =
+		h.owerdep
+		LEFT
+		JOIN benterprise e on e.id = h.supdep
 		${ew.sqlSegment}
-   </select>
+	</select>
+	<select id="selectRemoteStationListOfInspect" parameterType="Long"
+		resultMap="BaseResultMap">
+		SELECT
+		r.id,
+		r.type,
+		r.`code`,
+		r.owerdep,
+		r.`name`,
+		r.address,
+		r.depid,
+		r.mngpersonid,
+		r.remark,
+		r.leveltype,
+		r.funtype,
+		r.funtionlist,
+		r.lng,
+		r.lat,
+		r.mainprotocal,
+		r.mainip,
+		r.intalltime,
+		r.qualitytime,
+		r.repairtime,
+		r.supdep,
+		r.condep,
+		r.revalue,
+		r.fillpersonid
+		FROM
+		brcstationdevhouse AS r
+		WHERE
+		r.id IN (
+		SELECT
+		p.redevid
+		FROM
+		bpersoninspection p
+		WHERE
+		p.id = #{inspectid}
+		)
+	</select>
 </mapper>

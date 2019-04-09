@@ -2,6 +2,7 @@ package com.adminlte.controller.devmng;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -112,6 +113,21 @@ public class DevsystemController extends BaseController {
 			e.printStackTrace();
 		}
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+	}
+
+	@RequestMapping("/getBdevsystemList")
+	@ResponseBody
+	public List<Bdevsystem> getBdevsystemList() {
+		EntityWrapper<Bdevsystem> wrapper = new EntityWrapper<Bdevsystem>();
+		return this.bdevsystemService.selectList(wrapper);
+	}
+
+	@RequestMapping("/getBdevsystemListOfStation")
+	@ResponseBody
+	public List<Bdevsystem> getBdevsystemListOfStation(@RequestParam Long stationid) {
+		EntityWrapper<Bdevsystem> wrapper = new EntityWrapper<Bdevsystem>();
+		wrapper.eq("rchouseid", stationid);
+		return this.bdevsystemService.selectList(wrapper);
 	}
 
 	/**

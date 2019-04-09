@@ -84,6 +84,15 @@ public class inspectController extends BaseController {
 		return this.ibpersoninspectionService.selectList(wrapper);
 	}
 
+	@RequestMapping("/getInspectWithFaultList")
+	@ResponseBody
+	public List<Bpersoninspection> getInspectWithFaultList() {
+		EntityWrapper<Bpersoninspection> wrapper = new EntityWrapper<Bpersoninspection>();
+		wrapper.eq("isfault", 1);
+		wrapper.orderBy("id");
+		return this.ibpersoninspectionService.selectList(wrapper);
+	}
+
 	/**
 	 * 插入一条巡检信息
 	 * 

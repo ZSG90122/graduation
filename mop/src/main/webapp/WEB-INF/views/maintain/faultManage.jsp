@@ -71,7 +71,7 @@
 					<th>序号</th>
 					<th>问题类型</th>
 					<th>问题描述</th>
-					<th>状态</th>
+					<th>故障跟踪</th>
 					<th>发现人</th>
 					<th>发现时间</th>
 					<th>操作</th>
@@ -102,7 +102,7 @@
 								</div>
 							</div>
 							<div class="row" style="margin-left:0px;">
-								<h5>资产档案信息:</h5>
+								<h5>故障信息:</h5>
 							</div>
 						</div>
 
@@ -113,20 +113,7 @@
 									method="post">
 									<input type="hidden" class="form-control" name="id" id='id'>
 									<!-- 第一行 -->
-									<div class="form-group">
-										<label for="inputName" class="col-sm-2 control-label">遥控站</label>
-										<div class="col-sm-4">
-											<select class="form-control select2" name="redevid"
-												id="redevid">
-											</select>
-										</div>
-										<label for="inputName" class="col-sm-2 control-label">配套系统</label>
-										<div class="col-sm-4">
-											<select class="form-control select2" name="systemid"
-												id="systemid">
-											</select>
-										</div>
-									</div>
+
 									<div class="form-group">
 										<label for="inputName" class="col-sm-2 control-label">巡检名称</label>
 										<div class="col-sm-4">
@@ -134,8 +121,23 @@
 												id="inpectid">
 											</select>
 										</div>
+										<label for="inputName" class="col-sm-2 control-label">遥控站</label>
+										<div class="col-sm-4">
+											<select class="form-control select2" name="redevid"
+												id="redevid">
+											</select>
+										</div>
+
+									</div>
+									<div class="form-group">
+										<label for="inputName" class="col-sm-2 control-label">配套系统</label>
+										<div class="col-sm-4">
+											<select class="form-control select2" name="systemid"
+												id="systemid">
+											</select>
+										</div>
 										<label id="taskLable" for="inputName"
-											class="col-sm-2 control-label">错误类型</label>
+											class="col-sm-2 control-label">问题类型</label>
 										<div class="col-sm-4">
 											<select class="form-control select2" name="typeid"
 												id="typeid">
@@ -147,9 +149,9 @@
 										<label for="inputName" class="col-sm-2 control-label">发现时间</label>
 										<div class="col-sm-4">
 											<div class='input-group date' id='datetimepicker'>
-												<input type='text' class="form-control" name='inspecttime'
-													id="inspecttime" /> <span class="input-group-addon">
-													<span class="glyphicon glyphicon-calendar"></span>
+												<input type='text' class="form-control" name='findtime'
+													id="findtime" /> <span class="input-group-addon"> <span
+													class="glyphicon glyphicon-calendar"></span>
 												</span>
 											</div>
 										</div>
@@ -197,16 +199,16 @@
 							aria-label="Close">
 							<span aria-hidden="true">×</span>
 						</button>
-						<h4 class="modal-title">审核意见</h4>
+						<h4 class="modal-title">审核</h4>
 					</div>
 					<div class="modal-body">
 						<form class="form-horizontal" action="">
 							<div class="form-group">
-								<label for="finishcontent" class="col-sm-2 control-label">参数名</label>
+								<label for="finishcontent" class="col-sm-2 control-label">解决方案</label>
 								<div class="col-sm-6">
 									<textarea class="form-control" style="resize:none"
-										name="finishcontent" rows="5" id="finishcontent"
-										placeholder="请输入审核意见......"></textarea>
+										name="solution" rows="5" id="solution"
+										placeholder="请输入解决方案......"></textarea>
 								</div>
 							</div>
 						</form>
@@ -215,6 +217,50 @@
 						<button type="button" class="btn btn-default pull-left"
 							data-dismiss="modal">取消</button>
 						<button id="btn_confirm" type="button"
+							class="btn btn-primary suredepart" data-dismiss="modal">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--  -->
+
+		<div class="modal fade" id="solution_modal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+						<h4 class="modal-title">完成故障修复</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" action="">
+							<div class="form-group">
+								<label for="inputName" class="col-sm-2 control-label">解决时间</label>
+								<div class="col-sm-6">
+									<div class='input-group date' id='datetimepicker'>
+										<input type='text' class="form-control" name='soluttime'
+											id="soluttime" /> <span class="input-group-addon"> <span
+											class="glyphicon glyphicon-calendar"></span>
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="finishcontent" class="col-sm-2 control-label">解决结果</label>
+								<div class="col-sm-6">
+									<textarea class="form-control" style="resize:none"
+										name="solutionresult" rows="5" id="solutionresult"
+										placeholder="请输入解决结果......"></textarea>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default pull-left"
+							data-dismiss="modal">取消</button>
+						<button id="btn_confirm_solution" type="button"
 							class="btn btn-primary suredepart" data-dismiss="modal">确定</button>
 					</div>
 				</div>
@@ -362,12 +408,17 @@
 					"render" : function(data, type, full, callback) {
 						switch (data) {
 						case 0:
-							return "无故障";
+							return "<div class='btn-group'>" +
+								"<a id='btn_verify' class='label label-primary' type='button'>点击审核</a>" +
+								"</div>";
 							break;
 						case 1:
 							return "<div class='btn-group'>" +
-								"<button id='insert_fault' class='btn btn-primary btn-sm' type='button'><i class='fa fa-plus'></i></button>" +
+								"<a id='btn_fix' class='label label-warning' type='button'>更新故障</a>" +
 								"</div>";
+							break;
+						case 2:
+							return '<small class="label label-success">故障已解决</small>';
 							break;
 						}
 
@@ -386,8 +437,8 @@
 					"data" : null,
 					"render" : function(data, type, full, callback) {
 						return "<div class='btn-group'>" +
-							"<button id='editRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-edit'></i></button>" +
-							"<button id='delRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-trash-o'></i></button>" +
+							"<a id='editRow' class='label label-primary'><i class='fa fa-edit'></i></a>" +
+							"<a id='delRow' class='label label-danger'><i class='fa fa-trash-o'></i></a>" +
 							"</div>";
 					}
 				}
@@ -438,24 +489,20 @@
 		//表单数据验证
 		inputvalidator();
 
-
 		//添加
 		$("#btn-add").on("click", function() {
 			$("input[name=id]").val(null);
-			// 用于级联效果的参数，防止前面值的影响，置为空
-			taskid = null;
 			redevid = null;
-			sel.syndata('owerdep', "<%=request.getContextPath()%>/rest/department/getdeplist", 'id', 'name', function(data) {});
-			sel.syndata('typeid', "<%=request.getContextPath()%>/rest/dic/getInspcetTypeList", 'id', 'name', function(data) {});
-
-			$("input[name=name]").val("");
-			$("#isfault").select2("val", [ 0 ])
-			$("textarea[name=inspectcontent]").val("");
-			$("textarea[name=inspectresult]").val("");
-			$("input[name=inspecttime]").val("");
-			$("input[name=inspectperson]").val("");
-			url = "<%=request.getContextPath()%>/rest/inspect/insertOneInspect";
-			$("#myModalLabel").html("<b>巡检信息录入</b>");
+			systemid = null;
+			sel.synfirstdata('inpectid', "<%=request.getContextPath()%>/rest/inspect/getInspectWithFaultList", 'id', 'name')
+			// 问题类型
+			sel.bindselectfirst('typeid', "<%=request.getContextPath()%>/rest/dic/getFaulttypeList", 'id', 'name')
+			//sel.bindselectfirst('systemid', "<%=request.getContextPath()%>/rest/devsystem/getBdevsystemListOfStation?stationid=100", 'id', 'name')
+			$("input[name=findtime]").val("");
+			$("input[name=findperson]").val("");
+			$("textarea[name=faultdes]").val("");
+			url = "<%=request.getContextPath()%>/rest/fault/insertOneFault";
+			$("#myModalLabel").html("<b>故障信息录入</b>");
 			$("#editModal").modal("show");
 			//下边2行清除上次验证结果
 			$("#editForm").data('bootstrapValidator').destroy();
@@ -466,21 +513,22 @@
 		//修改
 		$("#dataTable tbody").on("click", "#editRow", function() {
 			var data = tables.api().row($(this).parents("tr")).data();
+			console.log(data)
 			$("input[name=id]").val(data.id);
-			taskid = data.taskid;
 			redevid = data.redevid;
-			sel.synbinddata('owerdep', "<%=request.getContextPath()%>/rest/department/getdeplist", 'id', 'name', data.owerdep, function(data) {});
+			systemid = data.systemid;
+			sel.synNonebinddata('inpectid', "<%=request.getContextPath()%>/rest/inspect/getInspectList", 'id', 'name', data.inpectid)
 			sel.synbinddata('typeid', "<%=request.getContextPath()%>/rest/dic/getInspcetTypeList", 'id', 'name', data.typeid, function(data) {});
 
 			$("input[name=name]").val(data.name);
 			$("#isfault").select2("val", [ data.isfault ])
 			$("textarea[name=inspectcontent]").val(data.inspectcontent);
 			$("textarea[name=inspectresult]").val(data.inspectresult);
-			$("input[name=inspecttime]").val(new Date(data.inspecttime).format("yyyy-MM-dd hh:mm:ss"));
+			$("input[name=findtime]").val(new Date(data.findtime).format("yyyy-MM-dd hh:mm:ss"));
 			$("input[name=inspectperson]").val(data.inspectperson);
 			//修改操作时controller的url
 			url = "<%=request.getContextPath()%>/rest/inspect/updateOneInspect";
-			$("#myModalLabel").html("<b>修改巡检信息</b>");
+			$("#myModalLabel").html("<b>修改故障信息</b>");
 			$("#editModal").modal("show");
 
 			//下边2行清除上次验证结果
@@ -489,39 +537,40 @@
 			inputvalidator();
 		});
 
-		var taskid;
-		// 巡检类型下拉列表值变化监听事件
-		$("#typeid").on('change', function() {
-			var typeIdVal = $("#typeid").val();
-			if (typeIdVal != 1) {
-				$("#taskid").next().css("display", "none");
-				$("#taskid").empty();
-				$("#taskLable").hide();
-			} else {
-				$("#taskid").next().css("display", "block");
-				$("#taskid").prop("disabled", false);
-				if (taskid == null) {
-					sel.bindselectfirst('taskid', "<%=request.getContextPath()%>/rest/task/getTransedTaskList", 'id', 'taskcontent');
+		var redevid;
+		$("#inpectid").on("change", function() {
+			// 巡检的编号
+			var inspectIdVal = $("#inpectid").val();
+			// 当不选择"无"选项时，产生联动效果
+			if (inspectIdVal != -1) {
+				if (redevid != null) {
+					// 不为空时需要回显,同时级联
+					sel.synbinddata('redevid', "<%=request.getContextPath()%>/rest/remotestation/getRemoteStationListOfInspect?inspectid=" + inspectIdVal, 'id', 'name', redevid, function(data) {});
+					redevid = null;
 				} else {
-					sel.binddata('taskid', "<%=request.getContextPath()%>/rest/task/getTransedTaskList", 'id', 'taskcontent', taskid);
-					taskid = null;
+					sel.syndata('redevid', "<%=request.getContextPath()%>/rest/remotestation/getRemoteStationListOfInspect?inspectid=" + inspectIdVal, 'id', 'name', function(data) {});
 				}
-				$("#taskLable").show();
+			} else {
+				sel.synfirstdata('redevid', "<%=request.getContextPath()%>/rest/remotestation/getstationdevhouselist", 'id', 'name');
 			}
 		});
 
-		// 遥控站与市州之间的级联
-		var redevid;
-		$("#owerdep").on('change', function() {
-			var owerDepVal = $("#owerdep").val();
-			if (redevid != null) {
-				//查找相应市州下的遥控站
-				sel.binddata('redevid', "<%=request.getContextPath()%>/rest/remotestation/getRemoteStationList?owerdep=" + owerDepVal, 'id', 'name', redevid);
-				redevid = null;
+		var systemid;
+		$("#redevid").on("change", function() {
+			var redevIdVal = $("#redevid").val();
+			if (redevIdVal != -1) {
+				if (systemid != null) {
+					sel.synNonebinddata('systemid', "<%=request.getContextPath()%>/rest/devsystem/getBdevsystemListOfStation?stationid=" + redevIdVal, 'id', 'name', systemid);
+					systemid = null;
+				} else {
+					//sel.syndata('systemid',"<%=request.getContextPath()%>/rest/devsystem/getBdevsystemListOfStation?stationid="+redevIdVal, 'id', 'name',function(data){});
+					sel.synfirstdata('systemid', "<%=request.getContextPath()%>/rest/devsystem/getBdevsystemListOfStation?stationid=" + redevIdVal, 'id', 'name');
+				}
 			} else {
-				sel.bindselectfirst('redevid', "<%=request.getContextPath()%>/rest/remotestation/getRemoteStationList?owerdep=" + owerDepVal, 'id', 'name');
+				sel.synfirstdata('systemid', "<%=request.getContextPath()%>/rest/devsystem/getBdevsystemList", 'id', 'name');
 			}
 		});
+
 
 		// 提交
 		$("#btn-submit").on("click", function() {
@@ -566,7 +615,7 @@
 			obj.id = data.id;
 			if (confirm("是否确认删除这条信息?")) {
 				$.ajax({
-					url : "<%=request.getContextPath()%>/rest/inspect/deleteOneInspect",
+					url : "<%=request.getContextPath()%>/rest/fault/deleteOneFault",
 					type : 'post',
 					dataType : "json",
 					cache : "false",
@@ -661,34 +710,6 @@
 								message : '请选择市州'
 							}
 						}
-					},
-					name : {
-						validators : {
-							notEmpty : {
-								message : '请输入巡检名称'
-							}
-						}
-					},
-					inspectcontent : {
-						validators : {
-							notEmpty : {
-								message : '请输入巡检内容'
-							}
-						}
-					},
-					inspectresult : {
-						validators : {
-							notEmpty : {
-								message : '请输入巡检结论'
-							}
-						}
-					},
-					inspectperson : {
-						validators : {
-							notEmpty : {
-								message : '请输入巡检人姓名'
-							}
-						}
 					}
 				} /* end field */
 			}).on("success.form.bv", function(e) {
@@ -700,28 +721,27 @@
 			$("#editModal").modal("hide");
 		});
 
-		var verify_data;
+		var dataFault;
 		// 审核按钮事件
 		$("#dataTable tbody").on("click", "#btn_verify", function() {
-			verify_data = tables.api().row($(this).parents("tr")).data();
+			dataFault = tables.api().row($(this).parents("tr")).data();
 			$("#verify_opinion_modal").modal("show");
 			$("#finishcontent").val("");
 		});
 
-		// 提交审核意见
+		// 提交
 		$("#btn_confirm").on("click", function() {
-			verify_data.finishcontent = $("#finishcontent").val();
-			verify_data.filltime = new Date(verify_data.filltime).format("yyyy-MM-dd hh:mm:ss");
-			verify_data.inspecttime = new Date(verify_data.inspecttime).format("yyyy-MM-dd hh:mm:ss");
-			console.log(JSON.stringify(verify_data));
-			url = "<%=request.getContextPath()%>/rest/inspect/verify";
+			dataFault.solution = $("#solution").val();
+			dataFault.findtime = new Date(dataFault.findtime).format("yyyy-MM-dd hh:mm:ss");
+			//console.log(JSON.stringify(verify_data));
+			url = "<%=request.getContextPath()%>/rest/fault/insertFaultSolution";
 			if (confirm("确定提交审核意见吗？？")) {
 				$.ajax({
 					url : url,
 					type : 'post',
 					dataType : "json",
 					cache : "false",
-					data : verify_data, //传给后台的数据
+					data : dataFault, //传给后台的数据
 					success : function(data) {
 						if (data.success) {
 							toastr.success("删除成功！");
@@ -737,6 +757,43 @@
 			}
 		});
 
-		$("#dataTable tbody").on("click", "#btn_read", function() {});
+		// 点击更新故障按钮之后的事件
+		$("#dataTable tbody").on("click", "#btn_fix", function() {
+			dataFault = tables.api().row($(this).parents("tr")).data();
+			$("#solution_modal").modal("show");
+			$("#solutionresult").val("");
+		});
+
+		// 提交
+		$("#btn_confirm_solution").on("click", function() {
+			dataFault.solutionresult = $("#solutionresult").val();
+			dataFault.findtime = new Date(dataFault.findtime).format("yyyy-MM-dd hh:mm:ss");
+			dataFault.veriytime = new Date(dataFault.veriytime).format("yyyy-MM-dd hh:mm:ss");
+			dataFault.soluttime = new Date($("input[name=soluttime]").val()).format("yyyy-MM-dd hh:mm:ss");
+
+			console.log(JSON.stringify(dataFault));
+			url = "<%=request.getContextPath()%>/rest/fault/insertFaultSolutionResult";
+			if (confirm("确定提交吗？？")) {
+				$.ajax({
+					url : url,
+					type : 'post',
+					dataType : "json",
+					cache : "false",
+					data : dataFault, //传给后台的数据
+					success : function(data) {
+						if (data.success) {
+							toastr.success("删除成功！");
+							tables.api().row().remove().draw(false);
+						} else {
+							toastr.error('删除失败！' + JSON.stringify(data));
+						}
+					},
+					error : function(err) {
+						toastr.error("Server Connection Error<%=request.getContextPath()%>.");
+					}
+				});
+			}
+		});
+
 	});
 </script>
