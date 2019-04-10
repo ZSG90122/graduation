@@ -1,12 +1,14 @@
 package com.adminlte.controller.maintain;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -123,13 +125,26 @@ public class faultController extends BaseController {
 	@ResponseBody
 	public Result deleteOneFault(Bfault fault) {
 		try {
-			// 如果此故障是来自于巡检的故障，那么删除后就需要重新将状态置为未录入
-			if (fault.getInpectid() != null) {
-				Bpersoninspection personinspection = this.ibpersoninspectionService.selectById(fault.getInpectid());
-				personinspection.setState((byte) 1);
-				this.ibpersoninspectionService.updateById(personinspection);
-			}
 			this.ibfaultService.deleteById(fault);
+			return new Result(true);
+		} catch (Exception e) {
+			return new Result(false);
+		}
+	}
+
+	/**
+	 * 批量删除数据
+	 * 
+	 * @param fault
+	 * @return
+	 */
+	@RequestMapping("/deleteFaultByBatch")
+	@ResponseBody
+	public Result deleteFaultByBatch(@RequestBody List<Bfault> faultList) {
+		try {
+			// 删除故障信息不会有其他附带的影响
+			for (Bfault fault : faultList)
+				this.ibfaultService.deleteById(fault);
 			return new Result(true);
 		} catch (Exception e) {
 			return new Result(false);
@@ -159,22 +174,30 @@ public class faultController extends BaseController {
 	/**
 	 * 故障解决后，而且当故障是来自于巡检的时候会修改巡检的故障状态
 	 * 
+	 * 当前巡检下的所有故障都解决之后，就把该巡检置为故障已经解决的状态
+	 * 
 	 * @param fault
 	 * @param solution
 	 * @return
 	 */
 	@RequestMapping("/insertFaultSolutionResult")
 	@ResponseBody
-	public Result insertFaultSolutionResult(Bfault fault, String solution) {
+	public Result insertFaultSolutionResult(Bfault fault) {
 		try {
-			// 如果是来自于巡检的故障,则更新其故障的状态
-			if (fault.getInpectid() != null) {
-				Bpersoninspection personinspection = this.ibpersoninspectionService.selectById(fault.getInpectid());
-				personinspection.setIsfault((byte) 2);
-				this.ibpersoninspectionService.updateById(personinspection);
-			}
 			fault.setState((byte) 2);
 			this.ibfaultService.updateById(fault);
+			// // 如果是来自于巡检的故障,则更新其故障的状态
+			if (fault.getInpectid() != null) {
+				// 去检查当前巡检下的故障的状态
+				// 获取当前巡检下未解决的故障的集合，判断该集合的大小
+				List<Bfault> notSoluteFaultList = this.ibfaultService.selectNotSoluteFaultList(fault.getInpectid());
+				// 说明不存在还有故障处于未修复的状态，那么更新该次巡检的故障的状态为修复状态
+				if (notSoluteFaultList.size() == 0) {
+					Bpersoninspection personinspection = this.ibpersoninspectionService.selectById(fault.getInpectid());
+					personinspection.setIsfault((byte) 2);
+					this.ibpersoninspectionService.updateById(personinspection);
+				}
+			}
 			return new Result(true);
 		} catch (Exception e) {
 			return new Result(false);

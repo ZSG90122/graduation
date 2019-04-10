@@ -648,15 +648,15 @@
 					check_val.push(oneEnterprice);
 				}
 			}
-			var inspectIds = JSON.stringify(check_val);
-			url = "<%=request.getContextPath()%>/rest/inspect/deleteInspectByBatch";
+			var faultIds = JSON.stringify(check_val);
+			url = "<%=request.getContextPath()%>/rest/fault/deleteFaultByBatch";
 			if (confirm("确定要删除吗？！")) {
 				$.ajax({
 					url : url,
 					type : 'post',
 					dataType : "json",
 					cache : "false",
-					data : inspectIds, //传给后台的数据
+					data : faultIds, //传给后台的数据
 					contentType : "application/json;charset=UTF-8",
 					success : function(data) {
 						if (data.success) {
@@ -744,10 +744,10 @@
 					data : dataFault, //传给后台的数据
 					success : function(data) {
 						if (data.success) {
-							toastr.success("删除成功！");
+							toastr.success("操作成功！");
 							tables.api().row().remove().draw(false);
 						} else {
-							toastr.error('删除失败！' + JSON.stringify(data));
+							toastr.error('操作失败！' + JSON.stringify(data));
 						}
 					},
 					error : function(err) {
@@ -782,10 +782,10 @@
 					data : dataFault, //传给后台的数据
 					success : function(data) {
 						if (data.success) {
-							toastr.success("删除成功！");
+							toastr.success("操作成功！");
 							tables.api().row().remove().draw(false);
 						} else {
-							toastr.error('删除失败！' + JSON.stringify(data));
+							toastr.error('操作失败！' + JSON.stringify(data));
 						}
 					},
 					error : function(err) {

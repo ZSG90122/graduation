@@ -169,4 +169,14 @@ public class Bfault implements Serializable {
 	public void setVeriyperson(Long veriyperson) {
 		this.veriyperson = veriyperson;
 	}
+
+	@Override
+	public String toString() {
+		return "Bfault [id=" + id + ", typeid=" + typeid + ", souce=" + souce + ", inpectid=" + inpectid + ", redevid="
+				+ redevid + ", systemid=" + systemid + ", faultdes=" + faultdes + ", state=" + state + ", solution="
+				+ solution + ", solutionresult=" + solutionresult + ", findtime=" + findtime + ", veriytime="
+				+ veriytime + ", soluttime=" + soluttime + ", findperson=" + findperson + ", fillperson=" + fillperson
+				+ ", veriyperson=" + veriyperson + "]";
+	}
+	
 }

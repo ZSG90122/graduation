@@ -38,7 +38,7 @@
 		<result column="fillperson" jdbcType="BIGINT" property="fillperson" />
 		<result column="veriyperson" jdbcType="BIGINT" property="veriyperson" />
 		<result column="faulttypename" jdbcType="VARCHAR" property="faulttypename" />
-	
+
 	</resultMap>
 
 	<select id="selectVoList" resultMap="BaseVoResultMap">
@@ -64,5 +64,37 @@
 		bfault AS f
 		LEFT JOIN dicfaulttype ft ON ft.id = f.typeid
 		${ew.sqlSegment}
+	</select>
+
+	<select id="selectNotSoluteFaultList" resultMap="BaseResultMap">
+		SELECT
+		f.id,
+		f.typeid,
+		f.souce,
+		f.inpectid,
+		f.redevid,
+		f.systemid,
+		f.faultdes,
+		f.state,
+		f.solution,
+		f.solutionresult,
+		f.findtime,
+		f.veriytime,
+		f.soluttime,
+		f.findperson,
+		f.fillperson,
+		f.veriyperson
+		FROM
+		bfault AS f
+		WHERE
+		f.inpectid IN (
+		SELECT
+		id
+		FROM
+		bpersoninspection p
+		WHERE
+		p.id = #{inspectid}
+		)
+		AND f.state != 2
 	</select>
 </mapper>

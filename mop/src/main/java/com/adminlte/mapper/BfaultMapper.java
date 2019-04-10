@@ -13,4 +13,6 @@ public interface BfaultMapper extends BaseMapper<Bfault> {
 
 	List<BfaultVo> selectVoList(@Param("ew") EntityWrapper<Bfault> wrapper);
 
+	List<Bfault> selectNotSoluteFaultList(@Param("inspectid") Long inspectid);
+
 }

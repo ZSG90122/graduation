@@ -161,6 +161,7 @@
 												id="isfault">
 												<option value="0">无故障</option>
 												<option value="1">有故障</option>
+												<option value="2">已修复</option>
 											</select>
 										</div>
 									</div>
@@ -442,10 +443,7 @@
 							return str;
 							break;
 						case 1:
-							return "<div class='btn-group'>" +
-								"<a id='btn_read' class='label label-info'><i class='fa fa-eye'></i></a>" +
-								"<a id='delRow' class='label label-danger'><i class='fa fa-trash-o'></i></a>" +
-								"</div>";
+							return str;
 							break;
 						case 2:
 							return str;
@@ -504,7 +502,7 @@
 		//添加
 		$("#btn-add").on("click", function() {
 			$("#typeid").prop("disabled", false);
-			$("#isfault").prop("disabled", false);
+			// 			$("#isfault").prop("disabled", false);
 			$("input[name=id]").val(null);
 			// 用于级联效果的参数，防止前面值的影响，置为空
 			taskid = null;
@@ -513,6 +511,9 @@
 			sel.syndata('typeid', "<%=request.getContextPath()%>/rest/dic/getInspcetTypeList", 'id', 'name', function(data) {});
 
 			$("input[name=name]").val("");
+			$("#isfault").empty();
+			$("#isfault").append("<option value='" + 0 + "'>&nbsp;" + "无故障" + "</option>");
+			$("#isfault").append("<option value='" + 1 + "'>&nbsp;" + "有故障" + "</option>");
 			$("#isfault").select2("val", [ 0 ])
 			$("textarea[name=inspectcontent]").val("");
 			$("textarea[name=inspectresult]").val("");
@@ -527,6 +528,7 @@
 			inputvalidator();
 		});
 
+		var stateOfFault = null; //这个值保存选中行是否存在过问题
 		//修改
 		$("#dataTable tbody").on("click", "#editRow", function() {
 			var data = tables.api().row($(this).parents("tr")).data();
@@ -536,11 +538,45 @@
 			sel.synbinddata('owerdep', "<%=request.getContextPath()%>/rest/department/getdeplist", 'id', 'name', data.owerdep, function(data) {});
 			sel.synbinddata('typeid', "<%=request.getContextPath()%>/rest/dic/getInspcetTypeList", 'id', 'name', data.typeid, function(data) {});
 			$("#typeid").prop("disabled", true);
+			$("#taskid").prop("disabled", true);
 
 			$("input[name=name]").val(data.name);
-			if (data.isfault == 2) {
+			$("#isfault").empty();
+			if (data.isfault == 0) {
+				stateOfFault = data.isfault
+				$("#isfault").append("<option value='" + 0 + "'>&nbsp;" + "无故障" + "</option>");
+				$("#isfault").append("<option value='" + 1 + "'>&nbsp;" + "有故障" + "</option>");
+			}
+			if (data.isfault == 1) {
+				stateOfFault = data.isfault
+				$("#isfault").append("<option value='" + 0 + "'>&nbsp;" + "无故障" + "</option>");
+				$("#isfault").append("<option value='" + 1 + "'>&nbsp;" + "有故障" + "</option>");
 				$("#isfault").append("<option value='" + 2 + "'>&nbsp;" + "已修复" + "</option>");
 			}
+			if (data.isfault == 2) {
+				$("#isfault").append("<option value='" + 1 + "'>&nbsp;" + "有故障" + "</option>");
+				$("#isfault").append("<option value='" + 2 + "'>&nbsp;" + "已修复" + "</option>");
+			}
+
+
+			// 本身就无故障
+			// 			if (data.isfault == 0) {
+			// // 				stateOfFault = data.isfault
+			// 				$("#isfault").append("<option value='" + 0 + "'>&nbsp;" + "无故障" + "</option>");
+			// 				$("#isfault").append("<option value='" + 1 + "'>&nbsp;" + "有故障" + "</option>");
+			// 			}
+			// // 			if (data.isfault == 1) {
+			// // 				if (flag == true) {
+			// // 					$("#isfault").append("<option value='" + 1 + "'>&nbsp;" + "有故障" + "</option>");
+			// // 					$("#isfault").append("<option value='" + 2 + "'>&nbsp;" + "已修复" + "</option>");
+			// // 				} else {
+			// // 					$("#isfault").append("<option value='" + 0 + "'>&nbsp;" + "无故障" + "</option>");
+			// // 					$("#isfault").append("<option value='" + 1 + "'>&nbsp;" + "有故障" + "</option>");
+			// // 				}
+			// // 			}
+			// 			// 已经发现了故障的情况
+
+
 			$("#isfault").select2("val", [ data.isfault ])
 			$("textarea[name=inspectcontent]").val(data.inspectcontent);
 			$("textarea[name=inspectresult]").val(data.inspectresult);
@@ -568,7 +604,7 @@
 			} else {
 				// 添加了校验之后会添加一个隐藏的标签，所以用两个next
 				$("#taskid").next().next().css("display", "");
-				$("#taskid").prop("disabled", false);
+// 				$("#taskid").prop("disabled", false);
 				if (taskid == null) {
 					sel.bindselectNonefirst('taskid', "<%=request.getContextPath()%>/rest/task/getTransedTaskList", 'id', 'taskcontent');
 				} else {
@@ -599,8 +635,6 @@
 				if (confirm("确定提交么？")) {
 					//获取到表单中的数据
 					var params = $("#editForm").form().getFormSimpleData();
-					//此处的data保存了操作的返回值	
-					//alert(JSON.stringify(params))
 					console.log(JSON.stringify(params));
 					$.ajax({
 						url : url,

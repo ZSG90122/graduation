@@ -32,4 +32,9 @@ public class BfaultServiceImpl extends ServiceImpl<BfaultMapper, Bfault> impleme
 		datatablesResult.setRecordsFiltered(datatablesResult.getRecordsTotal());
 		return datatablesResult;
 	}
+
+	@Override
+	public List<Bfault> selectNotSoluteFaultList(Long inspectid) {
+		return this.bfaultMapper.selectNotSoluteFaultList(inspectid);
+	}
 }

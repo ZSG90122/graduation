@@ -1,5 +1,7 @@
 package com.adminlte.service;
 
+import java.util.List;
+
 import com.adminlte.pojo.Bfault;
 import com.adminlte.pojo.vo.BfaultVo;
 import com.adminlte.result.DatatablesResult;
@@ -9,5 +11,7 @@ import com.baomidou.mybatisplus.service.IService;
 public interface IBfaultService extends IService<Bfault> {
 
 	DatatablesResult<BfaultVo> selecDataGridWrapper(int page, int rows, int parseInt, EntityWrapper<Bfault> wrapper);
+
+	List<Bfault> selectNotSoluteFaultList(Long inspectid);
 
 }
