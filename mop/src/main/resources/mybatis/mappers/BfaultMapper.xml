@@ -38,6 +38,11 @@
 		<result column="fillperson" jdbcType="BIGINT" property="fillperson" />
 		<result column="veriyperson" jdbcType="BIGINT" property="veriyperson" />
 		<result column="faulttypename" jdbcType="VARCHAR" property="faulttypename" />
+		<result column="inspectname" jdbcType="VARCHAR" property="inspectname" />
+		<result column="stationname" jdbcType="VARCHAR" property="stationname" />
+		<result column="systemname" jdbcType="VARCHAR" property="systemname" />
+		<result column="fillpersonname" jdbcType="VARCHAR" property="fillpersonname" />
+		<result column="veriypersonname" jdbcType="VARCHAR" property="veriypersonname" />
 
 	</resultMap>
 
@@ -59,10 +64,25 @@
 		f.findperson,
 		f.fillperson,
 		f.veriyperson,
-		ft.`name` AS faulttypename
+		ft.`name` AS faulttypename,
+		p.`name` AS inspectname,
+		r.`name` AS stationname,
+		s.`name` AS
+		systemname,
+		u1.`name` AS fillpersonname,
+		u2.`name` AS veriypersonname
 		FROM
 		bfault AS f
 		LEFT JOIN dicfaulttype ft ON ft.id = f.typeid
+		LEFT JOIN
+		bpersoninspection p ON p.id = f.inpectid
+		LEFT JOIN brcstationdevhouse r
+		ON r.id = f.redevid
+		LEFT JOIN bdevsystem s ON s.id = f.systemid
+		LEFT
+		JOIN `user` u1 ON u1.id = f.fillperson
+		LEFT JOIN `user` u2 ON u2.id =
+		f.veriyperson
 		${ew.sqlSegment}
 	</select>
 
@@ -87,7 +107,8 @@
 		FROM
 		bfault AS f
 		WHERE
-		f.inpectid IN (
+		f.inpectid
+		IN (
 		SELECT
 		id
 		FROM
@@ -95,6 +116,7 @@
 		WHERE
 		p.id = #{inspectid}
 		)
-		AND f.state != 2
+		AND
+		f.state != 2
 	</select>
 </mapper>

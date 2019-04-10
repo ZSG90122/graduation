@@ -95,26 +95,26 @@
 						<h4 class="modal-title" id="myModalLabel"></h4>
 					</div>
 
-					<div class="modal-body">
-						<div class="row-fluid">
-							<div class="pull-right">
-								<div class="btn-group">
-									<button type="button" id="btn-loadmodel"
-										class="btn btn-primary">
-										<i class="fa fa-save">&nbsp;导入模板</i>
-									</button>
+					<form class="form-horizontal" id="editForm" action="" method="post">
+						<div class="modal-body">
+							<div class="row-fluid">
+								<div class="pull-right">
+									<div class="btn-group">
+										<button type="button" id="btn-loadmodel"
+											class="btn btn-primary">
+											<i class="fa fa-save">&nbsp;导入模板</i>
+										</button>
+									</div>
+								</div>
+								<div class="row" style="margin-left:0px;">
+									<h5>巡检信息:</h5>
 								</div>
 							</div>
-							<div class="row" style="margin-left:0px;">
-								<h5>巡检信息:</h5>
-							</div>
-						</div>
 
-						<!-------------第一个表框开始 ---------->
-						<div class="panel panel-default" id="panel1">
-							<div class="panel-body">
-								<form class="form-horizontal" id="editForm" action=""
-									method="post">
+							<!-------------第一个表框开始 ---------->
+							<div class="panel panel-default" id="panel1">
+								<div class="panel-body">
+
 									<input type="hidden" class="form-control" name="id" id='id'>
 									<!-- 第一行 -->
 									<div class="form-group">
@@ -138,8 +138,6 @@
 												id="typeid">
 											</select>
 										</div>
-										<!-- 隐藏控件，用于下拉列表的校验，校验器对下拉列表的校验存在问题 -->
-										<!-- 										<input type="hidden" class="form-control" id='taskidValidator'> -->
 										<label id="taskLable" for="inputName"
 											class="col-sm-2 control-label">任务</label>
 										<div class="col-sm-4">
@@ -194,22 +192,23 @@
 										</div>
 									</div>
 									<!-------------第一个表框结束 ---------->
-								</form>
+
+								</div>
+							</div>
+							<!-- 第一个表框结束 -->
+
+							<div class="modal-footer">
+								<button type="button" id="btn-cancel" class="btn btn-default"
+									data-btn-type="cancel">
+									<i class="fa fa-reply">&nbsp;取消</i>
+								</button>
+								<button type="submit" id="btn-submit" class="btn btn-primary">
+									<i class="fa fa-save">&nbsp;保存</i>
+								</button>
 							</div>
 						</div>
-						<!-- 第一个表框结束 -->
-
-						<div class="modal-footer">
-							<button type="button" id="btn-cancel" class="btn btn-default"
-								data-btn-type="cancel">
-								<i class="fa fa-reply">&nbsp;取消</i>
-							</button>
-							<button type="submit" id="btn-submit" class="btn btn-primary">
-								<i class="fa fa-save">&nbsp;保存</i>
-							</button>
-						</div>
-
-					</div>
+						<!-- modal body结束 -->
+					</form>
 
 				</div>
 			</div>
@@ -263,35 +262,25 @@
 <script
 	src="<%=request.getContextPath()%>/AdminLTE/plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/fastclick/fastclick.js"></script>
-<script src="<%=request.getContextPath()%>/AdminLTE/dist/js/app.min.js"></script>
-<script src="<%=request.getContextPath()%>/AdminLTE/dist/js/demo.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/dataTables.bootstrap.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/jquery.dataTables.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-treeview.min.js"></script>
-<script
 	src="<%=request.getContextPath()%>/AdminLTE/conmmon/js/toastr.min.js"></script>
 <script src="<%=request.getContextPath()%>/AdminLTE/conmmon/common.js"></script>
 <script
 	src="<%=request.getContextPath()%>/AdminLTE/plugins/select2/select2.full.min.js"></script>
 <script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrapValidator.js"></script>
-<script src="<%=request.getContextPath()%>/AdminLTE/dist/js/base.js"></script>
+	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
 <script
-	src="<%=request.getContextPath()%>/AdminLTE/dist/js/base-form.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap.js"></script>
+	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/moment-with-locales.min.js"></script>
 <script src="<%=request.getContextPath()%>/assets/js/fileinput.js"></script>
 <script src="<%=request.getContextPath()%>/assets/js/zh.js"></script>
 <script
 	src="<%=request.getContextPath()%>/AdminLTE/conmmon/fileupload.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/dist/js/base.js"></script>
 <script
-	src="<%=request.getContextPath()%>/AdminLTE/conmmon/xlsx.core.min.js"></script>
+	src="<%=request.getContextPath()%>/AdminLTE/dist/js/base-form.js"></script>
 <script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-treeview.min.js"></script>
+<script
+	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrapValidator.js"></script>
 
 
 <script type="text/javascript">
@@ -497,8 +486,6 @@
 		});
 		//表单数据验证
 		inputvalidator();
-
-
 		//添加
 		$("#btn-add").on("click", function() {
 			$("#typeid").prop("disabled", false);
@@ -558,25 +545,6 @@
 				$("#isfault").append("<option value='" + 2 + "'>&nbsp;" + "已修复" + "</option>");
 			}
 
-
-			// 本身就无故障
-			// 			if (data.isfault == 0) {
-			// // 				stateOfFault = data.isfault
-			// 				$("#isfault").append("<option value='" + 0 + "'>&nbsp;" + "无故障" + "</option>");
-			// 				$("#isfault").append("<option value='" + 1 + "'>&nbsp;" + "有故障" + "</option>");
-			// 			}
-			// // 			if (data.isfault == 1) {
-			// // 				if (flag == true) {
-			// // 					$("#isfault").append("<option value='" + 1 + "'>&nbsp;" + "有故障" + "</option>");
-			// // 					$("#isfault").append("<option value='" + 2 + "'>&nbsp;" + "已修复" + "</option>");
-			// // 				} else {
-			// // 					$("#isfault").append("<option value='" + 0 + "'>&nbsp;" + "无故障" + "</option>");
-			// // 					$("#isfault").append("<option value='" + 1 + "'>&nbsp;" + "有故障" + "</option>");
-			// // 				}
-			// // 			}
-			// 			// 已经发现了故障的情况
-
-
 			$("#isfault").select2("val", [ data.isfault ])
 			$("textarea[name=inspectcontent]").val(data.inspectcontent);
 			$("textarea[name=inspectresult]").val(data.inspectresult);
@@ -598,13 +566,13 @@
 		$("#typeid").on('change', function() {
 			var typeIdVal = $("#typeid").val();
 			if (typeIdVal != 1) {
-				$("#taskid").next().next().css("display", "none");
+				$("#taskid").next().css("display", "none");
 				$("#taskid").empty();
 				$("#taskLable").hide();
 			} else {
 				// 添加了校验之后会添加一个隐藏的标签，所以用两个next
-				$("#taskid").next().next().css("display", "");
-// 				$("#taskid").prop("disabled", false);
+				$("#taskid").next().css("display", "");
+				// 				$("#taskid").prop("disabled", false);
 				if (taskid == null) {
 					sel.bindselectNonefirst('taskid', "<%=request.getContextPath()%>/rest/task/getTransedTaskList", 'id', 'taskcontent');
 				} else {
@@ -631,7 +599,9 @@
 		// 提交
 		$("#btn-submit").on("click", function() {
 			$("#editForm").bootstrapValidator('validate'); //提交验证
-			if ($("#editForm").data('bootstrapValidator').isValid()) { //获取验证结果，如果成功，执行下面代码
+			var value = $("#taskid").val();
+
+			if ($("#editForm").data('bootstrapValidator').isValid() && value != -1) { //获取验证结果，如果成功，执行下面代码
 				if (confirm("确定提交么？")) {
 					//获取到表单中的数据
 					var params = $("#editForm").form().getFormSimpleData();
@@ -656,6 +626,8 @@
 						}
 					});
 				}
+			} else {
+				alert("任务巡检必须选择任务，若无任务请检查是否已下达！")
 			}
 			//下边清表单中的数据
 			$("#editForm").data('bootstrapValidator').destroy();
@@ -748,6 +720,7 @@
 
 		// 数据校验
 		function inputvalidator() {
+			console.log("进行表单验证")
 			$('#editForm').bootstrapValidator({
 				message : '请输入有效值',
 				feedbackIcons : {
@@ -760,19 +733,19 @@
 					// 版本号v0.5.2-dev不再支持submitHandler配置	
 				},
 				fields : {
-					taskid : {
-						validators : {
-							callback : {
-								message : "请选择任务，若无任务，请确认任务是否已下达",
-								callback : function(value, validator) {
-									if (value == -1) {
-										return false;
-									}
-									else return true;
-								}
-							}
-						}
-					},
+					// 					taskid : {
+					// 						validators : {
+					// 							callback : {
+					// 								message : "请选择任务，若无任务，请确认任务是否已下达",
+					// 								callback : function(value, validator) {
+					// 									if (value == -1) {
+					// 										return false;
+					// 									}
+					// 									else return true;
+					// 								}
+					// 							}
+					// 						}
+					// 					},
 					// 					owerdep : {
 					// 						validators : {
 					// 							notEmpty : {
@@ -780,7 +753,6 @@
 					// 							}
 					// 						}
 					// 					},
-
 					name : {
 						validators : {
 							notEmpty : {
@@ -812,7 +784,7 @@
 				} /* end field */
 			}).on("success.form.bv", function(e) {
 				e.preventDefault(); //防止重复提交						
-			}); /* end $('#editForm').bootstrapValidator */
+			});
 		}
 
 
@@ -857,30 +829,26 @@
 			}
 		});
 
-		// 审核完成之后只能查看无法修改
 		$("#dataTable tbody").on("click", "#insert_fault", function() {
 			verify_data = tables.api().row($(this).parents("tr")).data();
 			if (undefined != $(window.parent.document).contents().find("#iframe_803")[0]) {
-
-				//alert(JSON.stringify( $(window.parent.document).contents().find("#iframe_27")[0]));
 				parent.closeTab($(window.parent.document).contents().find("#iframe_803")[0]); //关掉重新
 				parent.addTabs({
 					id : '803',
 					title : '故障录入',
 					close : true,
-					url : "/fault/faultManage"
+					url : "/inspect/goTofaultManagePage?inspectid=" + verify_data.id
 				});
-				$(window.parent.document).contents().find("#iframe_803")[0].contentWindow.parentprojectId(data.id);
+				//$(window.parent.document).contents().find("#iframe_803")[0].contentWindow.parentprojectId(data.id);
 				$(window.parent.document).contents().find("#iframe_803")[0].contentWindow.$("#btn-re").click();
-			//$(window.parent.document).contents().find("#iframe_27")[0].contentWindow.parentprojectId(null);
 			} else {
 				parent.addTabs({
 					id : '803',
 					title : '故障录入',
 					close : true,
-					url : "/fault/faultManage"
+					url : "/inspect/goTofaultManagePage?inspectid=" + verify_data.id
 				});
-				$(window.parent.document).contents().find("#iframe_803")[0].contentWindow.parentprojectId(data.id);
+			//$(window.parent.document).contents().find("#iframe_803")[0].contentWindow.parentprojectId(data.id);
 			}
 		});
 	});

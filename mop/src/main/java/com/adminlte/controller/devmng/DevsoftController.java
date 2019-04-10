@@ -116,6 +116,10 @@ public class DevsoftController extends BaseController {
 	@ResponseBody
 	public Result insertDevSoft(Bdevsoft bdevsoft) {
 		try {
+			if(bdevsoft.getDepid()==-1)
+				bdevsoft.setDepid(null);
+			if(bdevsoft.getRchouseid()==-1)
+				bdevsoft.setRchouseid(null);
 			this.bdevsoftService.insert(bdevsoft);
 			return new Result(true);
 		} catch (Exception e) {
@@ -134,7 +138,7 @@ public class DevsoftController extends BaseController {
 			// 在此处出现了一个问题，那就是springMVC无法解析复杂的bean
 			// http://www.bmchild.com/2014/02/spring-mvc-3-property-referenced-in.html
 			// 暂时没有找到合适的方法，待改善
-			Bdevsoft bdevsoft = new Bdevsoft(null, bdevsoftVo.getRchouseid(), bdevsoftVo.getDevcode(),
+			Bdevsoft bdevsoft = new Bdevsoft(null, bdevsoftVo.getRchouseid(), bdevsoftVo.getDevsystemid(),bdevsoftVo.getDevcode(),
 					bdevsoftVo.getName(), bdevsoftVo.getSystemtypeid(), bdevsoftVo.getDevtypeid(),
 					bdevsoftVo.getMaintenid(), bdevsoftVo.getTypecode(), bdevsoftVo.getMngpersonid(),
 					bdevsoftVo.getDepid(), bdevsoftVo.getApplication(), bdevsoftVo.getProviderenterpriseid(),
@@ -187,7 +191,7 @@ public class DevsoftController extends BaseController {
 	public Result updateDevSoft(@RequestBody BdevsoftVo bdevsoftVo) {
 		try {
 			// 构造Bdevsoft的那一部分
-			Bdevsoft bdevsoft = new Bdevsoft(bdevsoftVo.getId(), bdevsoftVo.getRchouseid(), bdevsoftVo.getDevcode(),
+			Bdevsoft bdevsoft = new Bdevsoft(bdevsoftVo.getId(), bdevsoftVo.getRchouseid(),bdevsoftVo.getDevsystemid(), bdevsoftVo.getDevcode(),
 					bdevsoftVo.getName(), bdevsoftVo.getSystemtypeid(), bdevsoftVo.getDevtypeid(),
 					bdevsoftVo.getMaintenid(), bdevsoftVo.getTypecode(), bdevsoftVo.getMngpersonid(),
 					bdevsoftVo.getDepid(), bdevsoftVo.getApplication(), bdevsoftVo.getProviderenterpriseid(),

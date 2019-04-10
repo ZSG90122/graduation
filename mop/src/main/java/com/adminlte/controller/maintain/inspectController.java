@@ -38,6 +38,20 @@ public class inspectController extends BaseController {
 		return "maintain/inspectManage";
 	}
 
+	/**
+	 * 在巡检界面点击故障录入按钮进入故障录入界面
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/goTofaultManagePage")
+	public String goTofaultManagePage(Model model,@RequestParam Long inspectid) {
+		Bpersoninspection personinspection = this.ibpersoninspectionService.selectById(inspectid);
+		model.addAttribute("inspectid", personinspection.getId());
+		model.addAttribute("stationid", personinspection.getRedevid());
+		return "maintain/faultManage";
+	}
+
 	@RequestMapping("/getInspectDataGrid")
 	public ResponseEntity<DatatablesResult<BpersoninspectionVo>> getInspectDataGrid(String querystring,
 			@RequestParam(value = "draw") String draw, @RequestParam(value = "start") String start,

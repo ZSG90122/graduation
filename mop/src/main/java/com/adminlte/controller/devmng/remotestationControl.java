@@ -196,7 +196,7 @@ public class remotestationControl extends BaseController {
 	@RequestMapping("/rsdevsystemmanager")
 	public String rsdevsystemmanager(Model model) {
 		model.addAttribute("querystr", "");
-		return "devmanager/rsdevsystemManager2"; // 测试页面
+		return "devmanager/rsdevsystemManager"; 
 	}
 
 	/**

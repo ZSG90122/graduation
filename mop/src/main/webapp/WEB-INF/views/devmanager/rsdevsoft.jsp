@@ -97,7 +97,7 @@
 					<td><input type="checkbox" id="checkAll"></td>
 					<th>序号</th>
 					<th>市州</th>
-					<th>系统大类</th>
+					<th>系统名称</th>
 					<th>设备类型</th>
 					<th>设备型号</th>
 					<th>运维类型</th>
@@ -211,6 +211,14 @@
 										<div class="col-sm-4">
 											<select class="form-control select2" name="rchouseid"
 												id="rchouseid">
+											</select>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label for="inputName" class="col-sm-2 control-label">所属系统</label>
+										<div class="col-sm-4">
+											<select class="form-control select2" name="devsystemid" id="devsystemid">
 											</select>
 										</div>
 									</div>
@@ -548,40 +556,23 @@
 	</div>
 </body>
 </html>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/jQuery/jquery-2.2.3.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/dataTables.bootstrap.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/jquery.dataTables.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/slimScroll/jquery.slimscroll.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/fastclick/fastclick.js"></script>
-<script src="<%=request.getContextPath()%>/AdminLTE/dist/js/app.min.js"></script>
-<script src="<%=request.getContextPath()%>/AdminLTE/dist/js/demo.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/dataTables.bootstrap.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/jquery.dataTables.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-treeview.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/conmmon/js/toastr.min.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap.min.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/jquery.dataTables.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/conmmon/js/toastr.min.js"></script>
 <script src="<%=request.getContextPath()%>/AdminLTE/conmmon/common.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/select2/select2.full.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrapValidator.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/plugins/select2/select2.full.min.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/moment-with-locales.min.js"></script>
+<script src="<%=request.getContextPath()%>/assets/js/fileinput.js"></script>
+<script src="<%=request.getContextPath()%>/assets/js/zh.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/conmmon/fileupload.js"></script>
 <script src="<%=request.getContextPath()%>/AdminLTE/dist/js/base.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/dist/js/base-form.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/conmmon/xlsx.core.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/dist/js/base-form.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-treeview.min.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrapValidator.js"></script>
 
 
 <script type="text/javascript">
@@ -670,8 +661,8 @@
 		var str = "";
 		<shiro:hasAnyRoles name = "admin">
     	 str+= "<div class='btn-group'>" +
-         "<button id='editRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-edit'></i></button>" +
-         "<button id='delRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-trash-o'></i></button>" +
+         "<a id='editRow' class='label label-primary'><i class='fa fa-edit'></i></a>" +
+         "<a id='delRow' class='label label-danger'><i class='fa fa-trash-o'></i></a>" +
          "</div>"
     	</shiro:hasAnyRoles>
 
@@ -797,9 +788,10 @@
 			$("input[name=typecode]").val("1");
 			//责任人下拉列表数据的获取
 			sel.bindselectfirst('mngpersonid', "<%=request.getContextPath()%>/rest/user/userList", 'id', 'name');
+			rchouseid=null;
+			systemid=null;
 			//所在部门下拉列表数据的获取
-			sel.bindselectfirst('depid', "<%=request.getContextPath()%>/rest/department/getdeplist/0", 'id', 'name');
-			sel.bindselectfirst('rchouseid', "<%=request.getContextPath()%>/rest/remotestation/getstationdevhouselist", 'id', 'name');
+			sel.syndata('depid', "<%=request.getContextPath()%>/rest/department/getdeplist", 'id', 'name',function(data){});
 			$("input[name=application]").val("1");
 			//供应商下拉列表数据的获取
 			sel.bindselectfirst('providerenterpriseid', "<%=request.getContextPath()%>/rest/benterprise/getenterpriselist", 'id', 'name');
@@ -836,7 +828,87 @@
 			$("#editForm").data('bootstrapValidator', null);
 			inputvalidator();
 		});
+		
+		//修改
+		$("#dataTable tbody").on("click", "#editRow", function() {
 
+			var data = tables.api().row($(this).parents("tr")).data();
+			//根据选中的行，获取到该行数据的id，再去后台查询，用于model里面
+			//那张表的数据的回显
+			console.log(JSON.stringify(data))
+			softparameterTable.rows.add(data.parameterList).draw()
+			$("input[name=id]").val(data.id);
+			$("input[name=devcode]").val(data.devcode);
+			$("input[name=name]").val(data.name);
+			sel.binddata('systemtypeid', "<%=request.getContextPath()%>/rest/dic/selectSystemTypeList", 'id', 'name', data.systemtypeid);
+			sel.binddata('devtypeid', "<%=request.getContextPath()%>/rest/dic/selectDevTypeList", 'id', 'name', data.devtypeid);
+			sel.binddata('maintenid', "<%=request.getContextPath()%>/rest/dic/selectDevMaintainTypeList", 'id', 'name', data.maintenid);
+			$("input[name=typecode]").val(data.typecode);
+			sel.binddata('mngpersonid', "<%=request.getContextPath()%>/rest/user/userList", 'id', 'name', data.mngpersonid);
+			rchouseid = data.rchouseid;
+			systemid = data.devsystemid;
+			sel.synbinddata('depid', "<%=request.getContextPath()%>/rest/department/getdeplist", 'id', 'name', data.depid ,function(data){})
+<%-- 			sel.binddata('rchouseid', "<%=request.getContextPath()%>/rest/remotestation/getstationdevhouselist", 'id', 'name', data.rchouseid); --%>
+			$("input[name=application]").val(data.application);
+			sel.binddata('providerenterpriseid', "<%=request.getContextPath()%>/rest/benterprise/getenterpriselist", 'id', 'name', data.providerenterpriseid);
+			sel.binddata('madeenterpriseid', "<%=request.getContextPath()%>/rest/benterprise/getenterpriselist", 'id', 'name', data.madeenterpriseid);
+			$("#leavedate").val(new Date(data.leavedate).format("yyyy-MM-dd"));
+			$("input[name=leavecode]").val(data.leavecode);
+			$("#buydate").val(new Date(data.buydate).format("yyyy-MM-dd"));
+			$("input[name=buyaddress]").val(data.buyaddress);
+			$("input[name=devrevalue]").val(data.devrevalue);
+			$("input[name=assectcode]").val(data.assectcode);
+			$("input[name=buyperson]").val(data.buyperson);
+			$("#qualdate").val(new Date(data.qualdate).format("yyyy-MM-dd"));
+			$("#repairdate").val(new Date(data.repairdate).format("yyyy-MM-dd"));
+			$("#scrapdate").val(new Date(data.scrapdate).format("yyyy-MM-dd"));
+			sel.binddata('installrchouseid', "<%=request.getContextPath()%>/rest/remotestation/getstationdevhouselist", 'id', 'name', data.installrchouseid);
+			sel.binddata('usepersonid', "<%=request.getContextPath()%>/rest/user/userList", 'id', 'name', data.usepersonid);
+			sel.binddata('installenterpriseid', "<%=request.getContextPath()%>/rest/benterprise/getenterpriselist", 'id', 'name', data.installenterpriseid);
+			$("#installdate").val(new Date(data.installdate).format("yyyy-MM-dd"));
+			$("input[name=installreson]").val(data.installreson);
+			$("input[name=mainip]").val(data.mainip);
+			$("input[name=mainport]").val(data.mainport);
+			$("input[name=tprotocal1]").val(data.tprotocal1);
+			$("input[name=tprotocal2]").val(data.tprotocal2);
+			$("input[name=username]").val(data.username);
+			$("input[name=password]").val(data.password);
+			//修改操作时controller的url
+			url = "<%=request.getContextPath()%>/rest/devsoft/updateDevSoftVo";
+			$("#myModalLabel").html("<b>修改设备信息</b>");
+			$("#editModal").modal("show");
+
+			//下边2行清除上次验证结果
+			$("#editForm").data('bootstrapValidator').destroy();
+			$("#editForm").data('bootstrapValidator', null);
+			inputvalidator();
+		});
+		
+		var rchouseid;
+		$("#depid").on('change', function() {
+			var depVal = $("#depid").val();
+			console.log(depVal+"!!!!!!!")
+			if (rchouseid != null) {
+				//查找相应市州下的遥控站
+				sel.synbinddata('rchouseid', "<%=request.getContextPath()%>/rest/remotestation/getRemoteStationList?owerdep=" + depVal, 'id', 'name', rchouseid,function(data){});
+				rchouseid = null;
+			} else {
+				sel.syndata('rchouseid', "<%=request.getContextPath()%>/rest/remotestation/getRemoteStationList?owerdep=" + depVal, 'id', 'name',function(data){});
+			}
+		});
+		
+		var systemid;
+		$("#rchouseid").on('change', function() {
+			var stationVal = $("#rchouseid").val();
+			if (systemid != null) {
+				//查找相应市州下的遥控站
+				sel.synbinddata('devsystemid', "<%=request.getContextPath()%>/rest/devsystem/getSystemOfStationList?stationid=" + stationVal, 'id', 'name', systemid,function(data){});
+				systemid = null;
+			} else {
+				sel.syndata('devsystemid', "<%=request.getContextPath()%>/rest/devsystem/getSystemOfStationList?stationid=" + stationVal, 'id', 'name',function(data){});
+			}
+		});
+		
 		//删除
 		$("#dataTable tbody").on("click", "#delRow", function() {
 			var data = tables.api().row($(this).parents("tr")).data();
@@ -969,7 +1041,7 @@
 						data[index].repairdate = new Date(data[index].repairdate).format("yyyy-MM-dd");
 						data[index].scrapdate = new Date(data[index].scrapdate).format("yyyy-MM-dd");
 						data[index].installdate = new Date(data[index].installdate).format("yyyy-MM-dd");
-					//alert(new Date(data[index].leavedate).format("yyyy-MM-dd"));
+					//console.log(new Date(data[index].leavedate).format("yyyy-MM-dd"));
 					})
 					$("#btn-export").attr("disabled", true);
 					var sheet = XLSX.utils.json_to_sheet(data);
@@ -1002,57 +1074,7 @@
 			}
 		});
 
-		//修改
-		$("#dataTable tbody").on("click", "#editRow", function() {
-
-			var data = tables.api().row($(this).parents("tr")).data();
-			//根据选中的行，获取到该行数据的id，再去后台查询，用于model里面
-			//那张表的数据的回显
-			softparameterTable.rows.add(data.parameterList).draw()
-			$("input[name=id]").val(data.id);
-			$("input[name=devcode]").val(data.devcode);
-			$("input[name=name]").val(data.name);
-			sel.binddata('systemtypeid', "<%=request.getContextPath()%>/rest/dic/selectSystemTypeList", 'id', 'name', data.systemtypeid);
-			sel.binddata('devtypeid', "<%=request.getContextPath()%>/rest/dic/selectDevTypeList", 'id', 'name', data.devtypeid);
-			sel.binddata('maintenid', "<%=request.getContextPath()%>/rest/dic/selectDevMaintainTypeList", 'id', 'name', data.maintenid);
-			$("input[name=typecode]").val(data.typecode);
-			sel.binddata('mngpersonid', "<%=request.getContextPath()%>/rest/user/userList", 'id', 'name', data.mngpersonid);
-			sel.binddata('depid', "<%=request.getContextPath()%>/rest/department/getdeplist/0", 'id', 'name', data.depid);
-			sel.binddata('rchouseid', "<%=request.getContextPath()%>/rest/remotestation/getstationdevhouselist", 'id', 'name', data.rchouseid);
-			$("input[name=application]").val(data.application);
-			sel.binddata('providerenterpriseid', "<%=request.getContextPath()%>/rest/benterprise/getenterpriselist", 'id', 'name', data.providerenterpriseid);
-			sel.binddata('madeenterpriseid', "<%=request.getContextPath()%>/rest/benterprise/getenterpriselist", 'id', 'name', data.madeenterpriseid);
-			$("#leavedate").val(new Date(data.leavedate).format("yyyy-MM-dd"));
-			$("input[name=leavecode]").val(data.leavecode);
-			$("#buydate").val(new Date(data.buydate).format("yyyy-MM-dd"));
-			$("input[name=buyaddress]").val(data.buyaddress);
-			$("input[name=devrevalue]").val(data.devrevalue);
-			$("input[name=assectcode]").val(data.assectcode);
-			$("input[name=buyperson]").val(data.buyperson);
-			$("#qualdate").val(new Date(data.qualdate).format("yyyy-MM-dd"));
-			$("#repairdate").val(new Date(data.repairdate).format("yyyy-MM-dd"));
-			$("#scrapdate").val(new Date(data.scrapdate).format("yyyy-MM-dd"));
-			sel.binddata('installrchouseid', "<%=request.getContextPath()%>/rest/remotestation/getstationdevhouselist", 'id', 'name', data.installrchouseid);
-			sel.binddata('usepersonid', "<%=request.getContextPath()%>/rest/user/userList", 'id', 'name', data.usepersonid);
-			sel.binddata('installenterpriseid', "<%=request.getContextPath()%>/rest/benterprise/getenterpriselist", 'id', 'name', data.installenterpriseid);
-			$("#installdate").val(new Date(data.installdate).format("yyyy-MM-dd"));
-			$("input[name=installreson]").val(data.installreson);
-			$("input[name=mainip]").val(data.mainip);
-			$("input[name=mainport]").val(data.mainport);
-			$("input[name=tprotocal1]").val(data.tprotocal1);
-			$("input[name=tprotocal2]").val(data.tprotocal2);
-			$("input[name=username]").val(data.username);
-			$("input[name=password]").val(data.password);
-			//修改操作时controller的url
-			url = "<%=request.getContextPath()%>/rest/devsoft/updateDevSoftVo";
-			$("#myModalLabel").html("<b>修改设备信息</b>");
-			$("#editModal").modal("show");
-
-			//下边2行清除上次验证结果
-			$("#editForm").data('bootstrapValidator').destroy();
-			$("#editForm").data('bootstrapValidator', null);
-			inputvalidator();
-		});
+		
 
 		function inputvalidator() {
 			$('#editForm').bootstrapValidator({
@@ -1148,7 +1170,7 @@
 					//获取到表单中的数据
 					var params = form.getFormSimpleData();
 					params["parameterList"] = JSON.parse(JSON.stringify(list));
-					alert(JSON.stringify(params));
+					console.log(JSON.stringify(params));
 					//此处的data保存了操作的返回值	
 					$.ajax({
 						url : url,

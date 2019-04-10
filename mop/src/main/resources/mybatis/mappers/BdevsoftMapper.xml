@@ -4,6 +4,7 @@
 	<resultMap id="BaseResultMap" type="com.adminlte.pojo.Bdevsoft">
 		<id column="id" property="id" jdbcType="BIGINT" />
 		<result column="rchouseid" property="rchouseid" jdbcType="BIGINT" />
+		<result column="devsystemid" property="devsystemid" jdbcType="BIGINT" />
 		<result column="devcode" property="devcode" jdbcType="VARCHAR" />
 		<result column="name" property="name" jdbcType="VARCHAR" />
 		<result column="systemtypeid" property="systemtypeid" jdbcType="BIGINT" />
@@ -46,6 +47,7 @@
 	<resultMap id="BaseVoResultMap" type="com.adminlte.pojo.vo.BdevsoftVo">
 		<id column="id" property="id" jdbcType="BIGINT" />
 		<result column="rchouseid" property="rchouseid" jdbcType="BIGINT" />
+		<result column="devsystemid" property="devsystemid" jdbcType="BIGINT" />
 		<result column="devcode" property="devcode" jdbcType="VARCHAR" />
 		<result column="name" property="name" jdbcType="VARCHAR" />
 		<result column="systemtypeid" property="systemtypeid" jdbcType="BIGINT" />
@@ -119,6 +121,7 @@
 		SELECT
 		v.id,
 		v.rchouseid,
+		v.devsystemid,
 		v.devcode,
 		v.`name`,
 		v.systemtypeid,
@@ -166,7 +169,7 @@
 		FROM
 		bdevsoft v
 		LEFT JOIN udepartment u ON u.id = v.depid
-		LEFT JOIN dicsystemtype st ON st.id = v.systemtypeid
+		LEFT JOIN bdevsystem st ON st.id = v.devsystemid
 		LEFT JOIN dicdevtype dt ON dt.id = v.devtypeid
 		LEFT JOIN dicmaintaintype dmt ON dmt.id = v.maintenid
 		LEFT JOIN benterprise e ON e.id = v.providerenterpriseid
@@ -178,6 +181,7 @@
 		SELECT
 		v.id,
 		v.rchouseid,
+		v.devsystemid,
 		v.devcode,
 		v.`name`,
 		v.systemtypeid,

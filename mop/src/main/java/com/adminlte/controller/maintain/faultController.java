@@ -38,6 +38,12 @@ public class faultController extends BaseController {
 	@Autowired
 	IBpersoninspectionService ibpersoninspectionService;
 
+	/**
+	 * 点击菜单进入故障录入界面
+	 * 
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/faultManage")
 	public String faultManage(Model model) {
 		return "maintain/faultManage";

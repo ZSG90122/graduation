@@ -48,6 +48,20 @@ public class DevsystemController extends BaseController {
 	}
 
 	/**
+	 * 获取某一遥控站下的系统
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/getSystemOfStationList")
+	@ResponseBody
+	public List<Bdevsystem> getSystemOfStationList(@RequestParam Long stationid) {
+		EntityWrapper<Bdevsystem> wrapper = new EntityWrapper<Bdevsystem>();
+		wrapper.eq("rchouseid",stationid);
+		wrapper.orderBy("id");
+		return this.bdevsystemService.selectList(wrapper);
+	}
+
+	/**
 	 * 查询得到用于填充前端表格的对象并返回
 	 * 
 	 * @param querystring

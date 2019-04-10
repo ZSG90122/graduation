@@ -115,11 +115,10 @@
 					<!--  <th></th> -->
 					<th>序号</th>
 					<th>市州</th>
+					<th>遥控站名称</th>
 					<th>等级</th>
 					<th>功能类别</th>
-					<th>名称</th>
 					<th>地址</th>
-					<!-- <th>信息管理</th> -->
 					<th>供应商</th>
 					<th>操作</th>
 				</tr>
@@ -169,8 +168,6 @@
 										<div class="col-sm-6">
 											<select class="form-control select2" name="owerdep"
 												id="owerdepid">
-												<option value="1">四川省无线电监测站</option>
-												<option value="2">自贡无线电监测站</option>
 											</select>
 										</div>
 									</div>
@@ -218,7 +215,7 @@
 										<label for="inputName" class="col-sm-2 control-label">备注信息</label>
 										<div class="col-sm-8">
 											<textarea class="form-control" rows="3" name="remark"
-												id="remarkid" placeholder="输入遥控站的介绍信息"></textarea>
+												id="remarkid" placeholder="输入遥控站的介绍信息" style="resize: none;"></textarea>
 										</div>
 									</div>
 								</div>
@@ -435,40 +432,23 @@
 
 </body>
 </html>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/jQuery/jquery-2.2.3.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/dataTables.bootstrap.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/jquery.dataTables.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/slimScroll/jquery.slimscroll.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/fastclick/fastclick.js"></script>
-<script src="<%=request.getContextPath()%>/AdminLTE/dist/js/app.min.js"></script>
-<script src="<%=request.getContextPath()%>/AdminLTE/dist/js/demo.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/dataTables.bootstrap.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/jquery.dataTables.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-treeview.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/conmmon/js/toastr.min.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap.min.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/jquery.dataTables.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/conmmon/js/toastr.min.js"></script>
 <script src="<%=request.getContextPath()%>/AdminLTE/conmmon/common.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/select2/select2.full.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrapValidator.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/plugins/select2/select2.full.min.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/moment-with-locales.min.js"></script>
+<script src="<%=request.getContextPath()%>/assets/js/fileinput.js"></script>
+<script src="<%=request.getContextPath()%>/assets/js/zh.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/conmmon/fileupload.js"></script>
 <script src="<%=request.getContextPath()%>/AdminLTE/dist/js/base.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/dist/js/base-form.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/conmmon/xlsx.core.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/dist/js/base-form.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-treeview.min.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrapValidator.js"></script>
 <%-- <script src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/moment-with-locales.min.js"></script> --%>
 
 
@@ -531,7 +511,7 @@
 	if(null != restr){
 		querydata.querystring = restr;
 		//restr的含义： 设置查询条件 projecttype_id:1,projectstate:1,name:
-		//alert(restr);
+		//console.log(restr);
 				
 		var name = "";
 		//var type = null;
@@ -571,8 +551,8 @@
 		var str = "";
     	<shiro:hasAnyRoles name = "admin">
     	 str+= "<div class='btn-group'>" +
-         "<button id='editRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-edit'></i></button>" +
-         "<button id='delRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-trash-o'></i></button>" +
+         "<a id='editRow' class='label label-primary'><i class='fa fa-edit'></i></a>" +
+         "<a id='delRow' class='label label-danger'><i class='fa fa-trash-o'></i></a>" +
          "</div>"
     	 </shiro:hasAnyRoles>
          
@@ -620,6 +600,7 @@
                 {"data": "null"},
                 {"data": "id"},//此处的编号是在最后table已经draw成功后才设置的
                 {"data": "ownerdepname"},
+                {"data": 'name'},
                 {
                 	"data": 'leveltype',
                 	"render": function (data, type, full, callback) {
@@ -654,7 +635,7 @@
                     }  
                     
                 },          
-                {"data": 'name'},
+                
                 {"data": 'address'},
                 {"data": 'supdepname'},
                 /* {
@@ -777,7 +758,7 @@
 			enterprisesIds = JSON.stringify(check_val);
 			//enterprisesIds = check_val;
 			url = "<%=request.getContextPath()%>/rest/remotestation/deleteRcstationdevhouseBatch";
-			//alert(JSON.stringify(check_val));
+			//console.log(JSON.stringify(check_val));
 			//
 			$.ajax({
                     url: url,
@@ -879,7 +860,7 @@
 		//修改
         $("#dataTable tbody").on("click", "#editRow", function () {
             var data = tables.api().row($(this).parents("tr")).data();
-            alert(JSON.stringify(data));
+            console.log(JSON.stringify(data));
             $("input[name=id]").val(data.id);
             $("input[name=type]").val(data.type);
             $("input[name=name]").val(data.name);
@@ -1055,10 +1036,10 @@
             
            	$("#editForm").bootstrapValidator('validate'); //提交验证
 			if ($("#editForm").data('bootstrapValidator').isValid()) { //获取验证结果，如果成功，执行下面代码
-				//alert("yes"); //验证成功后的操作，如ajax
+				//console.log("yes"); //验证成功后的操作，如ajax
 				if(confirm("确定提交么？")){
 					var params = form.getFormSimpleData();	
-					//alert(JSON.stringify(params));			
+					//console.log(JSON.stringify(params));			
 					ajaxPost(url, params, function(data, status) {
 						if (data.success) {
 							tables.fnDraw(false);//刷新保持分页状态 false重新加载当前页，true重新加载初始状态

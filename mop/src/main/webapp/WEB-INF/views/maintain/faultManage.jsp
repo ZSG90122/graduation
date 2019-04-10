@@ -31,6 +31,10 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
 	<!-- 查询、添加、批量删除、导出、刷新 -->
+	<input type="hidden" id="inspectIdFromInspectPage"
+		value="${inspectid }">
+	<input type="hidden" id="stationIdFromInspectPage"
+		value="${stationid }">
 	<div class="content">
 		<!-- 查询、添加、批量删除、导出、刷新 -->
 		<div class="row-fluid">
@@ -268,43 +272,136 @@
 		</div>
 		<!--  -->
 
+		<div class="modal fade" id="readonly_modal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+						<h4 class="modal-title">故障信息查看</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" action="">
+							<div class="form-group">
+								<label for="inputName" class="col-sm-2 control-label">错误类型</label>
+								<div class="col-sm-6">
+									<input type='text' class="form-control" id="typeforread" readonly="readonly"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputName" class="col-sm-2 control-label">巡检名称</label>
+								<div class="col-sm-6">
+									<input type='text' class="form-control" id="inspectforread" readonly="readonly"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputName" class="col-sm-2 control-label">遥控站名称</label>
+								<div class="col-sm-6">
+									<input type='text' class="form-control" id="redevforread" readonly="readonly"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputName" class="col-sm-2 control-label">系统名称</label>
+								<div class="col-sm-6">
+									<input type='text' class="form-control" id="systemforread" readonly="readonly"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="finishcontent" class="col-sm-2 control-label">问题描述</label>
+								<div class="col-sm-6">
+									<textarea class="form-control" style="resize:none"
+										rows="5" id="faultdesforread"
+										 readonly="readonly"></textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="finishcontent" class="col-sm-2 control-label">解决方案</label>
+								<div class="col-sm-6">
+									<textarea class="form-control" style="resize:none"
+										rows="5" id="solutionforread"
+										 readonly="readonly"></textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="finishcontent" class="col-sm-2 control-label">解决结果</label>
+								<div class="col-sm-6">
+									<textarea class="form-control" style="resize:none"
+										rows="5" id="solutionresultforread"
+										 readonly="readonly"></textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputName" class="col-sm-2 control-label">发现时间</label>
+								<div class="col-sm-6">
+									<input type='text' class="form-control" id="findtimeforread" readonly="readonly"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputName" class="col-sm-2 control-label">审核时间</label>
+								<div class="col-sm-6">
+									<input type='text' class="form-control" id="veriytimeforread" readonly="readonly"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputName" class="col-sm-2 control-label">解决时间</label>
+								<div class="col-sm-6">
+									<input type='text' class="form-control" id="soluttimeforread" readonly="readonly"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputName" class="col-sm-2 control-label">发现人</label>
+								<div class="col-sm-6">
+									<input type='text' class="form-control" id="findpersonforread" readonly="readonly"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputName" class="col-sm-2 control-label">填写人</label>
+								<div class="col-sm-6">
+									<input type='text' class="form-control" id="fillpersonforread" readonly="readonly"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputName" class="col-sm-2 control-label">审核人</label>
+								<div class="col-sm-6">
+									<input type='text' class="form-control" id="veriypersonforread" readonly="readonly"/>
+								</div>
+							</div>
+							
+							
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default pull-right"
+							data-dismiss="modal">返回</button>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--  -->
+
 	</div>
 </body>
 </html>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/jQuery/jquery-2.2.3.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/dataTables.bootstrap.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/jquery.dataTables.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/slimScroll/jquery.slimscroll.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/fastclick/fastclick.js"></script>
-<script src="<%=request.getContextPath()%>/AdminLTE/dist/js/app.min.js"></script>
-<script src="<%=request.getContextPath()%>/AdminLTE/dist/js/demo.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/dataTables.bootstrap.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/jquery.dataTables.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-treeview.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/conmmon/js/toastr.min.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap.min.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/jquery.dataTables.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/conmmon/js/toastr.min.js"></script>
 <script src="<%=request.getContextPath()%>/AdminLTE/conmmon/common.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/select2/select2.full.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrapValidator.js"></script>
+<script	src="<%=request.getContextPath()%>/AdminLTE/plugins/select2/select2.full.min.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/moment-with-locales.min.js"></script>
+<script src="<%=request.getContextPath()%>/assets/js/fileinput.js"></script>
+<script src="<%=request.getContextPath()%>/assets/js/zh.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/conmmon/fileupload.js"></script>
 <script src="<%=request.getContextPath()%>/AdminLTE/dist/js/base.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/dist/js/base-form.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/conmmon/xlsx.core.min.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/dist/js/base-form.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-treeview.min.js"></script>
+<script src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrapValidator.js"></script>
 
 
 <script type="text/javascript">
@@ -362,15 +459,16 @@
 	}
 
 	$(function() {
+
 		form = $('#editForm').form();
 		//添加、修改异步提交地址
 		//只有具有admin权限的用户才具有对数据记录进行删除和修改的功能
 		var str = null;
 		<shiro:hasAnyRoles name = "admin">
     	 str = "<div class='btn-group'>" +
-         "<button id='editRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-edit'></i></button>" +
-         "<button id='delRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-trash-o'></i></button>" +
-         "</div>"
+							"<a id='editRow' class='label label-primary'><i class='fa fa-edit'></i></a>" +
+							"<a id='delRow' class='label label-danger'><i class='fa fa-trash-o'></i></a>" +
+							"</div>"
     	</shiro:hasAnyRoles>
 
 		var url = "";
@@ -434,12 +532,22 @@
 					}
 				},
 				{
-					"data" : null,
+					"data" : "state",
 					"render" : function(data, type, full, callback) {
-						return "<div class='btn-group'>" +
-							"<a id='editRow' class='label label-primary'><i class='fa fa-edit'></i></a>" +
-							"<a id='delRow' class='label label-danger'><i class='fa fa-trash-o'></i></a>" +
-							"</div>";
+						switch (data) {
+						case 0:
+							return str;
+							break;
+						case 1:
+							return str;
+							break;
+						case 2:
+							return "<div class='btn-group'>" +
+								"<a id='readRow' class='label label-info'><i class='fa fa-eye'></i></a>" +
+								"<a id='delRow' class='label label-danger'><i class='fa fa-trash-o'></i></a>" +
+								"</div>";
+							break;
+						}
 					}
 				}
 			],
@@ -513,11 +621,11 @@
 		//修改
 		$("#dataTable tbody").on("click", "#editRow", function() {
 			var data = tables.api().row($(this).parents("tr")).data();
-			console.log(data)
+			console.log(data + "修改")
 			$("input[name=id]").val(data.id);
 			redevid = data.redevid;
 			systemid = data.systemid;
-			sel.synNonebinddata('inpectid', "<%=request.getContextPath()%>/rest/inspect/getInspectList", 'id', 'name', data.inpectid)
+			sel.synNonebinddata('inpectid', "<%=request.getContextPath()%>/rest/inspect/getInspectWithFaultList", 'id', 'name', data.inpectid)
 			sel.synbinddata('typeid', "<%=request.getContextPath()%>/rest/dic/getInspcetTypeList", 'id', 'name', data.typeid, function(data) {});
 
 			$("input[name=name]").val(data.name);
@@ -579,7 +687,7 @@
 				if (confirm("确定提交么？")) {
 					//获取到表单中的数据
 					var params = $("#editForm").form().getFormSimpleData();
-					alert(JSON.stringify(params))
+					console.log(JSON.stringify(params))
 					//此处的data保存了操作的返回值	
 					$.ajax({
 						url : url,
@@ -721,15 +829,40 @@
 			$("#editModal").modal("hide");
 		});
 
+		// 已解决的故障只能查看信息了
+		$("#dataTable tbody").on("click", "#readRow", function() {
+			var data = tables.api().row($(this).parents("tr")).data();
+			$("#readonly_modal").modal("show");
+			console.log(JSON.stringify(data))
+			
+			$("#typeforread").val(data.faulttypename);
+			$("#inspectforread").val(data.inspectname);
+			$("#redevforread").val(data.stationname);
+			$("#systemforread").val(data.systemname);
+			$("#faultdesforread").val(data.faultdes);
+			$("#solutionforread").val(data.solution);
+			$("#solutionresultforread").val(data.solutionresult);
+			
+			$("#findtimeforread").val(new Date(data.findtime).format("yyyy-MM-dd hh:mm:ss"));
+			$("#veriytimeforread").val(new Date(data.veriytime).format("yyyy-MM-dd hh:mm:ss"));
+			$("#soluttimeforread").val(new Date(data.soluttime).format("yyyy-MM-dd hh:mm:ss"));
+			
+			$("#findpersonforread").val(data.findperson);
+			$("#fillpersonforread").val(data.fillpersonname);
+			$("#veriypersonforread").val(data.veriypersonname);
+			
+			
+		});
+
 		var dataFault;
 		// 审核按钮事件
 		$("#dataTable tbody").on("click", "#btn_verify", function() {
 			dataFault = tables.api().row($(this).parents("tr")).data();
 			$("#verify_opinion_modal").modal("show");
-			$("#finishcontent").val("");
+			$("#solution").val("");
 		});
 
-		// 提交
+		// 审核提交
 		$("#btn_confirm").on("click", function() {
 			dataFault.solution = $("#solution").val();
 			dataFault.findtime = new Date(dataFault.findtime).format("yyyy-MM-dd hh:mm:ss");
@@ -761,16 +894,16 @@
 		$("#dataTable tbody").on("click", "#btn_fix", function() {
 			dataFault = tables.api().row($(this).parents("tr")).data();
 			$("#solution_modal").modal("show");
+			$("input[name=soluttime]").val("")
 			$("#solutionresult").val("");
 		});
 
-		// 提交
+		// 故障解决后提交事件
 		$("#btn_confirm_solution").on("click", function() {
 			dataFault.solutionresult = $("#solutionresult").val();
 			dataFault.findtime = new Date(dataFault.findtime).format("yyyy-MM-dd hh:mm:ss");
 			dataFault.veriytime = new Date(dataFault.veriytime).format("yyyy-MM-dd hh:mm:ss");
 			dataFault.soluttime = new Date($("input[name=soluttime]").val()).format("yyyy-MM-dd hh:mm:ss");
-
 			console.log(JSON.stringify(dataFault));
 			url = "<%=request.getContextPath()%>/rest/fault/insertFaultSolutionResult";
 			if (confirm("确定提交吗？？")) {
@@ -795,5 +928,23 @@
 			}
 		});
 
+		// 从巡检界面跳转过来时，会有值
+		var inspectId = $("#inspectIdFromInspectPage").val()
+		var stationId = $("#stationIdFromInspectPage").val()
+		if (inspectId != "") {
+			redevid = stationId;
+			sel.synNonebinddata('inpectid', "<%=request.getContextPath()%>/rest/inspect/getInspectWithFaultList", 'id', 'name', inspectId)
+			sel.bindselectfirst('typeid', "<%=request.getContextPath()%>/rest/dic/getFaulttypeList", 'id', 'name')
+			$("input[name=findtime]").val("");
+			$("input[name=findperson]").val("");
+			$("textarea[name=faultdes]").val("");
+			url = "<%=request.getContextPath()%>/rest/fault/insertOneFault";
+			$("#myModalLabel").html("<b>故障信息录入</b>");
+			$("#editModal").modal("show");
+			//下边2行清除上次验证结果
+			$("#editForm").data('bootstrapValidator').destroy();
+			$("#editForm").data('bootstrapValidator', null);
+			inputvalidator();
+		}
 	});
 </script>

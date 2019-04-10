@@ -8,12 +8,14 @@ import com.adminlte.pojo.Bdevsoftparameter;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
 
-public class BdevsoftVo implements Serializable{
+public class BdevsoftVo implements Serializable {
 
 	@TableId(type = IdType.AUTO)
 	private Long id;
 
 	private Long rchouseid;
+
+	private Long devsystemid;
 
 	private String devcode;
 
@@ -90,10 +92,10 @@ public class BdevsoftVo implements Serializable{
 	private String devmaintainname;
 
 	private String enterprisename;
-	
-	//这个是性能参数列表
+
+	// 这个是性能参数列表
 	private List<Bdevsoftparameter> parameterList;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -422,6 +424,14 @@ public class BdevsoftVo implements Serializable{
 		this.parameterList = parameterList;
 	}
 
+	public Long getDevsystemid() {
+		return devsystemid;
+	}
+
+	public void setDevsystemid(Long devsystemid) {
+		this.devsystemid = devsystemid;
+	}
+
 	@Override
 	public String toString() {
 		return "BdevsoftVo [id=" + id + ", rchouseid=" + rchouseid + ", devcode=" + devcode + ", name=" + name
@@ -439,5 +449,5 @@ public class BdevsoftVo implements Serializable{
 				+ ", devmaintainname=" + devmaintainname + ", enterprisename=" + enterprisename + ", parameterList="
 				+ parameterList + "]";
 	}
-	
+
 }

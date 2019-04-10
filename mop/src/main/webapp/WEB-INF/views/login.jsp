@@ -110,8 +110,8 @@
                             message: '密码不能为空'
                         },
                         stringLength: {
-                            min: 1,
-                            max: 6,
+                            min: 6,
+                            max: 30,
                             message: '密码长度必须在6到30之间'
                         }
                     }
@@ -128,7 +128,6 @@
             		passWord: $("#password").val(),
             		validCode: $("#validCode").val(),
             }, function (result) {
-            	alert(result.msg);
             	if (result.msg == "登录成功") {
     /*         		var userid = result.userid;
             		cookie.set("userid",userid); */
@@ -136,6 +135,7 @@
             	<%-- 	window.location.href='<%=request.getContextPath()%>/rest/zfyp/loadpage'; --%>
 				}else{
 					alert(result.msg);
+					$("#btn_login").removeAttr("disabled");
 				}
             });
         });

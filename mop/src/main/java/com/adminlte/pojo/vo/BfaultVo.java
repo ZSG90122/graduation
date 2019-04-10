@@ -38,6 +38,16 @@ public class BfaultVo implements Serializable {
 
 	private String faulttypename;
 
+	private String inspectname;
+
+	private String stationname;
+
+	private String systemname;
+
+	private String fillpersonname;
+
+	private String veriypersonname;
+
 	public Long getId() {
 		return id;
 	}
@@ -172,6 +182,46 @@ public class BfaultVo implements Serializable {
 
 	public void setFaulttypename(String faulttypename) {
 		this.faulttypename = faulttypename;
+	}
+
+	public String getInspectname() {
+		return inspectname;
+	}
+
+	public void setInspectname(String inspectname) {
+		this.inspectname = inspectname;
+	}
+
+	public String getStationname() {
+		return stationname;
+	}
+
+	public void setStationname(String stationname) {
+		this.stationname = stationname;
+	}
+
+	public String getSystemname() {
+		return systemname;
+	}
+
+	public void setSystemname(String systemname) {
+		this.systemname = systemname;
+	}
+
+	public String getFillpersonname() {
+		return fillpersonname;
+	}
+
+	public void setFillpersonname(String fillpersonname) {
+		this.fillpersonname = fillpersonname;
+	}
+
+	public String getVeriypersonname() {
+		return veriypersonname;
+	}
+
+	public void setVeriypersonname(String veriypersonname) {
+		this.veriypersonname = veriypersonname;
 	}
 
 }

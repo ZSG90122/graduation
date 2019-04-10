@@ -196,7 +196,7 @@ var sel = {
 		var control = $('#' + ctrlName);
 		//绑定Ajax的内容
 		$.getJSON(url, function(data) {
-			console.log(data)
+			//console.log(data)
 			if (data.length!=0) {
 				control.empty(); //清空下拉框
 				$.each(data, function(i, item) {

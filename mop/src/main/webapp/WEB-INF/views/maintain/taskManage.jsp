@@ -90,28 +90,27 @@
 						</button>
 						<h4 class="modal-title" id="myModalLabel"></h4>
 					</div>
+					<form class="form-horizontal" id="editForm" action="" method="post">
+						<div class="modal-body">
 
-					<div class="modal-body">
-
-						<div class="row-fluid">
-							<div class="pull-right">
-								<div class="btn-group">
-									<button type="button" id="btn-loadmodel"
-										class="btn btn-primary">
-										<i class="fa fa-save">&nbsp;导入模板</i>
-									</button>
+							<div class="row-fluid">
+								<div class="pull-right">
+									<div class="btn-group">
+										<button type="button" id="btn-loadmodel"
+											class="btn btn-primary">
+											<i class="fa fa-save">&nbsp;导入模板</i>
+										</button>
+									</div>
+								</div>
+								<div class="row" style="margin-left:0px;">
+									<h5>资产档案信息:</h5>
 								</div>
 							</div>
-							<div class="row" style="margin-left:0px;">
-								<h5>资产档案信息:</h5>
-							</div>
-						</div>
 
-						<!-------------第一个表框开始 ---------->
-						<div class="panel panel-default" id="panel1">
-							<div class="panel-body">
-								<form class="form-horizontal" id="editForm" action=""
-									method="post">
+							<!-------------第一个表框开始 ---------->
+							<div class="panel panel-default" id="panel1">
+								<div class="panel-body">
+
 									<input type="hidden" class="form-control" name="id" id='id'>
 									<div class="form-group">
 										<label for="inputName" class="col-sm-2 control-label">任务类型</label>
@@ -127,23 +126,24 @@
 												id="taskcontent" placeholder="输入任务的内容..."></textarea>
 										</div>
 									</div>
-								</form>
-								<!-------------第一个表框结束 ---------->
+
+									<!-------------第一个表框结束 ---------->
+								</div>
 							</div>
-						</div>
-						<!-- 第一个表框结束 -->
+							<!-- 第一个表框结束 -->
 
-						<div class="modal-footer">
-							<button type="button" id="btn-cancel" class="btn btn-default"
-								data-btn-type="cancel">
-								<i class="fa fa-reply">&nbsp;取消</i>
-							</button>
-							<button type="submit" id="btn-submit" class="btn btn-primary">
-								<i class="fa fa-save">&nbsp;保存</i>
-							</button>
-						</div>
+							<div class="modal-footer">
+								<button type="button" id="btn-cancel" class="btn btn-default"
+									data-btn-type="cancel">
+									<i class="fa fa-reply">&nbsp;取消</i>
+								</button>
+								<button type="submit" id="btn-submit" class="btn btn-primary">
+									<i class="fa fa-save">&nbsp;保存</i>
+								</button>
+							</div>
 
-					</div>
+						</div>
+					</form>
 					<!-- modal-body END -->
 				</div>
 			</div>
@@ -162,30 +162,25 @@
 <script
 	src="<%=request.getContextPath()%>/AdminLTE/plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/fastclick/fastclick.js"></script>
-<script src="<%=request.getContextPath()%>/AdminLTE/dist/js/app.min.js"></script>
-<script src="<%=request.getContextPath()%>/AdminLTE/dist/js/demo.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/dataTables.bootstrap.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/plugins/datatables/jquery.dataTables.js"></script>
-<script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-treeview.min.js"></script>
-<script
 	src="<%=request.getContextPath()%>/AdminLTE/conmmon/js/toastr.min.js"></script>
 <script src="<%=request.getContextPath()%>/AdminLTE/conmmon/common.js"></script>
 <script
 	src="<%=request.getContextPath()%>/AdminLTE/plugins/select2/select2.full.min.js"></script>
 <script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrapValidator.js"></script>
+	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+<script
+	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/moment-with-locales.min.js"></script>
+<script src="<%=request.getContextPath()%>/assets/js/fileinput.js"></script>
+<script src="<%=request.getContextPath()%>/assets/js/zh.js"></script>
+<script
+	src="<%=request.getContextPath()%>/AdminLTE/conmmon/fileupload.js"></script>
 <script src="<%=request.getContextPath()%>/AdminLTE/dist/js/base.js"></script>
 <script
 	src="<%=request.getContextPath()%>/AdminLTE/dist/js/base-form.js"></script>
 <script
-	src="<%=request.getContextPath()%>/AdminLTE/conmmon/xlsx.core.min.js"></script>
+	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-treeview.min.js"></script>
 <script
-	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
-
+	src="<%=request.getContextPath()%>/AdminLTE/bootstrap/js/bootstrapValidator.js"></script>
 
 <script type="text/javascript">
 	toastr.options = {
@@ -248,8 +243,8 @@
 		var str = "";
 		<shiro:hasAnyRoles name = "admin">
     	 str+= "<div class='btn-group'>" +
-         "<button id='editRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-edit'></i></button>" +
-         "<button id='delRow' class='btn btn-primary btn-sm' type='button'><i class='fa fa-trash-o'></i></button>" +
+         "<a id='editRow' class='label label-primary'><i class='fa fa-edit'></i></a>" +
+         "<a id='delRow' class='label label-danger'><i class='fa fa-trash-o'></i></a>" +
          "</div>"
     	</shiro:hasAnyRoles>
 
@@ -399,7 +394,7 @@
 				if (confirm("确定提交么？")) {
 					//获取到表单中的数据
 					var params = $("#editForm").form().getFormSimpleData();
-					//alert(JSON.stringify(params))
+					//console.log(JSON.stringify(params))
 					//此处的data保存了操作的返回值	
 					$.ajax({
 						url : url,
@@ -524,66 +519,10 @@
 					// 版本号v0.5.2-dev不再支持submitHandler配置	
 				},
 				fields : {
-					devcode : {
+					taskcontent : {
 						validators : {
 							notEmpty : {
-								message : '请输入设备编号'
-							}
-						}
-					},
-					name : {
-						validators : {
-							notEmpty : {
-								message : '请输入设备名称'
-							}
-						}
-					},
-					typecode : {
-						validators : {
-							notEmpty : {
-								message : '请输入设备规格型号'
-							}
-						}
-					},
-					application : {
-						validators : {
-							notEmpty : {
-								message : '请输入设备用途'
-							}
-						}
-					},
-					leavecode : {
-						validators : {
-							notEmpty : {
-								message : '请输入出厂编号'
-							}
-						}
-					},
-					buyaddress : {
-						validators : {
-							notEmpty : {
-								message : '请输入采购地址'
-							}
-						}
-					},
-					devrevalue : {
-						validators : {
-							notEmpty : {
-								message : '请输入设备原值'
-							}
-						}
-					},
-					assectcode : {
-						validators : {
-							notEmpty : {
-								message : '请输入资产编号'
-							}
-						}
-					},
-					buyperson : {
-						validators : {
-							notEmpty : {
-								message : '请输入采购人名称'
+								message : '请输入任务内容'
 							}
 						}
 					}
