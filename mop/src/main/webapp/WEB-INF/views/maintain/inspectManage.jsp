@@ -196,19 +196,46 @@
 								</div>
 							</div>
 							<!-- 第一个表框结束 -->
-
-							<div class="modal-footer">
-								<button type="button" id="btn-cancel" class="btn btn-default"
-									data-btn-type="cancel">
-									<i class="fa fa-reply">&nbsp;取消</i>
-								</button>
-								<button type="submit" id="btn-submit" class="btn btn-primary">
-									<i class="fa fa-save">&nbsp;保存</i>
-								</button>
+					</form>
+					<div class="row-fluid">
+						<div class="row" style="margin-left:0px;">
+							<h5>图片上传:</h5>
+						</div>
+					</div>
+					<div class="panel panel-default" id="panel2">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-15">
+									<div class="form-group" style="margin:0px 0px 0px 75px;">
+										<label for="inputName" class="col-md-4 control-label">文档材料</label>
+										<div class="col-md-10">
+											<form id="add_talentattach_form" method="post"
+												enctype="multipart/form-data">
+												<input id="uploadfile" type="file" name="uploadfile"
+													data-ref="url2" class="file-loading" value="test" multiple />
+												<input type="hidden" id="path" name="path"
+													value="upload/material">
+											</form>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
-						<!-- modal body结束 -->
-					</form>
+
+
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="btn-cancel" class="btn btn-default"
+							data-btn-type="cancel">
+							<i class="fa fa-reply">&nbsp;取消</i>
+						</button>
+						<button type="submit" id="btn-submit" class="btn btn-primary">
+							<i class="fa fa-save">&nbsp;保存</i>
+						</button>
+					</div>
+					<!-- modal body结束 -->
+
 
 				</div>
 			</div>
@@ -600,7 +627,6 @@
 		$("#btn-submit").on("click", function() {
 			$("#editForm").bootstrapValidator('validate'); //提交验证
 			var value = $("#taskid").val();
-
 			if ($("#editForm").data('bootstrapValidator').isValid() && value != -1) { //获取验证结果，如果成功，执行下面代码
 				if (confirm("确定提交么？")) {
 					//获取到表单中的数据
@@ -627,7 +653,8 @@
 					});
 				}
 			} else {
-				alert("任务巡检必须选择任务，若无任务请检查是否已下达！")
+				if (value == -1)
+					alert("任务巡检必须选择任务，若无任务请检查是否已下达！")
 			}
 			//下边清表单中的数据
 			$("#editForm").data('bootstrapValidator').destroy();
