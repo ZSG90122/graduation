@@ -1,6 +1,6 @@
 package com.adminlte.commons.scan;
 
-//用户操作的类型
+//用户操作的类型 
 public enum Achievetype {
 	LOGIN,
 	NEWPROJECT,
