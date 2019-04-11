@@ -195,7 +195,17 @@
 							<!-- ==========第一个表框结束======== -->
 						</div>
 						<!-- ==========modal-body结束======== -->
+						<!-- 						<div class="modal-footer"> -->
+						<button type="button" id="btn-cancel" class="btn btn-default"
+							data-btn-type="cancel">
+							<i class="fa fa-reply">&nbsp;取消</i>
+						</button>
+						<button type="submit" id="btn-submit" class="btn btn-primary">
+							<i class="fa fa-save">&nbsp;保存</i>
+						</button>
+						<!-- 						</div> -->
 					</form>
+
 					<div class="modal-body">
 						<div class="row-fluid">
 							<div class="row" style="margin-left:0px;">
@@ -215,11 +225,11 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="btn-cancel" class="btn btn-default"
+						<button type="button" id="btn_fake_cancel" class="btn btn-default"
 							data-btn-type="cancel">
 							<i class="fa fa-reply">&nbsp;取消</i>
 						</button>
-						<button type="submit" id="btn-submit" class="btn btn-primary">
+						<button type="submit" id="btn_fake_submit" class="btn btn-primary">
 							<i class="fa fa-save">&nbsp;保存</i>
 						</button>
 					</div>
@@ -351,6 +361,13 @@
 		}
 	}
 	$(function() {
+	// 按钮必须在表单内部才可以用bootstrapValidator验证，
+	// 这与图片上传的form冲突，所以用另外一个按钮来操纵提交按钮，避免冲突
+	$("#btn-submit").hide();
+	$("#btn-cancel").hide();
+	$("#btn_fake_submit").on("click",function(){
+	$("#btn-submit").click();
+	})
 		form = $('#editForm').form();
 		//添加、修改异步提交地址
 		//只有具有admin权限的用户才具有对数据记录进行删除和修改的功能
@@ -561,7 +578,6 @@
 			$("textarea[name=inspectresult]").val(data.inspectresult);
 			$("input[name=inspecttime]").val(new Date(data.inspecttime).format("yyyy-MM-dd hh:mm:ss"));
 			$("input[name=inspectperson]").val(data.inspectperson);
-
 			// 数据库中去获取图片信息，进行回显
 			// 先初始化文件上传的参数
 			filelist = [];
@@ -591,7 +607,6 @@
 // 						obj.size = 100;
 // 						obj.key = item.id;
 <%-- 						obj.url = "<%=request.getContextPath()%>/rest/FileUpload/springDelete" + "?fileurl=" + item.url; //用于初始化文件删除事件地址 --%>
-
 // 						nameArr.push(obj);
 // 						//用于重新上传和更新
 // 						var attach = new Object();
@@ -811,7 +826,7 @@
 				e.preventDefault(); //防止重复提交						
 			});
 		}
-		$("#btn-cancel").on("click", function() {
+		$("#btn_fake_cancel").on("click", function() {
 			$("#editModal").modal("hide");
 		});
 		var verify_data;
@@ -849,7 +864,6 @@
 				});
 			}
 		});
-
 		// 插入故障按钮，带值跳转到故障录入界面
 		$("#dataTable tbody").on("click", "#insert_fault", function() {
 			verify_data = tables.api().row($(this).parents("tr")).data();
@@ -872,17 +886,14 @@
 			}
 		});
 	});
-
 	// 上传文件的参数     在$(function(){})的外部
 	var oFileInput = new DSFileInput();
 	var filelist = [];
 	var pathArr = new Array(); //文件网络地址 集合
 	var nameArr = new Array(); //文件信息集合
 	var filepath = "upload/material";
-
 	var uploadUrl = "<%=request.getContextPath()%>/rest/FileUpload/springUpload";
 	var deleteUrl = "<%=request.getContextPath()%>/rest/FileUpload/springDelete";
-
 	function uploadcallback(url, previewId, filetype) {
 		console.log("uploadcallback")
 		var attach = new Object();
@@ -903,7 +914,6 @@
 			});
 		});
 	}
-
 	function deletecallback(key) {
 		console.log("uploadcallback")
 		var data = new Object();
@@ -929,7 +939,6 @@
 		}
 		filelist.removebyid(key);
 	}
-
 	function initFileInput() {
 		$("#add_inspectattach_form").empty();
 		$("#add_inspectattach_form").append("<input id='uploadimage' type='file' name='uploadimage' data-ref='url2' class='file-loading' value='test' multiple/>");
