@@ -40,6 +40,9 @@
 		<result column="owerdepname" jdbcType="VARCHAR" property="owerdepname" />
 		<result column="redevname" jdbcType="VARCHAR" property="redevname" />
 		<result column="inspecttypename" jdbcType="VARCHAR" property="inspecttypename" />
+		<collection property="bpersoninspectionattachs"
+			select="com.adminlte.mapper.BpersoninspectionattachMapper.selectBpersoninspectionattachOfInspectList"
+			column="id"></collection>
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -67,14 +70,17 @@
 		p.fillpersonid,
 		p.verifypersonid,
 		p.remark,
-		u.`name` AS owerdepname,
+		u.`name` AS
+		owerdepname,
 		r.`name` AS redevname,
 		i.`name` AS inspecttypename
 		FROM
 		bpersoninspection AS p
 		LEFT JOIN udepartment u ON u.id = p.owerdep
-		LEFT JOIN brcstationdevhouse r ON r.id = p.redevid
-		LEFT JOIN dicinspecttype i ON i.id = p.typeid
+		LEFT
+		JOIN brcstationdevhouse r ON r.id = p.redevid
+		LEFT JOIN dicinspecttype
+		i ON i.id = p.typeid
 		${ew.sqlSegment}
 	</select>
 

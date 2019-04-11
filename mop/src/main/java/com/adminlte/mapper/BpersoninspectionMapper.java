@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 public interface BpersoninspectionMapper extends BaseMapper<Bpersoninspection> {
 
 	List<BpersoninspectionVo> selectVoListWrapper(@Param("ew") EntityWrapper<Bpersoninspection> wrapper);
-
+	
 }

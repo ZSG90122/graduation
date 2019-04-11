@@ -2,6 +2,9 @@ package com.adminlte.pojo.vo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
+import com.adminlte.pojo.Bpersoninspectionattach;
 
 public class BpersoninspectionVo implements Serializable {
 	private Long id;
@@ -41,6 +44,8 @@ public class BpersoninspectionVo implements Serializable {
 	private String redevname;
 	
 	private String inspecttypename;
+	
+	private List<Bpersoninspectionattach> bpersoninspectionattachs;
 
 	public Long getId() {
 		return id;
@@ -193,4 +198,13 @@ public class BpersoninspectionVo implements Serializable {
 	public void setRemark(String remark) {
 		this.remark = remark == null ? null : remark.trim();
 	}
+
+	public List<Bpersoninspectionattach> getBpersoninspectionattachs() {
+		return bpersoninspectionattachs;
+	}
+
+	public void setBpersoninspectionattachs(List<Bpersoninspectionattach> bpersoninspectionattachs) {
+		this.bpersoninspectionattachs = bpersoninspectionattachs;
+	}
+	
 }

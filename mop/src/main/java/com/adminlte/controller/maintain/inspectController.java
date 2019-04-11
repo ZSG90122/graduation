@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,7 +46,7 @@ public class inspectController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/goTofaultManagePage")
-	public String goTofaultManagePage(Model model,@RequestParam Long inspectid) {
+	public String goTofaultManagePage(Model model, @RequestParam Long inspectid) {
 		Bpersoninspection personinspection = this.ibpersoninspectionService.selectById(inspectid);
 		model.addAttribute("inspectid", personinspection.getId());
 		model.addAttribute("stationid", personinspection.getRedevid());
@@ -229,5 +230,22 @@ public class inspectController extends BaseController {
 		} catch (Exception e) {
 			return new Result(false);
 		}
+	}
+
+	/**
+	 * 返回多表连接后的某一巡检的信息，主要目的是去获取图片信息
+	 * 
+	 * @param inspectid
+	 * @return
+	 */
+	@RequestMapping("/getImageResourceOfThisInspect")
+	@ResponseBody
+	public List<BpersoninspectionVo> getImageResourceOfThisInspect(@RequestParam Long inspectid) {
+		EntityWrapper<Bpersoninspection> wrapper = new EntityWrapper<Bpersoninspection>();
+		wrapper.isWhere(true);
+		wrapper.eq("p.id", inspectid);
+		System.out.println("!!!!!!!!!!!!!!!!" + this.ibpersoninspectionService.getImageResourceOfThisInspect(wrapper));
+		return this.ibpersoninspectionService.getImageResourceOfThisInspect(wrapper);
+
 	}
 }

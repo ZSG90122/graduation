@@ -34,4 +34,10 @@ public class BpersoninspectionServiceImpl extends ServiceImpl<BpersoninspectionM
 		return datatablesResult;
 	}
 
+	@Override
+	public List<BpersoninspectionVo> getImageResourceOfThisInspect(EntityWrapper<Bpersoninspection> wrapper) {
+		return this.bpersoninspectionMapper.selectVoListWrapper(wrapper);
+	}
+
+
 }

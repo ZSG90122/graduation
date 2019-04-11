@@ -114,7 +114,6 @@
 							<!-------------第一个表框开始 ---------->
 							<div class="panel panel-default" id="panel1">
 								<div class="panel-body">
-
 									<input type="hidden" class="form-control" name="id" id='id'>
 									<!-- 第一行 -->
 									<div class="form-group">
@@ -191,39 +190,29 @@
 												id="inspectperson" placeholder="请输入巡检人名称">
 										</div>
 									</div>
-									<!-------------第一个表框结束 ---------->
-
 								</div>
 							</div>
-							<!-- 第一个表框结束 -->
+							<!-- ==========第一个表框结束======== -->
+						</div>
+						<!-- ==========modal-body结束======== -->
 					</form>
-					<div class="row-fluid">
-						<div class="row" style="margin-left:0px;">
-							<h5>图片上传:</h5>
-						</div>
-					</div>
-					<div class="panel panel-default" id="panel2">
-						<div class="panel-body">
-							<div class="row">
-								<div class="col-md-15">
-									<div class="form-group" style="margin:0px 0px 0px 75px;">
-										<label for="inputName" class="col-md-4 control-label">文档材料</label>
-										<div class="col-md-10">
-											<form id="add_talentattach_form" method="post"
-												enctype="multipart/form-data">
-												<input id="uploadfile" type="file" name="uploadfile"
-													data-ref="url2" class="file-loading" value="test" multiple />
-												<input type="hidden" id="path" name="path"
-													value="upload/material">
-											</form>
-										</div>
-									</div>
-								</div>
+					<div class="modal-body">
+						<div class="row-fluid">
+							<div class="row" style="margin-left:0px;">
+								<h5>图片上传:</h5>
 							</div>
 						</div>
-
-
-
+						<div class="panel panel-default" id="panel1">
+							<div class="panel-body">
+								<form id="add_inspectattach_form" method="post"
+									enctype="multipart/form-data">
+									<input id="uploadimage" type="file" name="uploadimage"
+										data-ref="url2" class="file-loading" value="test" multiple />
+									<input type="hidden" id="path" name="path"
+										value="upload/material">
+								</form>
+							</div>
+						</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" id="btn-cancel" class="btn btn-default"
@@ -234,48 +223,48 @@
 							<i class="fa fa-save">&nbsp;保存</i>
 						</button>
 					</div>
-					<!-- modal body结束 -->
-
 
 				</div>
 			</div>
 		</div>
-		<!-- editModal END -->
-
-		<div class="modal fade" id="verify_opinion_modal">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close">
-							<span aria-hidden="true">×</span>
-						</button>
-						<h4 class="modal-title">审核意见</h4>
-					</div>
-					<div class="modal-body">
-						<form class="form-horizontal" action="">
-							<div class="form-group">
-								<label for="finishcontent" class="col-sm-2 control-label">审核意见</label>
-								<div class="col-sm-6">
-									<textarea class="form-control" style="resize:none"
-										name="finishcontent" rows="5" id="finishcontent"
-										placeholder="请输入审核意见......"></textarea>
-								</div>
-							</div>
-						</form>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default pull-left"
-							data-dismiss="modal">取消</button>
-						<button id="btn_confirm" type="button"
-							class="btn btn-primary suredepart" data-dismiss="modal">确定</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!--  -->
-
+		<!-- ====================editModal结束==================== -->
 	</div>
+
+
+	<div class="modal fade" id="verify_opinion_modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+					<h4 class="modal-title">审核意见</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" action="">
+						<div class="form-group">
+							<label for="finishcontent" class="col-sm-2 control-label">审核意见</label>
+							<div class="col-sm-6">
+								<textarea class="form-control" style="resize:none"
+									name="finishcontent" rows="5" id="finishcontent"
+									placeholder="请输入审核意见......"></textarea>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default pull-left"
+						data-dismiss="modal">取消</button>
+					<button id="btn_confirm" type="button"
+						class="btn btn-primary suredepart" data-dismiss="modal">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--  -->
+
+
 </body>
 </html>
 <script
@@ -343,7 +332,6 @@
 		todayBtn : true,
 		autoclose : 1
 	});
-
 	$(".select2").select2({
 		tags : true,
 		createTag : function(decorated, params) {
@@ -356,14 +344,12 @@
 	var form = null;
 	var querydata = [];
 	querydata.querystring = "";
-
 	//页面加载完成后根据查询语句设置查询框中的选项
 	window.onload = function() {
 		if (null != name) {
 			$('#keyword').val(name);
 		}
 	}
-
 	$(function() {
 		form = $('#editForm').form();
 		//添加、修改异步提交地址
@@ -375,9 +361,7 @@
          "<a id='delRow' class='label label-danger'><i class='fa fa-trash-o'></i></a>" +
          "</div>"
     	</shiro:hasAnyRoles>
-
 		var url = "";
-
 		var tables = $("#dataTable").dataTable({
 			serverSide : true, //分页，取数据等等的都放到服务端去
 			pageLength : 10, //首次加载的数据条数
@@ -516,14 +500,12 @@
 		//添加
 		$("#btn-add").on("click", function() {
 			$("#typeid").prop("disabled", false);
-			// 			$("#isfault").prop("disabled", false);
 			$("input[name=id]").val(null);
 			// 用于级联效果的参数，防止前面值的影响，置为空
 			taskid = null;
 			redevid = null;
 			sel.syndata('owerdep', "<%=request.getContextPath()%>/rest/department/getdeplist", 'id', 'name', function(data) {});
 			sel.syndata('typeid', "<%=request.getContextPath()%>/rest/dic/getInspcetTypeList", 'id', 'name', function(data) {});
-
 			$("input[name=name]").val("");
 			$("#isfault").empty();
 			$("#isfault").append("<option value='" + 0 + "'>&nbsp;" + "无故障" + "</option>");
@@ -533,6 +515,11 @@
 			$("textarea[name=inspectresult]").val("");
 			$("input[name=inspecttime]").val("");
 			$("input[name=inspectperson]").val("");
+			//初始化上传图片的参数
+			filelist = [];
+			pathArr = [];
+			nameArr = [];
+			initFileInput();
 			url = "<%=request.getContextPath()%>/rest/inspect/insertOneInspect";
 			$("#myModalLabel").html("<b>巡检信息录入</b>");
 			$("#editModal").modal("show");
@@ -541,7 +528,6 @@
 			$("#editForm").data('bootstrapValidator', null);
 			inputvalidator();
 		});
-
 		var stateOfFault = null; //这个值保存选中行是否存在过问题
 		//修改
 		$("#dataTable tbody").on("click", "#editRow", function() {
@@ -553,7 +539,6 @@
 			sel.synbinddata('typeid', "<%=request.getContextPath()%>/rest/dic/getInspcetTypeList", 'id', 'name', data.typeid, function(data) {});
 			$("#typeid").prop("disabled", true);
 			$("#taskid").prop("disabled", true);
-
 			$("input[name=name]").val(data.name);
 			$("#isfault").empty();
 			if (data.isfault == 0) {
@@ -571,23 +556,65 @@
 				$("#isfault").append("<option value='" + 1 + "'>&nbsp;" + "有故障" + "</option>");
 				$("#isfault").append("<option value='" + 2 + "'>&nbsp;" + "已修复" + "</option>");
 			}
-
 			$("#isfault").select2("val", [ data.isfault ])
 			$("textarea[name=inspectcontent]").val(data.inspectcontent);
 			$("textarea[name=inspectresult]").val(data.inspectresult);
 			$("input[name=inspecttime]").val(new Date(data.inspecttime).format("yyyy-MM-dd hh:mm:ss"));
 			$("input[name=inspectperson]").val(data.inspectperson);
+
+			// 数据库中去获取图片信息，进行回显
+			// 先初始化文件上传的参数
+			filelist = [];
+			pathArr = [];
+			nameArr = [];
+			// 进行参数赋值 , 赋值之前先去获取本行巡检所拥有的图片资源
+			$.ajax({
+				url : "<%=request.getContextPath()%>/rest/inspect/getImageResourceOfThisInspect?inspectid=" + data.id,
+				type : 'post',
+				dataType : "json",
+				cache : "false",
+				data : null,
+				success : function(dataOfReturn) {
+					console.log(dataOfReturn);
+					// 获取到此行巡检对应的图片资源
+					var data = new Object();
+					data = dataOfReturn[0];
+					console.log(data)
+					for (var k = 0; k < data.bpersoninspectionattachs.length; k++) {
+// 						var item = data.attachList[k];
+// 						/* alert(JSON.stringify(item)); */
+// 						//构造
+<%-- 						pathArr.push("<%=request.getContextPath()%>" + "/" + item.url); //文件访问地址 这里需要网络地址  例：http://localhost:8080/xxx/xx.jpg --%>
+// 						var obj = new Object();
+// 						obj.caption = item.name; //item.id;    
+// 						obj.type = item.type;
+// 						obj.size = 100;
+// 						obj.key = item.id;
+<%-- 						obj.url = "<%=request.getContextPath()%>/rest/FileUpload/springDelete" + "?fileurl=" + item.url; //用于初始化文件删除事件地址 --%>
+
+// 						nameArr.push(obj);
+// 						//用于重新上传和更新
+// 						var attach = new Object();
+// 						attach.id = item.id
+// 						attach.url = item.url;
+// 						attach.type = item.type;
+// 						attach.talentId = item.talentId;
+// 						filelist.push(attach);
+					}
+				},
+				error : function(err) {
+					toastr.error("Server Connection Error<%=request.getContextPath()%>.");
+				}
+			});
 			//修改操作时controller的url
 			url = "<%=request.getContextPath()%>/rest/inspect/updateOneInspect";
 			$("#myModalLabel").html("<b>修改巡检信息</b>");
 			$("#editModal").modal("show");
-
 			//下边2行清除上次验证结果
 			$("#editForm").data('bootstrapValidator').destroy();
 			$("#editForm").data('bootstrapValidator', null);
 			inputvalidator();
 		});
-
 		var taskid;
 		// 巡检类型下拉列表值变化监听事件
 		$("#typeid").on('change', function() {
@@ -599,7 +626,6 @@
 			} else {
 				// 添加了校验之后会添加一个隐藏的标签，所以用两个next
 				$("#taskid").next().css("display", "");
-				// 				$("#taskid").prop("disabled", false);
 				if (taskid == null) {
 					sel.bindselectNonefirst('taskid', "<%=request.getContextPath()%>/rest/task/getTransedTaskList", 'id', 'taskcontent');
 				} else {
@@ -609,8 +635,6 @@
 				$("#taskLable").show();
 			}
 		});
-
-
 		var redevid;
 		$("#owerdep").on('change', function() {
 			var owerDepVal = $("#owerdep").val();
@@ -622,7 +646,6 @@
 				sel.bindselectfirst('redevid', "<%=request.getContextPath()%>/rest/remotestation/getRemoteStationList?owerdep=" + owerDepVal, 'id', 'name');
 			}
 		});
-
 		// 提交
 		$("#btn-submit").on("click", function() {
 			$("#editForm").bootstrapValidator('validate'); //提交验证
@@ -661,7 +684,6 @@
 			$("#editForm").data('bootstrapValidator', null);
 			inputvalidator();
 		});
-
 		//删除
 		$("#dataTable tbody").on("click", "#delRow", function() {
 			var data = tables.api().row($(this).parents("tr")).data();
@@ -688,7 +710,6 @@
 				});
 			}
 		});
-
 		//批量删除
 		$("#btn-delAll").on("click", function() {
 			obj = $("input[name='checkList']");
@@ -726,13 +747,11 @@
 				});
 			}
 		});
-
 		//刷新
 		$("#btn-re").on("click", function() {
 			tables.api().ajax.reload(); //刷新保持分页状态
 			tables.fnDraw();
 		});
-
 		//checkbox全选
 		$("#checkAll").on("click", function() {
 			if ($(this).prop("checked") === true) {
@@ -744,7 +763,6 @@
 				$("#dataTable tbody tr").removeClass('selected');
 			}
 		});
-
 		// 数据校验
 		function inputvalidator() {
 			console.log("进行表单验证")
@@ -760,26 +778,6 @@
 					// 版本号v0.5.2-dev不再支持submitHandler配置	
 				},
 				fields : {
-					// 					taskid : {
-					// 						validators : {
-					// 							callback : {
-					// 								message : "请选择任务，若无任务，请确认任务是否已下达",
-					// 								callback : function(value, validator) {
-					// 									if (value == -1) {
-					// 										return false;
-					// 									}
-					// 									else return true;
-					// 								}
-					// 							}
-					// 						}
-					// 					},
-					// 					owerdep : {
-					// 						validators : {
-					// 							notEmpty : {
-					// 								message : '请选择市州'
-					// 							}
-					// 						}
-					// 					},
 					name : {
 						validators : {
 							notEmpty : {
@@ -813,12 +811,9 @@
 				e.preventDefault(); //防止重复提交						
 			});
 		}
-
-
 		$("#btn-cancel").on("click", function() {
 			$("#editModal").modal("hide");
 		});
-
 		var verify_data;
 		// 审核按钮事件
 		$("#dataTable tbody").on("click", "#btn_verify", function() {
@@ -826,7 +821,6 @@
 			$("#verify_opinion_modal").modal("show");
 			$("#finishcontent").val("");
 		});
-
 		// 提交审核意见
 		$("#btn_confirm").on("click", function() {
 			verify_data.finishcontent = $("#finishcontent").val();
@@ -856,6 +850,7 @@
 			}
 		});
 
+		// 插入故障按钮，带值跳转到故障录入界面
 		$("#dataTable tbody").on("click", "#insert_fault", function() {
 			verify_data = tables.api().row($(this).parents("tr")).data();
 			if (undefined != $(window.parent.document).contents().find("#iframe_803")[0]) {
@@ -866,7 +861,6 @@
 					close : true,
 					url : "/inspect/goTofaultManagePage?inspectid=" + verify_data.id
 				});
-				//$(window.parent.document).contents().find("#iframe_803")[0].contentWindow.parentprojectId(data.id);
 				$(window.parent.document).contents().find("#iframe_803")[0].contentWindow.$("#btn-re").click();
 			} else {
 				parent.addTabs({
@@ -875,8 +869,106 @@
 					close : true,
 					url : "/inspect/goTofaultManagePage?inspectid=" + verify_data.id
 				});
-			//$(window.parent.document).contents().find("#iframe_803")[0].contentWindow.parentprojectId(data.id);
 			}
 		});
 	});
+
+	// 上传文件的参数     在$(function(){})的外部
+	var oFileInput = new DSFileInput();
+	var filelist = [];
+	var pathArr = new Array(); //文件网络地址 集合
+	var nameArr = new Array(); //文件信息集合
+	var filepath = "upload/material";
+
+	var uploadUrl = "<%=request.getContextPath()%>/rest/FileUpload/springUpload";
+	var deleteUrl = "<%=request.getContextPath()%>/rest/FileUpload/springDelete";
+
+	function uploadcallback(url, previewId, filetype) {
+		console.log("uploadcallback")
+		var attach = new Object();
+		attach.attur = url;
+		attach.type = filetype;
+		filelist.push(attach); //上传
+		var deleteaction = deleteUrl + "?fileurl=" + url;
+		console.log(deleteaction)
+		$("#" + previewId).find(".kv-file-remove").click(function() {
+			$.ajax({
+				url : deleteaction,
+				type : "post",
+				dataType : "json",
+				success : function(result) {
+					filelist.removebyurl(result.url);
+				},
+				error : function(result) {}
+			});
+		});
+	}
+
+	function deletecallback(key) {
+		console.log("uploadcallback")
+		var data = new Object();
+		data.id = key;
+		if (key > 0) {
+			$.ajax({
+				url : "<%=request.getContextPath()%>/rest/datamanager/deletewordbyid",
+				type : 'post',
+				dataType : "json",
+				cache : "false",
+				data : data,
+				success : function(data) {
+					if (data.success) {
+						toastr.success("删除成功！");
+					} else {
+						toastr.error('删除失败！' + JSON.stringify(data));
+					}
+				},
+				error : function(err) {
+					toastr.error("Server Connection Error<%=request.getContextPath()%>.");
+				}
+			});
+		}
+		filelist.removebyid(key);
+	}
+
+	function initFileInput() {
+		$("#add_inspectattach_form").empty();
+		$("#add_inspectattach_form").append("<input id='uploadimage' type='file' name='uploadimage' data-ref='url2' class='file-loading' value='test' multiple/>");
+		oFileInput.Init("uploadimage", uploadUrl, deleteUrl, true, pathArr, nameArr, filepath, uploadcallback, deletecallback);
+	}
+	Array.prototype.removebyid = function(id) {
+		if (this.length < 1) {
+			return false;
+		}
+		var a = -1;
+		for (var i = 0; i < this.length; i++) {
+			if (this[i].id == id) {
+				a = i;
+				break;
+			}
+		}
+		//var a = this.indexOf(b);
+		if (a >= 0) {
+			this.splice(a, 1);
+			return true;
+		}
+		return false;
+	};
+	Array.prototype.removebyurl = function(url) {
+		if (this.length < 1) {
+			return false;
+		}
+		var a = -1;
+		for (var i = 0; i < this.length; i++) {
+			if (this[i].url == url) {
+				a = i;
+				break;
+			}
+		}
+		//var a = this.indexOf(b);
+		if (a >= 0) {
+			this.splice(a, 1);
+			return true;
+		}
+		return false;
+	};
 </script>
