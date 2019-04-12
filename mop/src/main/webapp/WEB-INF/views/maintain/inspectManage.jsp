@@ -351,6 +351,7 @@
 	});
 </script>
 <script>
+    var inspectid_use_by_upload; // 用于上传图片的巡检的编号
 	var form = null;
 	var querydata = [];
 	querydata.querystring = "";
@@ -548,6 +549,7 @@
 		var stateOfFault = null; //这个值保存选中行是否存在过问题
 		//修改
 		$("#dataTable tbody").on("click", "#editRow", function() {
+			$("#uploadfile").fileinput('reset')
 			var data = tables.api().row($(this).parents("tr")).data();
 			$("input[name=id]").val(data.id);
 			taskid = data.taskid;
@@ -597,25 +599,24 @@
 					data = dataOfReturn[0];
 					console.log(data)
 					for (var k = 0; k < data.bpersoninspectionattachs.length; k++) {
-// 						var item = data.attachList[k];
-// 						/* alert(JSON.stringify(item)); */
-// 						//构造
-<%-- 						pathArr.push("<%=request.getContextPath()%>" + "/" + item.url); //文件访问地址 这里需要网络地址  例：http://localhost:8080/xxx/xx.jpg --%>
-// 						var obj = new Object();
-// 						obj.caption = item.name; //item.id;    
-// 						obj.type = item.type;
-// 						obj.size = 100;
-// 						obj.key = item.id;
-<%-- 						obj.url = "<%=request.getContextPath()%>/rest/FileUpload/springDelete" + "?fileurl=" + item.url; //用于初始化文件删除事件地址 --%>
-// 						nameArr.push(obj);
-// 						//用于重新上传和更新
-// 						var attach = new Object();
-// 						attach.id = item.id
-// 						attach.url = item.url;
-// 						attach.type = item.type;
-// 						attach.talentId = item.talentId;
-// 						filelist.push(attach);
+						var item = data.bpersoninspectionattachs[k];
+						/* alert(JSON.stringify(item)); */
+						//构造
+						pathArr.push("<%=request.getContextPath()%>" + "/" + item.url); //文件访问地址 这里需要网络地址  例：http://localhost:8080/xxx/xx.jpg
+						var obj = new Object();
+						obj.caption = item.title;
+						obj.key = item.id; 
+						obj.type = "image";
+						//obj.url = "<%=request.getContextPath()%>/rest/FileUpload/springDelete" + "?fileurl=" + item.url; //用于初始化文件删除事件地址
+						obj.url = "<%=request.getContextPath()%>/rest/FileUpload/springDelete" + "?fileurl=" + item.url; //用于初始化文件删除事件地址
+						nameArr.push(obj);
+						//用于重新上传和更新
+						var attach = new Object();
+						attach.id = item.id
+						attach.url = item.url;
+						filelist.push(attach);
 					}
+					initFileInput();
 				},
 				error : function(err) {
 					toastr.error("Server Connection Error<%=request.getContextPath()%>.");
@@ -674,11 +675,16 @@
 						url : url,
 						type : 'post',
 						cache : "false",
-						data : params, //
+						data : params, 
 						dataType : "json",
-						success : function(data) {
-							if (data.success) {
-								tables.fnDraw(false); //刷新保持分页状态 false重新加载当前页，true重新加载初始状态
+						success : function(returnData) {
+							if (returnData.success) {
+							    // 执行添加操作后需要返回添加成功后的巡检的id，用于图片的上传
+							    inspectid_use_by_upload = returnData.data
+							    if(inspectid_use_by_upload==null)
+							        inspectid_use_by_upload = params.id
+							    $('#uploadimage').fileinput('upload')
+								tables.fnDraw(false); 
 								$("#editModal").modal("hide");
 								toastr.success("保存成功！");
 							} else {
@@ -821,7 +827,7 @@
 							}
 						}
 					}
-				} /* end field */
+				} 
 			}).on("success.form.bv", function(e) {
 				e.preventDefault(); //防止重复提交						
 			});
@@ -888,34 +894,44 @@
 	});
 	// 上传文件的参数     在$(function(){})的外部
 	var oFileInput = new DSFileInput();
+	
 	var filelist = [];
 	var pathArr = new Array(); //文件网络地址 集合
 	var nameArr = new Array(); //文件信息集合
 	var filepath = "upload/material";
 	var uploadUrl = "<%=request.getContextPath()%>/rest/FileUpload/springUpload";
 	var deleteUrl = "<%=request.getContextPath()%>/rest/FileUpload/springDelete";
+	// 上传成功后
 	function uploadcallback(url, previewId, filetype) {
 		console.log("uploadcallback")
 		var attach = new Object();
-		attach.attur = url;
-		attach.type = filetype;
-		filelist.push(attach); //上传
-		var deleteaction = deleteUrl + "?fileurl=" + url;
-		console.log(deleteaction)
-		$("#" + previewId).find(".kv-file-remove").click(function() {
-			$.ajax({
-				url : deleteaction,
-				type : "post",
+		attach.id = null;
+		attach.inpectid = inspectid_use_by_upload;
+		attach.title = "图片";
+		attach.url = url;
+		console.log(attach);
+		filelist.push(attach);
+		// 插入到数据库的逻辑
+		$.ajax({
+				url : "<%=request.getContextPath()%>/rest/inspect/addPersonInspectionAttach",
+				type : 'post',
 				dataType : "json",
-				success : function(result) {
-					filelist.removebyurl(result.url);
+				cache : "false",
+				data : attach,
+				success : function(data) {
+					if (data.success) {
+					} else {
+						toastr.error('图片保存数据库失败！' + JSON.stringify(data));
+					}
 				},
-				error : function(result) {}
+				error : function(err) {
+					toastr.error("Server Connection Error<%=request.getContextPath()%>.");
+				}
 			});
-		});
 	}
+	
 	function deletecallback(key) {
-		console.log("uploadcallback")
+		console.log("deletecallback")
 		var data = new Object();
 		data.id = key;
 		if (key > 0) {

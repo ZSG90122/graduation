@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.adminlte.controller.BaseController;
 import com.adminlte.pojo.Bpersoninspection;
+import com.adminlte.pojo.Bpersoninspectionattach;
 import com.adminlte.pojo.Btask;
 import com.adminlte.pojo.vo.BpersoninspectionVo;
 import com.adminlte.pojo.vo.Result;
 import com.adminlte.result.DatatablesResult;
 import com.adminlte.service.IBpersoninspectionService;
+import com.adminlte.service.IBpersoninspectionattachService;
 import com.adminlte.service.IBtaskService;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 
@@ -33,6 +35,9 @@ public class inspectController extends BaseController {
 
 	@Autowired
 	IBtaskService ibtaskService;
+
+	@Autowired
+	IBpersoninspectionattachService ibpersoninspectionattachService;
 
 	@RequestMapping("/inspectManage")
 	public String inspectManage(Model model) {
@@ -132,7 +137,7 @@ public class inspectController extends BaseController {
 				// 非任务巡检无需审核
 				bpersoninspection.setState((byte) 2);
 			this.ibpersoninspectionService.insert(bpersoninspection);
-			return new Result(true);
+			return new Result(true, bpersoninspection.getId());
 		} catch (Exception e) {
 			return new Result(false);
 		}
@@ -244,8 +249,35 @@ public class inspectController extends BaseController {
 		EntityWrapper<Bpersoninspection> wrapper = new EntityWrapper<Bpersoninspection>();
 		wrapper.isWhere(true);
 		wrapper.eq("p.id", inspectid);
-		System.out.println("!!!!!!!!!!!!!!!!" + this.ibpersoninspectionService.getImageResourceOfThisInspect(wrapper));
 		return this.ibpersoninspectionService.getImageResourceOfThisInspect(wrapper);
+	}
 
+	/**
+	 * 添加图片附件
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/addPersonInspectionAttach", method = RequestMethod.POST)
+	@ResponseBody
+	@Transactional
+	public Result addPersonInspectionAttach(Bpersoninspectionattach bpersoninspectionattach) {
+		try {
+			this.ibpersoninspectionattachService.insert(bpersoninspectionattach);
+			return new Result(true);
+		} catch (Exception e) {
+			return new Result(false);
+		}
+	}
+	
+	@RequestMapping(value = "/deleteOneAttach", method = RequestMethod.POST)
+	@ResponseBody
+	@Transactional
+	public Result deleteOneAttach(Bpersoninspectionattach bpersoninspectionattach) {
+		try {
+			this.ibpersoninspectionattachService.deleteById(bpersoninspectionattach);
+			return new Result(true);
+		} catch (Exception e) {
+			return new Result(false);
+		}
 	}
 }

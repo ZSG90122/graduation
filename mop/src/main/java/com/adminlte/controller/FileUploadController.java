@@ -137,7 +137,7 @@ public class FileUploadController extends BaseController{
 			String url = request.getParameter("fileurl");
 			String path = request.getSession().getServletContext().getRealPath("/");
 			String fullpath = path+ url;
-			System.out.println(fullpath);
+			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!"+fullpath);
 			File file = new File(fullpath);
 			if(file.exists() && file.isFile()){
 				file.delete();
