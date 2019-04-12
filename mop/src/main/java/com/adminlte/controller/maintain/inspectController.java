@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.adminlte.controller.BaseController;
+import com.adminlte.pojo.Bfault;
 import com.adminlte.pojo.Bpersoninspection;
 import com.adminlte.pojo.Bpersoninspectionattach;
 import com.adminlte.pojo.Btask;
 import com.adminlte.pojo.vo.BpersoninspectionVo;
 import com.adminlte.pojo.vo.Result;
 import com.adminlte.result.DatatablesResult;
+import com.adminlte.service.IBfaultService;
 import com.adminlte.service.IBpersoninspectionService;
 import com.adminlte.service.IBpersoninspectionattachService;
 import com.adminlte.service.IBtaskService;
@@ -35,6 +37,9 @@ public class inspectController extends BaseController {
 
 	@Autowired
 	IBtaskService ibtaskService;
+	
+	@Autowired
+	IBfaultService ibfaultService;
 
 	@Autowired
 	IBpersoninspectionattachService ibpersoninspectionattachService;
@@ -168,7 +173,7 @@ public class inspectController extends BaseController {
 	 */
 	@RequestMapping(value = "/deleteOneInspect", method = RequestMethod.POST)
 	@ResponseBody
-	public Result deleteOneTask(Bpersoninspection personinspection) {
+	public Result deleteOneInspect(Bpersoninspection personinspection) {
 		try {
 			// 获取待删除的巡检的完整信息
 			Bpersoninspection personinspectionFullm = this.ibpersoninspectionService.selectById(personinspection);
@@ -179,6 +184,10 @@ public class inspectController extends BaseController {
 				task.setState((byte) 0);
 				this.ibtaskService.updateById(task);
 			}
+			// 同时删除该巡检发现的故障
+			EntityWrapper<Bfault> wrapper = new EntityWrapper<Bfault>();
+			wrapper.eq("inpectid", personinspection.getId());
+			this.ibfaultService.delete(wrapper);
 			this.ibpersoninspectionService.deleteById(personinspection);
 			return new Result(true);
 		} catch (Exception e) {
@@ -196,8 +205,20 @@ public class inspectController extends BaseController {
 	@ResponseBody
 	public Result deleteInspectByBatch(@RequestBody List<Bpersoninspection> personinspectionList) {
 		try {
-			for (Bpersoninspection personinspection : personinspectionList)
+			for (Bpersoninspection personinspection : personinspectionList) {
+				// 如果删除的是任务巡检，那么需要更新任务的状态为下达状态
+				Bpersoninspection personinspectionFullm = this.ibpersoninspectionService.selectById(personinspection);
+				if (personinspectionFullm.getTypeid() == 1) {
+					Btask task = this.ibtaskService.selectById(personinspectionFullm.getTaskid());
+					// 任务巡检删除之后取消填入状态，置为下达状态
+					task.setState((byte) 0);
+					this.ibtaskService.updateById(task);
+					EntityWrapper<Bfault> wrapper = new EntityWrapper<Bfault>();
+					wrapper.eq("inpectid", personinspection.getId());
+					this.ibfaultService.delete(wrapper);
+				}
 				this.ibpersoninspectionService.deleteById(personinspection);
+			}
 			return new Result(true);
 		} catch (Exception e) {
 			return new Result(false);
@@ -268,7 +289,7 @@ public class inspectController extends BaseController {
 			return new Result(false);
 		}
 	}
-	
+
 	@RequestMapping(value = "/deleteOneAttach", method = RequestMethod.POST)
 	@ResponseBody
 	@Transactional

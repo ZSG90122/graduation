@@ -1,9 +1,15 @@
 <%@page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
 <!DOCTYPE html>
 <html>
 <head>
+<base href="<%=basePath%>">
 <meta charset="utf-8">
 <title>巡检管理</title>
 <link rel="stylesheet"
@@ -534,10 +540,8 @@
 			$("input[name=inspecttime]").val("");
 			$("input[name=inspectperson]").val("");
 			//初始化上传图片的参数
-			filelist = [];
-			pathArr = [];
-			nameArr = [];
-			initFileInput();
+			
+			
 			url = "<%=request.getContextPath()%>/rest/inspect/insertOneInspect";
 			$("#myModalLabel").html("<b>巡检信息录入</b>");
 			$("#editModal").modal("show");
@@ -546,10 +550,9 @@
 			$("#editForm").data('bootstrapValidator', null);
 			inputvalidator();
 		});
-		var stateOfFault = null; //这个值保存选中行是否存在过问题
+		
 		//修改
 		$("#dataTable tbody").on("click", "#editRow", function() {
-			$("#uploadfile").fileinput('reset')
 			var data = tables.api().row($(this).parents("tr")).data();
 			$("input[name=id]").val(data.id);
 			taskid = data.taskid;
@@ -582,46 +585,21 @@
 			$("input[name=inspectperson]").val(data.inspectperson);
 			// 数据库中去获取图片信息，进行回显
 			// 先初始化文件上传的参数
-			filelist = [];
-			pathArr = [];
-			nameArr = [];
-			// 进行参数赋值 , 赋值之前先去获取本行巡检所拥有的图片资源
 			$.ajax({
-				url : "<%=request.getContextPath()%>/rest/inspect/getImageResourceOfThisInspect?inspectid=" + data.id,
-				type : 'post',
-				dataType : "json",
-				cache : "false",
-				data : null,
-				success : function(dataOfReturn) {
-					console.log(dataOfReturn);
-					// 获取到此行巡检对应的图片资源
-					var data = new Object();
-					data = dataOfReturn[0];
-					console.log(data)
-					for (var k = 0; k < data.bpersoninspectionattachs.length; k++) {
-						var item = data.bpersoninspectionattachs[k];
-						/* alert(JSON.stringify(item)); */
-						//构造
-						pathArr.push("<%=request.getContextPath()%>" + "/" + item.url); //文件访问地址 这里需要网络地址  例：http://localhost:8080/xxx/xx.jpg
-						var obj = new Object();
-						obj.caption = item.title;
-						obj.key = item.id; 
-						obj.type = "image";
-						//obj.url = "<%=request.getContextPath()%>/rest/FileUpload/springDelete" + "?fileurl=" + item.url; //用于初始化文件删除事件地址
-						obj.url = "<%=request.getContextPath()%>/rest/FileUpload/springDelete" + "?fileurl=" + item.url; //用于初始化文件删除事件地址
-						nameArr.push(obj);
-						//用于重新上传和更新
-						var attach = new Object();
-						attach.id = item.id
-						attach.url = item.url;
-						filelist.push(attach);
-					}
-					initFileInput();
-				},
-				error : function(err) {
-					toastr.error("Server Connection Error<%=request.getContextPath()%>.");
-				}
-			});
+			url : "<%=request.getContextPath()%>/rest/inspect/getImageResourceOfThisInspect?inspectid=" + data.id,
+			type : 'post',
+			dataType : "json",
+			cache : "false",
+			data : null,
+			success : function(seldata) {
+			    console.log(seldata)
+				initMessageOfImage(seldata);
+			},
+			error : function(err) {
+				toastr.error("Server Connection Error<%=request.getContextPath()%>.");
+			}
+		});
+			
 			//修改操作时controller的url
 			url = "<%=request.getContextPath()%>/rest/inspect/updateOneInspect";
 			$("#myModalLabel").html("<b>修改巡检信息</b>");
@@ -631,6 +609,35 @@
 			$("#editForm").data('bootstrapValidator', null);
 			inputvalidator();
 		});
+		function initMessageOfImage(seldata){
+		    console.log(seldata);
+			var data = new Object();
+			data = seldata[0];//data中的有个参数是图片的资源信息
+			filelist = [];
+			pathArr = [];
+			nameArr = [];
+			for (var k = 0; k < data.bpersoninspectionattachs.length; k++) {
+				var item = data.bpersoninspectionattachs[k];
+				//构造
+				console.log("<%=request.getContextPath()%>" + "/" + item.url);
+				pathArr.push("<%=request.getContextPath()%>" + "/" + item.url); //文件访问地址 这里需要网络地址  例：http://localhost:8080/xxx/xx.jpg
+				var obj = new Object();
+				obj.caption = item.name; //item.id;  
+				obj.size = 100;
+				obj.key = item.id;
+				obj.url = "<%=request.getContextPath()%>/rest/FileUpload/springDelete" + "?fileurl=" + item.url; //用于初始化文件删除事件地址
+				console.log("这个让人费解的url哦" + obj.url);
+				nameArr.push(obj);
+				//用于重新上传和更新
+				var attach = new Object();
+				attach.id = item.id
+				attach.url = item.url;
+				attach.inpectid = item.inpectid;
+				filelist.push(attach);
+			}
+			initFileInput();
+		}
+		
 		var taskid;
 		// 巡检类型下拉列表值变化监听事件
 		$("#typeid").on('change', function() {
@@ -835,6 +842,7 @@
 		$("#btn_fake_cancel").on("click", function() {
 			$("#editModal").modal("hide");
 		});
+		
 		var verify_data;
 		// 审核按钮事件
 		$("#dataTable tbody").on("click", "#btn_verify", function() {
@@ -892,58 +900,56 @@
 			}
 		});
 	});
+	
+	
 	// 上传文件的参数     在$(function(){})的外部
 	var oFileInput = new DSFileInput();
-	
 	var filelist = [];
 	var pathArr = new Array(); //文件网络地址 集合
 	var nameArr = new Array(); //文件信息集合
 	var filepath = "upload/material";
+	var selecttalent = new Object();
+
 	var uploadUrl = "<%=request.getContextPath()%>/rest/FileUpload/springUpload";
 	var deleteUrl = "<%=request.getContextPath()%>/rest/FileUpload/springDelete";
-	// 上传成功后
+
 	function uploadcallback(url, previewId, filetype) {
-		console.log("uploadcallback")
 		var attach = new Object();
-		attach.id = null;
-		attach.inpectid = inspectid_use_by_upload;
-		attach.title = "图片";
+		attach.id = null
 		attach.url = url;
-		console.log(attach);
-		filelist.push(attach);
-		// 插入到数据库的逻辑
-		$.ajax({
-				url : "<%=request.getContextPath()%>/rest/inspect/addPersonInspectionAttach",
-				type : 'post',
+		attach.type = filetype;
+		attach.name = "附件";
+		attach.talentId = selecttalent.id;
+		filelist.push(attach); //上传
+		var deleteaction = deleteUrl + "?fileurl=" + url;
+		$("#" + previewId).find(".kv-file-remove").click(function() {
+			$.ajax({
+				url : deleteaction,
+				type : "post",
 				dataType : "json",
-				cache : "false",
-				data : attach,
-				success : function(data) {
-					if (data.success) {
-					} else {
-						toastr.error('图片保存数据库失败！' + JSON.stringify(data));
-					}
+				success : function(result) {
+					filelist.removebyurl(result.url);
 				},
-				error : function(err) {
-					toastr.error("Server Connection Error<%=request.getContextPath()%>.");
+				error : function(result) {
 				}
 			});
+		});
 	}
 	
+	//这个函数在初始化植入的删除按钮事件调用，这意味着有了数据库，需要删除数据库
 	function deletecallback(key) {
-		console.log("deletecallback")
 		var data = new Object();
 		data.id = key;
 		if (key > 0) {
 			$.ajax({
-				url : "<%=request.getContextPath()%>/rest/datamanager/deletewordbyid",
+				url : "<%=request.getContextPath()%>/rest/inspect/deleteOneAttach",
 				type : 'post',
 				dataType : "json",
 				cache : "false",
 				data : data,
 				success : function(data) {
 					if (data.success) {
-						toastr.success("删除成功！");
+						toastr.success("删除数据库成功！");
 					} else {
 						toastr.error('删除失败！' + JSON.stringify(data));
 					}
@@ -960,6 +966,7 @@
 		$("#add_inspectattach_form").append("<input id='uploadimage' type='file' name='uploadimage' data-ref='url2' class='file-loading' value='test' multiple/>");
 		oFileInput.Init("uploadimage", uploadUrl, deleteUrl, true, pathArr, nameArr, filepath, uploadcallback, deletecallback);
 	}
+
 	Array.prototype.removebyid = function(id) {
 		if (this.length < 1) {
 			return false;
@@ -989,7 +996,6 @@
 				break;
 			}
 		}
-		//var a = this.indexOf(b);
 		if (a >= 0) {
 			this.splice(a, 1);
 			return true;
