@@ -12,7 +12,7 @@ public interface IBpersoninspectionService extends IService<Bpersoninspection>{
 
 	DatatablesResult<BpersoninspectionVo> selecDataGridWrapper(int page, int rows, int parseInt,
 			EntityWrapper<Bpersoninspection> wrapper);
-
-	List<BpersoninspectionVo> getImageResourceOfThisInspect(EntityWrapper<Bpersoninspection> wrapper);
+	
+	List<BpersoninspectionVo> getInspectVoList(EntityWrapper<Bpersoninspection> wrapper);
 
 }

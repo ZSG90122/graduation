@@ -16,7 +16,7 @@ var DSFileInput = function() {
      * **/
     oFile.Init = function(ctrlName, uploadUrl,deleteUrl,shwoKey,imgPathArray,imgNameArray,filepath,uploadcallback,deletecallback) {
         var control = $('#' + ctrlName);
-        
+        //console.log(JSON.parse(imgNameArray))
     	control.fileinput({
                 uploadUrl:uploadUrl,//上传的地址
                 uploadAsync:true, //默认异步上传
@@ -50,7 +50,7 @@ var DSFileInput = function() {
                },
                initialPreviewAsData: true,
                initialPreview:imgPathArray,
-               initialPreviewConfig: imgNameArray,
+               initialPreviewConfig: imgNameArray
             });
             //异步上传返回结果处理
             control.on('fileerror', function(event, data, msg) {

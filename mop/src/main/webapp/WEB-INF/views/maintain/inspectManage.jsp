@@ -1,15 +1,9 @@
 <%@page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
-%>
 <!DOCTYPE html>
 <html>
 <head>
-<base href="<%=basePath%>">
 <meta charset="utf-8">
 <title>巡检管理</title>
 <link rel="stylesheet"
@@ -39,6 +33,7 @@
 	href="<%=request.getContextPath()%>/AdminLTE/plugins/select2/select2.min.css">
 </head>
 <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
+	<input type="hidden" id="query" value="${querystring }">
 	<!-- 查询、添加、批量删除、导出、刷新 -->
 	<div class="content">
 		<!-- 查询、添加、批量删除、导出、刷新 -->
@@ -357,10 +352,10 @@
 	});
 </script>
 <script>
-    var inspectid_use_by_upload; // 用于上传图片的巡检的编号
 	var form = null;
 	var querydata = [];
-	querydata.querystring = "";
+	querydata.querystring = $("#query").val();
+	console.log(querydata.querystring)
 	//页面加载完成后根据查询语句设置查询框中的选项
 	window.onload = function() {
 		if (null != name) {
@@ -368,13 +363,13 @@
 		}
 	}
 	$(function() {
-	// 按钮必须在表单内部才可以用bootstrapValidator验证，
-	// 这与图片上传的form冲突，所以用另外一个按钮来操纵提交按钮，避免冲突
-	$("#btn-submit").hide();
-	$("#btn-cancel").hide();
-	$("#btn_fake_submit").on("click",function(){
-	$("#btn-submit").click();
-	})
+		// 按钮必须在表单内部才可以用bootstrapValidator验证，
+		// 这与图片上传的form冲突，所以用另外一个按钮来操纵提交按钮，避免冲突
+		$("#btn-submit").hide();
+		$("#btn-cancel").hide();
+		$("#btn_fake_submit").on("click", function() {
+			$("#btn-submit").click();
+		})
 		form = $('#editForm').form();
 		//添加、修改异步提交地址
 		//只有具有admin权限的用户才具有对数据记录进行删除和修改的功能
@@ -540,8 +535,10 @@
 			$("input[name=inspecttime]").val("");
 			$("input[name=inspectperson]").val("");
 			//初始化上传图片的参数
-			
-			
+			filelist = [];
+			pathArr = [];
+			nameArr = [];
+			initFileInput();
 			url = "<%=request.getContextPath()%>/rest/inspect/insertOneInspect";
 			$("#myModalLabel").html("<b>巡检信息录入</b>");
 			$("#editModal").modal("show");
@@ -550,94 +547,20 @@
 			$("#editForm").data('bootstrapValidator', null);
 			inputvalidator();
 		});
-		
+		var stateOfFault = null; //这个值保存选中行是否存在过问题
 		//修改
 		$("#dataTable tbody").on("click", "#editRow", function() {
 			var data = tables.api().row($(this).parents("tr")).data();
-			$("input[name=id]").val(data.id);
-			taskid = data.taskid;
-			redevid = data.redevid;
-			sel.synbinddata('owerdep', "<%=request.getContextPath()%>/rest/department/getdeplist", 'id', 'name', data.owerdep, function(data) {});
-			sel.synbinddata('typeid', "<%=request.getContextPath()%>/rest/dic/getInspcetTypeList", 'id', 'name', data.typeid, function(data) {});
-			$("#typeid").prop("disabled", true);
-			$("#taskid").prop("disabled", true);
-			$("input[name=name]").val(data.name);
-			$("#isfault").empty();
-			if (data.isfault == 0) {
-				stateOfFault = data.isfault
-				$("#isfault").append("<option value='" + 0 + "'>&nbsp;" + "无故障" + "</option>");
-				$("#isfault").append("<option value='" + 1 + "'>&nbsp;" + "有故障" + "</option>");
-			}
-			if (data.isfault == 1) {
-				stateOfFault = data.isfault
-				$("#isfault").append("<option value='" + 0 + "'>&nbsp;" + "无故障" + "</option>");
-				$("#isfault").append("<option value='" + 1 + "'>&nbsp;" + "有故障" + "</option>");
-				$("#isfault").append("<option value='" + 2 + "'>&nbsp;" + "已修复" + "</option>");
-			}
-			if (data.isfault == 2) {
-				$("#isfault").append("<option value='" + 1 + "'>&nbsp;" + "有故障" + "</option>");
-				$("#isfault").append("<option value='" + 2 + "'>&nbsp;" + "已修复" + "</option>");
-			}
-			$("#isfault").select2("val", [ data.isfault ])
-			$("textarea[name=inspectcontent]").val(data.inspectcontent);
-			$("textarea[name=inspectresult]").val(data.inspectresult);
-			$("input[name=inspecttime]").val(new Date(data.inspecttime).format("yyyy-MM-dd hh:mm:ss"));
-			$("input[name=inspectperson]").val(data.inspectperson);
-			// 数据库中去获取图片信息，进行回显
-			// 先初始化文件上传的参数
-			$.ajax({
-			url : "<%=request.getContextPath()%>/rest/inspect/getImageResourceOfThisInspect?inspectid=" + data.id,
-			type : 'post',
-			dataType : "json",
-			cache : "false",
-			data : null,
-			success : function(seldata) {
-			    console.log(seldata)
-				initMessageOfImage(seldata);
-			},
-			error : function(err) {
-				toastr.error("Server Connection Error<%=request.getContextPath()%>.");
-			}
+			// 			if($("#keywordQualify").val()=="" && $("#talentroleId").val()==""){
+			// 				querystrdata.querystring="";
+			// 			}else if($("#keywordQualify").val()!="" && $("#talentroleId").val()==""){
+			// 				querystrdata.querystring = $("#keywordQualify1").val()+","+$("#keywordQualify").val()+","+"k";
+			// 			}else if($("#keywordQualify").val()=="" && $("#talentroleId").val()!=""){
+			// 				querystrdata.querystring = ""+","+""+","+$("#talentroleId").val();
+			// 			}
+			var preurl = "<%=request.getContextPath()%>/rest/inspect/gotoInspectPageWithQuerystr";
+			window.location.href = "<%=request.getContextPath()%>/rest/inspect/inspectEdit?inspectid=" + data.id + "&preurl=" + preurl;
 		});
-			
-			//修改操作时controller的url
-			url = "<%=request.getContextPath()%>/rest/inspect/updateOneInspect";
-			$("#myModalLabel").html("<b>修改巡检信息</b>");
-			$("#editModal").modal("show");
-			//下边2行清除上次验证结果
-			$("#editForm").data('bootstrapValidator').destroy();
-			$("#editForm").data('bootstrapValidator', null);
-			inputvalidator();
-		});
-		function initMessageOfImage(seldata){
-		    console.log(seldata);
-			var data = new Object();
-			data = seldata[0];//data中的有个参数是图片的资源信息
-			filelist = [];
-			pathArr = [];
-			nameArr = [];
-			for (var k = 0; k < data.bpersoninspectionattachs.length; k++) {
-				var item = data.bpersoninspectionattachs[k];
-				//构造
-				console.log("<%=request.getContextPath()%>" + "/" + item.url);
-				pathArr.push("<%=request.getContextPath()%>" + "/" + item.url); //文件访问地址 这里需要网络地址  例：http://localhost:8080/xxx/xx.jpg
-				var obj = new Object();
-				obj.caption = item.name; //item.id;  
-				obj.size = 100;
-				obj.key = item.id;
-				obj.url = "<%=request.getContextPath()%>/rest/FileUpload/springDelete" + "?fileurl=" + item.url; //用于初始化文件删除事件地址
-				console.log("这个让人费解的url哦" + obj.url);
-				nameArr.push(obj);
-				//用于重新上传和更新
-				var attach = new Object();
-				attach.id = item.id
-				attach.url = item.url;
-				attach.inpectid = item.inpectid;
-				filelist.push(attach);
-			}
-			initFileInput();
-		}
-		
 		var taskid;
 		// 巡检类型下拉列表值变化监听事件
 		$("#typeid").on('change', function() {
@@ -677,21 +600,17 @@
 				if (confirm("确定提交么？")) {
 					//获取到表单中的数据
 					var params = $("#editForm").form().getFormSimpleData();
+					params["fileliststr"] = JSON.stringify(filelist);
 					console.log(JSON.stringify(params));
 					$.ajax({
 						url : url,
 						type : 'post',
 						cache : "false",
-						data : params, 
+						data : params,
 						dataType : "json",
 						success : function(returnData) {
 							if (returnData.success) {
-							    // 执行添加操作后需要返回添加成功后的巡检的id，用于图片的上传
-							    inspectid_use_by_upload = returnData.data
-							    if(inspectid_use_by_upload==null)
-							        inspectid_use_by_upload = params.id
-							    $('#uploadimage').fileinput('upload')
-								tables.fnDraw(false); 
+								tables.fnDraw(false);
 								$("#editModal").modal("hide");
 								toastr.success("保存成功！");
 							} else {
@@ -834,7 +753,7 @@
 							}
 						}
 					}
-				} 
+				}
 			}).on("success.form.bv", function(e) {
 				e.preventDefault(); //防止重复提交						
 			});
@@ -842,7 +761,6 @@
 		$("#btn_fake_cancel").on("click", function() {
 			$("#editModal").modal("hide");
 		});
-		
 		var verify_data;
 		// 审核按钮事件
 		$("#dataTable tbody").on("click", "#btn_verify", function() {
@@ -900,27 +818,23 @@
 			}
 		});
 	});
-	
-	
 	// 上传文件的参数     在$(function(){})的外部
 	var oFileInput = new DSFileInput();
+
 	var filelist = [];
 	var pathArr = new Array(); //文件网络地址 集合
 	var nameArr = new Array(); //文件信息集合
 	var filepath = "upload/material";
-	var selecttalent = new Object();
-
 	var uploadUrl = "<%=request.getContextPath()%>/rest/FileUpload/springUpload";
 	var deleteUrl = "<%=request.getContextPath()%>/rest/FileUpload/springDelete";
-
+	// 上传成功后
 	function uploadcallback(url, previewId, filetype) {
 		var attach = new Object();
 		attach.id = null
 		attach.url = url;
-		attach.type = filetype;
-		attach.name = "附件";
-		attach.talentId = selecttalent.id;
+		attach.title = "附件";
 		filelist.push(attach); //上传
+		console.log(filelist)
 		var deleteaction = deleteUrl + "?fileurl=" + url;
 		$("#" + previewId).find(".kv-file-remove").click(function() {
 			$.ajax({
@@ -928,28 +842,28 @@
 				type : "post",
 				dataType : "json",
 				success : function(result) {
+					//删除文件成功
 					filelist.removebyurl(result.url);
 				},
-				error : function(result) {
-				}
+				error : function(result) {}
 			});
 		});
 	}
-	
-	//这个函数在初始化植入的删除按钮事件调用，这意味着有了数据库，需要删除数据库
+
 	function deletecallback(key) {
+		console.log("deletecallback")
 		var data = new Object();
 		data.id = key;
 		if (key > 0) {
 			$.ajax({
-				url : "<%=request.getContextPath()%>/rest/inspect/deleteOneAttach",
+				url : "<%=request.getContextPath()%>/rest/datamanager/deletewordbyid",
 				type : 'post',
 				dataType : "json",
 				cache : "false",
 				data : data,
 				success : function(data) {
 					if (data.success) {
-						toastr.success("删除数据库成功！");
+						toastr.success("删除成功！");
 					} else {
 						toastr.error('删除失败！' + JSON.stringify(data));
 					}
@@ -966,7 +880,6 @@
 		$("#add_inspectattach_form").append("<input id='uploadimage' type='file' name='uploadimage' data-ref='url2' class='file-loading' value='test' multiple/>");
 		oFileInput.Init("uploadimage", uploadUrl, deleteUrl, true, pathArr, nameArr, filepath, uploadcallback, deletecallback);
 	}
-
 	Array.prototype.removebyid = function(id) {
 		if (this.length < 1) {
 			return false;
@@ -996,6 +909,7 @@
 				break;
 			}
 		}
+		//var a = this.indexOf(b);
 		if (a >= 0) {
 			this.splice(a, 1);
 			return true;

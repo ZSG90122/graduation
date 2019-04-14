@@ -1169,6 +1169,8 @@
 				if (confirm("确定提交么？")) {
 					//获取到表单中的数据
 					var params = form.getFormSimpleData();
+					console.log("测试================");
+					console.log(params);
 					params["parameterList"] = JSON.parse(JSON.stringify(list));
 					console.log(JSON.stringify(params));
 					//此处的data保存了操作的返回值	

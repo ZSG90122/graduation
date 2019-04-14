@@ -215,17 +215,21 @@ var sel = {
 	// 听到该变化，以便执行相应的操作
 	synbinddata : function(ctrlName, url, val, text, selectval, fun) {
 		var control = $('#' + ctrlName);
+		console.log(selectval)
 		//绑定Ajax的内容
 		var flag; // 用于记录要被回显的标号
 		$.getJSON(url, function(data) {
 			control.empty(); //清空下拉框
 			$.each(data, function(i, item) {
 				if (selectval == data[i][val]) {
+					// data[i][val]是从后台返回的id
+					// data[i][text]是从后台返回的该id所对应的zhi
 					control.append("<option selected='selected' value='" + data[i][val] + "'>&nbsp;" + data[i][text] + "</option>");
 					flag = i;
 				}
 				else
 					control.append("<option value='" + data[i][val] + "'>&nbsp;" + data[i][text] + "</option>");
+				console.log("<option value='" + data[i][val] + "'>&nbsp;" + data[i][text] + "</option>")
 			});
 			fun(data);
 			// 选中传进来的那个参数所代表的值

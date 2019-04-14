@@ -1,5 +1,6 @@
 package com.adminlte.controller.maintain;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +29,8 @@ import com.adminlte.service.IBpersoninspectionService;
 import com.adminlte.service.IBpersoninspectionattachService;
 import com.adminlte.service.IBtaskService;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("/inspect")
@@ -37,7 +40,7 @@ public class inspectController extends BaseController {
 
 	@Autowired
 	IBtaskService ibtaskService;
-	
+
 	@Autowired
 	IBfaultService ibfaultService;
 
@@ -126,7 +129,7 @@ public class inspectController extends BaseController {
 	 */
 	@RequestMapping("/insertOneInspect")
 	@ResponseBody
-	public Result insertOneInspect(Bpersoninspection bpersoninspection) {
+	public Result insertOneInspect(Bpersoninspection bpersoninspection, @RequestParam String fileliststr) {
 		try {
 			bpersoninspection.setFillpersonid(getShiroUser().getId());
 			bpersoninspection.setFilltime(new Date());
@@ -142,7 +145,20 @@ public class inspectController extends BaseController {
 				// 非任务巡检无需审核
 				bpersoninspection.setState((byte) 2);
 			this.ibpersoninspectionService.insert(bpersoninspection);
-			return new Result(true, bpersoninspection.getId());
+			// 同时插入图片
+			if (fileliststr.length() > 0) {
+				fileliststr = fileliststr.replaceAll("&quot;", "\""); //
+				ObjectMapper mapper = new ObjectMapper();
+				JavaType jt = mapper.getTypeFactory().constructParametricType(ArrayList.class,
+						Bpersoninspectionattach.class);
+				List<Bpersoninspectionattach> bpersoninspectionattachList = mapper.readValue(fileliststr, jt);
+				for (Bpersoninspectionattach bpersoninspectionattach : bpersoninspectionattachList) {
+					bpersoninspectionattach.setInpectid(bpersoninspection.getId());
+					this.ibpersoninspectionattachService.insert(bpersoninspectionattach);
+				}
+			}
+
+			return new Result(true);
 		} catch (Exception e) {
 			return new Result(false);
 		}
@@ -156,9 +172,22 @@ public class inspectController extends BaseController {
 	 */
 	@RequestMapping(value = "/updateOneInspect", method = RequestMethod.POST)
 	@ResponseBody
-	public Result updateOneTask(Bpersoninspection personinspection) {
+	public Result updateOneTask(Bpersoninspection personinspection, @RequestParam String fileliststr) {
 		try {
 			this.ibpersoninspectionService.updateById(personinspection);
+			if (fileliststr.length() > 0) {
+				fileliststr = fileliststr.replaceAll("&quot;", "\""); //
+				ObjectMapper mapper = new ObjectMapper();
+				JavaType jt = mapper.getTypeFactory().constructParametricType(ArrayList.class,
+						Bpersoninspectionattach.class);
+				List<Bpersoninspectionattach> bpersoninspectionattachList = mapper.readValue(fileliststr, jt);
+				for (Bpersoninspectionattach bpersoninspectionattach : bpersoninspectionattachList) {
+					if (bpersoninspectionattach.getId() == null) {
+						bpersoninspectionattach.setInpectid(personinspection.getId());
+						this.ibpersoninspectionattachService.insert(bpersoninspectionattach);
+					}
+				}
+			}
 			return new Result(true);
 		} catch (Exception e) {
 			return new Result(false);
@@ -265,29 +294,11 @@ public class inspectController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/getImageResourceOfThisInspect")
-	@ResponseBody
-	public List<BpersoninspectionVo> getImageResourceOfThisInspect(@RequestParam Long inspectid) {
+	public ResponseEntity<List<BpersoninspectionVo>> getImageResourceOfThisInspect(@RequestParam Long inspectid) {
 		EntityWrapper<Bpersoninspection> wrapper = new EntityWrapper<Bpersoninspection>();
 		wrapper.isWhere(true);
 		wrapper.eq("p.id", inspectid);
-		return this.ibpersoninspectionService.getImageResourceOfThisInspect(wrapper);
-	}
-
-	/**
-	 * 添加图片附件
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/addPersonInspectionAttach", method = RequestMethod.POST)
-	@ResponseBody
-	@Transactional
-	public Result addPersonInspectionAttach(Bpersoninspectionattach bpersoninspectionattach) {
-		try {
-			this.ibpersoninspectionattachService.insert(bpersoninspectionattach);
-			return new Result(true);
-		} catch (Exception e) {
-			return new Result(false);
-		}
+		return ResponseEntity.ok(this.ibpersoninspectionService.getInspectVoList(wrapper));
 	}
 
 	@RequestMapping(value = "/deleteOneAttach", method = RequestMethod.POST)
@@ -300,5 +311,46 @@ public class inspectController extends BaseController {
 		} catch (Exception e) {
 			return new Result(false);
 		}
+	}
+
+	/**
+	 * 跳转到修改页面
+	 * 
+	 * @param inspectid
+	 * @param preurl
+	 * @return
+	 */
+	@RequestMapping("/inspectEdit")
+	public String gotoInspectEditPage(Model model, @RequestParam Long inspectid, @RequestParam String preurl) {
+		model.addAttribute("inspectid", inspectid);
+		model.addAttribute("preurl", preurl);
+		return "maintain/inspectEdit";
+	}
+
+	/**
+	 * 获取指定编号的巡检的信息
+	 * 
+	 * @param inspectid
+	 * @return
+	 */
+	@RequestMapping("/getInspectVobyid")
+	@ResponseBody
+	public List<BpersoninspectionVo> getInspectVobyid(@RequestParam Long inspectid) {
+		EntityWrapper<Bpersoninspection> wrapper = new EntityWrapper<Bpersoninspection>();
+		wrapper.isWhere(true);
+		wrapper.eq("p.id", inspectid);
+		return this.ibpersoninspectionService.getInspectVoList(wrapper);
+	}
+
+	/**
+	 * 在修改界面点击取消按钮后退回到上一个界面
+	 * 
+	 * @param model
+	 * @param querystr
+	 * @return
+	 */
+	@RequestMapping("/gotoInspectPageWithQuestr")
+	public String gotoInspectPageWithQuerystr() {
+		return "maintain/inspectManage";
 	}
 }

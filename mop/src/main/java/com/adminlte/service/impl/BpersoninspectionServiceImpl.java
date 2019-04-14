@@ -35,7 +35,7 @@ public class BpersoninspectionServiceImpl extends ServiceImpl<BpersoninspectionM
 	}
 
 	@Override
-	public List<BpersoninspectionVo> getImageResourceOfThisInspect(EntityWrapper<Bpersoninspection> wrapper) {
+	public List<BpersoninspectionVo> getInspectVoList(EntityWrapper<Bpersoninspection> wrapper) {
 		return this.bpersoninspectionMapper.selectVoListWrapper(wrapper);
 	}
 
