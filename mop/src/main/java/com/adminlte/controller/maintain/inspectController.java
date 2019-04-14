@@ -217,6 +217,11 @@ public class inspectController extends BaseController {
 			EntityWrapper<Bfault> wrapper = new EntityWrapper<Bfault>();
 			wrapper.eq("inpectid", personinspection.getId());
 			this.ibfaultService.delete(wrapper);
+			// 同时删除该巡检的图片，暂时不讨论删除本地的文件
+			EntityWrapper<Bpersoninspectionattach> personinspectionattachwrapper = new EntityWrapper<Bpersoninspectionattach>();
+			personinspectionattachwrapper.eq("inpectid", personinspection.getId());
+			this.ibpersoninspectionattachService.delete(personinspectionattachwrapper);
+			// 最后删除该巡检
 			this.ibpersoninspectionService.deleteById(personinspection);
 			return new Result(true);
 		} catch (Exception e) {
@@ -246,6 +251,9 @@ public class inspectController extends BaseController {
 					wrapper.eq("inpectid", personinspection.getId());
 					this.ibfaultService.delete(wrapper);
 				}
+				EntityWrapper<Bpersoninspectionattach> personinspectionattachwrapper = new EntityWrapper<Bpersoninspectionattach>();
+				personinspectionattachwrapper.eq("inpectid", personinspection.getId());
+				this.ibpersoninspectionattachService.delete(personinspectionattachwrapper);
 				this.ibpersoninspectionService.deleteById(personinspection);
 			}
 			return new Result(true);
