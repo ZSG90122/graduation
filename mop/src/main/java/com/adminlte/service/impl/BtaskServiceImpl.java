@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.adminlte.mapper.BtaskMapper;
 import com.adminlte.pojo.Btask;
+import com.adminlte.pojo.vo.BtaskVo;
 import com.adminlte.result.DatatablesResult;
 import com.adminlte.service.IBtaskService;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -27,6 +28,19 @@ public class BtaskServiceImpl extends ServiceImpl<BtaskMapper, Btask> implements
 		PageInfo<Btask> pageInfo = new PageInfo<Btask>(btaskList);
 		DatatablesResult<Btask> datatablesResult = new DatatablesResult<Btask>();
 		datatablesResult.setData(btaskList);
+		datatablesResult.setRecordsTotal((int) pageInfo.getTotal());
+		datatablesResult.setRecordsFiltered(datatablesResult.getRecordsTotal());
+		return datatablesResult;
+	}
+
+	@Override
+	public DatatablesResult<BtaskVo> selecVoDataGridWrapper(int page, int rows, int parseInt,
+			EntityWrapper<Btask> wrapper) {
+		PageHelper.startPage(page, rows);
+		List<BtaskVo> btaskVoList = this.btaskMapper.selectVoList(wrapper);
+		PageInfo<BtaskVo> pageInfo = new PageInfo<BtaskVo>(btaskVoList);
+		DatatablesResult<BtaskVo> datatablesResult = new DatatablesResult<BtaskVo>();
+		datatablesResult.setData(btaskVoList);
 		datatablesResult.setRecordsTotal((int) pageInfo.getTotal());
 		datatablesResult.setRecordsFiltered(datatablesResult.getRecordsTotal());
 		return datatablesResult;

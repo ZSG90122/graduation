@@ -273,10 +273,10 @@
 					"data" : "id" //编号
 				},
 				{
-					"data" : "type"
+					"data" : "typename"
 				},
 				{
-					"data" : 'taskcontent',
+					"data" : 'taskcontent'
 				},
 				{
 					"data" : 'state',

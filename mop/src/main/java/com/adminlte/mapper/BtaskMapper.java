@@ -1,8 +1,16 @@
 package com.adminlte.mapper;
 
-import com.adminlte.pojo.Btask;
-import com.baomidou.mybatisplus.mapper.BaseMapper;
+import java.util.List;
 
-public interface BtaskMapper extends BaseMapper<Btask>{
-   
+import org.apache.ibatis.annotations.Param;
+
+import com.adminlte.pojo.Btask;
+import com.adminlte.pojo.vo.BtaskVo;
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+
+public interface BtaskMapper extends BaseMapper<Btask> {
+
+	List<BtaskVo> selectVoList(@Param("ew") EntityWrapper<Btask> wrapper);
+
 }

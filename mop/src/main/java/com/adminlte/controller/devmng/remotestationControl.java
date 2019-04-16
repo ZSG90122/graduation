@@ -119,7 +119,7 @@ public class remotestationControl extends BaseController {
 	}
 
 	/**
-	 * insertEnterpriseInfor 新增遥控站、机房信息
+	 * insertEnterpriseInfor 新增遥控站信息
 	 * 
 	 * @return
 	 */
@@ -137,7 +137,7 @@ public class remotestationControl extends BaseController {
 	}
 
 	/**
-	 * saveEnterpriseInfor 保存遥控站、机房信息
+	 * saveEnterpriseInfor 修改遥控站信息
 	 * 
 	 * @return
 	 */
@@ -154,8 +154,8 @@ public class remotestationControl extends BaseController {
 		}
 	}
 
-	/*
-	 * 删除一个遥控站或机房
+	/**
+	 * 删除一个遥控站
 	 */
 	@RequestMapping(value = "/deleteRcstationdevhouse", method = RequestMethod.POST)
 	@ResponseBody
@@ -165,7 +165,7 @@ public class remotestationControl extends BaseController {
 			return new Result(true);
 		} catch (Exception ex) {
 			System.out.println(ex.toString());
-			return new Result(false, "删除商家失败！");
+			return new Result(false, "删除失败！");
 		}
 	}
 
@@ -196,7 +196,7 @@ public class remotestationControl extends BaseController {
 	@RequestMapping("/rsdevsystemmanager")
 	public String rsdevsystemmanager(Model model) {
 		model.addAttribute("querystr", "");
-		return "devmanager/rsdevsystemManager"; 
+		return "devmanager/rsdevsystemManager";
 	}
 
 	/**
@@ -233,7 +233,8 @@ public class remotestationControl extends BaseController {
 	@RequestMapping("/getRemoteStationListOfInspect")
 	@ResponseBody
 	public List<Brcstationdevhouse> getRemoteStationListOfInspect(@RequestParam Long inspectid) {
-		//System.out.println("!!!!!!!!!!!!!" + this.rcstationdevhouseService.selectRemoteStationListOfInspect(inspectid));
+		// System.out.println("!!!!!!!!!!!!!" +
+		// this.rcstationdevhouseService.selectRemoteStationListOfInspect(inspectid));
 		return this.rcstationdevhouseService.selectRemoteStationListOfInspect(inspectid);
 	}
 }

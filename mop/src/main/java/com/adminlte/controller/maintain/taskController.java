@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.adminlte.controller.BaseController;
 import com.adminlte.pojo.Btask;
+import com.adminlte.pojo.vo.BtaskVo;
 import com.adminlte.pojo.vo.Result;
 import com.adminlte.result.DatatablesResult;
 import com.adminlte.service.IBtaskService;
@@ -49,7 +50,7 @@ public class taskController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/getTaskDataGrid")
-	public ResponseEntity<DatatablesResult<Btask>> getTaskDataGrid(String querystring,
+	public ResponseEntity<DatatablesResult<BtaskVo>> getTaskDataGrid(String querystring,
 			@RequestParam(value = "draw") String draw, @RequestParam(value = "start") String start,
 			@RequestParam(value = "length") String length) {
 		int rows = Integer.parseInt(length);
@@ -74,10 +75,11 @@ public class taskController extends BaseController {
 		try {
 			EntityWrapper<Btask> wrapper = new EntityWrapper<Btask>();
 			if (null != taskcontent && taskcontent.length() > 0) {
+				wrapper.isWhere(true);
 				wrapper.like("taskcontent", taskcontent);
 			}
 			wrapper.orderBy("id");
-			DatatablesResult<Btask> datatablesResult = this.iBtaskService.selecDataGridWrapper(page, rows,
+			DatatablesResult<BtaskVo> datatablesResult = this.iBtaskService.selecVoDataGridWrapper(page, rows,
 					Integer.parseInt(draw), wrapper);
 			return ResponseEntity.ok(datatablesResult);
 		} catch (Exception e) {

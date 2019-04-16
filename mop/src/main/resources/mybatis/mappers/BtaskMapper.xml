@@ -13,10 +13,42 @@
 		<result column="finishcontent" jdbcType="VARCHAR" property="finishcontent" />
 		<result column="remark" jdbcType="VARCHAR" property="remark" />
 	</resultMap>
+
+	<resultMap id="BaseVoResultMap" type="com.adminlte.pojo.vo.BtaskVo">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="type" jdbcType="BIGINT" property="type" />
+		<result column="taskcontent" jdbcType="VARCHAR" property="taskcontent" />
+		<result column="state" jdbcType="TINYINT" property="state" />
+		<result column="transperson" jdbcType="VARCHAR" property="transperson" />
+		<result column="transtime" jdbcType="TIMESTAMP" property="transtime" />
+		<result column="fillperson" jdbcType="BIGINT" property="fillperson" />
+		<result column="filltime" jdbcType="TIMESTAMP" property="filltime" />
+		<result column="finishcontent" jdbcType="VARCHAR" property="finishcontent" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="typename" jdbcType="VARCHAR" property="typename" />
+	</resultMap>
 	<sql id="Base_Column_List">
-		id, type, taskcontent, state, transperson, transtime, fillperson,
+		id, type, taskcontent, state, transperson, transtime,
+		fillperson,
 		filltime, finishcontent,
 		remark
 	</sql>
-
+	<select id="selectVoList" resultMap="BaseVoResultMap">
+		SELECT DISTINCT
+		t.id,
+		t.type,
+		t.taskcontent,
+		t.state,
+		t.transperson,
+		t.transtime,
+		t.fillperson,
+		t.filltime,
+		t.finishcontent,
+		t.remark,
+		dt.`name` AS typename
+		FROM
+		btask AS t
+		LEFT JOIN dictasktype dt ON dt.id = t.type
+		${ew.sqlSegment}
+	</select>
 </mapper>
